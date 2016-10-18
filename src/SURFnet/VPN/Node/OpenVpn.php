@@ -139,8 +139,8 @@ class OpenVpn
             'tls-cipher TLS-DHE-RSA-WITH-AES-128-GCM-SHA256:TLS-DHE-RSA-WITH-AES-256-GCM-SHA384:TLS-DHE-RSA-WITH-AES-256-CBC-SHA',
             'auth SHA256',
             'cipher AES-256-CBC',
-            'client-connect /usr/sbin/vpn-server-api-client-connect',
-            'client-disconnect /usr/sbin/vpn-server-api-client-disconnect',
+            'client-connect /usr/sbin/vpn-server-node-client-connect',
+            'client-disconnect /usr/sbin/vpn-server-node-client-disconnect',
             'push "comp-lzo no"',
             'push "explicit-exit-notify 3"',
             sprintf('ca %s/ca.crt', $tlsDir),
@@ -175,7 +175,7 @@ class OpenVpn
         }
 
         if ($profileConfig->v('twoFactor')) {
-            $serverConfig[] = 'auth-user-pass-verify /usr/sbin/vpn-server-api-verify-otp via-env';
+            $serverConfig[] = 'auth-user-pass-verify /usr/sbin/vpn-server-node-verify-otp via-env';
         }
 
         // Routes
