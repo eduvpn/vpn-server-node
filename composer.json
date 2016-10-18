@@ -11,7 +11,7 @@
             "SURFnet\\VPN\\Node\\": "src/"
         }
     },
-    "description": "Control OpenVPN processes",
+    "description": "OpenVPN node controller",
     "license": "AGPL-3.0",
     "name": "eduvpn/vpn-server-node",
     "require": {
