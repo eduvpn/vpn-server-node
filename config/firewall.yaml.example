@@ -14,6 +14,6 @@ inputChain:
         # PeerVPN
         #- 7000
 
-    trustedInterfaces:
+    #trustedInterfaces:
         # PeerVPN
         #- tap+

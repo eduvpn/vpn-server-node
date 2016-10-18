@@ -71,7 +71,6 @@ class Firewall
         $firewall = array_merge(
             $firewall,
             [
-                //sprintf('-A FORWARD -p %s -j ACCEPT', 4 === $inetFamily ? 'icmp' : 'ipv6-icmp'),
                 '-A FORWARD -m state --state ESTABLISHED,RELATED -j ACCEPT',
             ]
         );
@@ -121,8 +120,10 @@ class Firewall
         ];
 
         // add trusted interfaces
-        foreach ($firewallConfig->v('inputChain', 'trustedInterfaces') as $trustedIf) {
-            $inputChain[] = sprintf('-A INPUT -i %s -j ACCEPT', $trustedIf);
+        if ($firewallConfig->e('inputChain', 'trustedInterfaces')) {
+            foreach ($firewallConfig->v('inputChain', 'trustedInterfaces') as $trustedIf) {
+                $inputChain[] = sprintf('-A INPUT -i %s -j ACCEPT', $trustedIf);
+            }
         }
 
         // NOTE: multiport is limited to 15 ports (a range counts as two)
