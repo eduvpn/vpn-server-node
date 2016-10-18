@@ -1,0 +1,22 @@
+{
+    "authors": [
+        {
+            "email": "fkooman@tuxed.net",
+            "name": "Fran\u00e7ois Kooman",
+            "role": "Developer"
+        }
+    ],
+    "autoload": {
+        "psr-0": {
+            "SURFnet\\VPN\\Node\\": "src/"
+        }
+    },
+    "description": "Control OpenVPN processes",
+    "license": "AGPL-3.0",
+    "name": "eduvpn/vpn-server-node",
+    "require": {
+        "eduvpn/common": "dev-master",
+        "php": ">=5.4.0",
+        "psr/log": "^1.0"
+    }
+}

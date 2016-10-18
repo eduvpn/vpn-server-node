@@ -1,0 +1,19 @@
+#
+# Firewall Configuration
+#
+# Due to iptables multiport, up to  15  ports  can  be  specified per protocol
+# See iptables-extensions(8)
+#
+inputChain:
+    tcp:
+        - 22
+        - 80
+        - 443
+    udp:
+        - 1194:1201
+        # PeerVPN
+        #- 7000
+
+    # PeerVPN
+    #trustedInterfaces:
+    #    - tap+

@@ -1,0 +1,10 @@
+# API providers & credentials for servers this service is connecting to
+apiProviders:
+    vpn-ca-api:
+        userName: vpn-server-node
+        userPass: aabbcc
+        apiUri: 'http://127.42.101.100:8008/api.php' 
+    vpn-server-api:
+        userName: vpn-server-node
+        userPass: ccbbaa 
+        apiUri: 'http://127.42.101.100:8009/api.php'

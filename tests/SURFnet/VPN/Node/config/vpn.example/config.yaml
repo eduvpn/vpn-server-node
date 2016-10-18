@@ -1,0 +1,39 @@
+instanceNumber: 8
+
+vpnPools:
+    internet:
+        extIf: eth0
+        listen: 192.168.1.1
+        range: 10.0.0.0/24
+        range6: 'fd00:4242:4242::/48'
+        useNat: true
+        defaultGateway: true
+        dns: [8.8.8.8, 8.8.4.4]
+
+    bar:
+        extIf: eth0
+        listen: 192.168.1.2
+        range: 10.10.10.0/24
+        range6: 'fd00:4343:4343::/48'
+        defaultGateway: false
+        routes: [10.20.20.0/24, 192.168.5.0/24]
+        useNat: false
+        clientToClient: true
+        enableAcl: true
+        aclGroupProvider: StaticProvider
+        aclGroupList: [all]
+
+groupProviders:
+    VootProvider:
+        apiUrl: 'https://voot.surfconext.nl/me/groups'
+
+    StaticProvider:
+        all:
+            displayName: All
+            members: [foo, bar]
+        students:
+            displayName: Students
+            members: [foo]
+        employees:
+            displayName: Employees
+            members: [bar]
