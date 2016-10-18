@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "4023b37582038946517ca772caa40050",
-    "content-hash": "89e98c8caec16484c827c9a7b104bb4d",
+    "hash": "7fd3d7d0daeba284f3cbc9c9c6efd019",
+    "content-hash": "d7486dbd71965af6b240cb13ac0c2d04",
     "packages": [
         {
             "name": "eduvpn/common",
@@ -612,6 +612,11 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
+        "ext-filter": "*",
+        "ext-json": "*",
+        "ext-mbstring": "*",
+        "ext-pcre": "*",
+        "ext-spl": "*",
         "php": ">=5.4.0"
     },
     "platform-dev": []
