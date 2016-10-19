@@ -50,6 +50,9 @@ try {
     $configFile = sprintf('%s/config/%s/config.yaml', dirname(__DIR__), $instanceId);
     $config = Config::fromFile($configFile);
 
+    $vpnUser = $config->e('vpnUser') ? $config->v('vpnUser') : 'openvpn';
+    $vpnGroup = $config->e('vpnGroup') ? $config->v('vpnGroup') : 'openvpn';
+
     $vpnConfigDir = sprintf('%s/openvpn-config', dirname(__DIR__));
     $vpnTlsDir = sprintf('%s/openvpn-config/tls/%s/%s', dirname(__DIR__), $instanceId, $poolId);
 
@@ -69,7 +72,11 @@ try {
 
     $instanceConfig = $serverClient->instanceConfig();
     $instanceNumber = $instanceConfig['instanceNumber'];
-    $profileConfig = new ProfileConfig($serverClient->serverPool($poolId));
+
+    $profileConfigData = $serverClient->serverPool($poolId);
+    $profileConfigData['_user'] = $vpnUser;
+    $profileConfigData['_group'] = $vpnGroup;
+    $profileConfig = new ProfileConfig($profileConfigData);
 
     $o = new OpenVpn($vpnConfigDir, $vpnTlsDir);
     $o->writePool($instanceNumber, $instanceId, $poolId, $profileConfig);
