@@ -80,22 +80,7 @@ class OpenVpn
         ];
 
         for ($i = 0; $i < $processCount; ++$i) {
-            // protocol is udp unless it is the last process when there is
-            // not just one process
-            if (1 === $processCount || $i !== $processCount - 1) {
-                $proto = 'udp';
-                $port = 1194 + $i;
-                $local = $profileConfig->v('listen');
-            } else {
-                $proto = 'tcp';
-                if ($profileConfig->v('hasProxy')) {
-                    $port = 1194;
-                    $local = $managementIp;
-                } else {
-                    $port = 443;
-                    $local = $profileConfig->v('listen');
-                }
-            }
+            list($proto, $port, $local) = self::determineProtoPortLocal($profileConfig, $i, $managementIp);
 
             $processConfig['range'] = $splitRange[$i];
             $processConfig['range6'] = $splitRange6[$i];
@@ -157,7 +142,7 @@ class OpenVpn
             sprintf('management %s %d', $processConfig['managementIp'], $processConfig['managementPort']),
             sprintf('setenv INSTANCE_ID %s', $instanceId),
             sprintf('setenv POOL_ID %s', $poolId),
-            sprintf('proto %s', 'tcp' === $processConfig['proto'] ? 'tcp-server' : 'udp'),
+            sprintf('proto %s', $processConfig['proto']),
             sprintf('local %s', $processConfig['local']),
 
             // increase the renegotiation time to 8h from the default of 1h when
@@ -264,5 +249,39 @@ class OpenVpn
             sprintf('push "route %s %s"', $rangeIp->getAddress(), $rangeIp->getNetmask()),
             sprintf('push "route-ipv6 %s"', $range6Ip->getAddressPrefix()),
         ];
+    }
+
+    private static function determineProtoPortLocal(ProfileConfig $profileConfig, $i, $managementIp)
+    {
+        $processCount = $profileConfig->v('processCount');
+        if ($profileConfig->v('dedicatedNode')) {
+            // we listen on all IPs, both IPv4 and IPv6
+            if (1 === $processCount || $i !== $processCount - 1) {
+                // UDP
+                $proto = 'udp6';
+                $port = 1194 + $i;
+                $local = '::';
+            } else {
+                // TCP
+                $proto = 'tcp6-server';
+                $port = 443;
+                $local = '::';
+            }
+        } else {
+            // not dedicated, we share with SNI Proxy, we listen on IPv4 only
+            if (1 === $processCount || $i !== $processCount - 1) {
+                // UDP
+                $proto = 'udp';
+                $port = 1194 + $i;
+                $local = $profileConfig->v('listen');
+            } else {
+                // TCP
+                $proto = 'tcp-server';
+                $port = 1194;
+                $local = $managementIp;
+            }
+        }
+
+        return [$proto, $port, $local];
     }
 }
