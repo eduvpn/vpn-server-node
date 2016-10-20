@@ -1,6 +1,6 @@
 instanceNumber: 8
 
-vpnPools:
+vpnProfiles:
     internet:
         extIf: eth0
         listen: 192.168.1.1

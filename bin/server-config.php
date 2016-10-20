@@ -31,7 +31,7 @@ try {
         'Generate VPN server configuration for an instance',
         [
             'instance' => ['the instance', true, true],
-            'pool' => ['the pool', true, true],
+            'profile' => ['the profile identifier', true, true],
             'generate' => ['generate a new certificate for the server', false, false],
             'cn' => ['the CN of the certificate to generate', true, false],
         ]
@@ -44,7 +44,7 @@ try {
     }
 
     $instanceId = $opt->v('instance');
-    $poolId = $opt->v('pool');
+    $profileId = $opt->v('profile');
     $generateCerts = $opt->e('generate');
 
     $configFile = sprintf('%s/config/%s/config.yaml', dirname(__DIR__), $instanceId);
@@ -54,7 +54,7 @@ try {
     $vpnGroup = $config->e('vpnGroup') ? $config->v('vpnGroup') : 'openvpn';
 
     $vpnConfigDir = sprintf('%s/openvpn-config', dirname(__DIR__));
-    $vpnTlsDir = sprintf('%s/openvpn-config/tls/%s/%s', dirname(__DIR__), $instanceId, $poolId);
+    $vpnTlsDir = sprintf('%s/openvpn-config/tls/%s/%s', dirname(__DIR__), $instanceId, $profileId);
 
     $serverClient = new ServerClient(
         new GuzzleHttpClient(
@@ -73,13 +73,13 @@ try {
     $instanceConfig = $serverClient->instanceConfig();
     $instanceNumber = $instanceConfig['instanceNumber'];
 
-    $profileConfigData = $serverClient->serverPool($poolId);
+    $profileConfigData = $serverClient->serverProfile($profileId);
     $profileConfigData['_user'] = $vpnUser;
     $profileConfigData['_group'] = $vpnGroup;
     $profileConfig = new ProfileConfig($profileConfigData);
 
     $o = new OpenVpn($vpnConfigDir, $vpnTlsDir);
-    $o->writePool($instanceNumber, $instanceId, $poolId, $profileConfig);
+    $o->writeProfile($instanceNumber, $instanceId, $profileId, $profileConfig);
     if ($generateCerts) {
         $caClient = new CaClient(
             new GuzzleHttpClient(

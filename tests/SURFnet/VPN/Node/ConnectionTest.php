@@ -46,7 +46,7 @@ class ConnectionTest extends PHPUnit_Framework_TestCase
             $this->connection->connect(
                 [
                     'common_name' => 'foo_bar',
-                    'POOL_ID' => 'internet',
+                    'PROFILE_ID' => 'internet',
                     'time_unix' => '12345678',
                     'ifconfig_pool_remote_ip' => '10.0.42.0',
                     'ifconfig_pool_remote_ip6' => 'fd00:4242:4242:4242::',
@@ -61,7 +61,7 @@ class ConnectionTest extends PHPUnit_Framework_TestCase
             $this->connection->connect(
                 [
                     'common_name' => 'bar_bar',
-                    'POOL_ID' => 'internet',
+                    'PROFILE_ID' => 'internet',
                     'time_unix' => '12345678',
                     'ifconfig_pool_remote_ip' => '10.0.42.0',
                     'ifconfig_pool_remote_ip6' => 'fd00:4242:4242:4242::',
@@ -76,7 +76,7 @@ class ConnectionTest extends PHPUnit_Framework_TestCase
             $this->connection->connect(
                 [
                     'common_name' => 'foo_baz',
-                    'POOL_ID' => 'internet',
+                    'PROFILE_ID' => 'internet',
                     'time_unix' => '12345678',
                     'ifconfig_pool_remote_ip' => '10.0.42.0',
                     'ifconfig_pool_remote_ip6' => 'fd00:4242:4242:4242::',
@@ -91,7 +91,7 @@ class ConnectionTest extends PHPUnit_Framework_TestCase
             $this->connection->connect(
                 [
                     'common_name' => 'foo_bar',
-                    'POOL_ID' => 'acl',
+                    'PROFILE_ID' => 'acl',
                     'time_unix' => '12345678',
                     'ifconfig_pool_remote_ip' => '10.0.42.0',
                     'ifconfig_pool_remote_ip6' => 'fd00:4242:4242:4242::',
@@ -106,7 +106,7 @@ class ConnectionTest extends PHPUnit_Framework_TestCase
             $this->connection->connect(
                 [
                     'common_name' => 'foo_bar',
-                    'POOL_ID' => 'acl2',
+                    'PROFILE_ID' => 'acl2',
                     'time_unix' => '12345678',
                     'ifconfig_pool_remote_ip' => '10.0.42.0',
                     'ifconfig_pool_remote_ip6' => 'fd00:4242:4242:4242::',
@@ -121,7 +121,7 @@ class ConnectionTest extends PHPUnit_Framework_TestCase
             $this->connection->disconnect(
                 [
                     'common_name' => 'foo_bar',
-                    'POOL_ID' => 'acl2',
+                    'PROFILE_ID' => 'acl2',
                     'time_unix' => '12345678',
                     'ifconfig_pool_remote_ip' => '10.0.42.0',
                     'ifconfig_pool_remote_ip6' => 'fd00:4242:4242:4242::',

@@ -38,7 +38,7 @@ class Connection
     public function connect(array $envData)
     {
         try {
-            $poolId = InputValidation::poolId($envData['POOL_ID']);
+            $profileId = InputValidation::profileId($envData['PROFILE_ID']);
             $commonName = InputValidation::commonName($envData['common_name']);
             $userId = self::getUserId($commonName);
 
@@ -60,10 +60,10 @@ class Connection
 
             // if the ACL is enabled, verify that the user is allowed to
             // connect
-            $serverPool = $this->serverClient->serverPool($poolId);
-            if ($serverPool['enableAcl']) {
+            $serverProfile = $this->serverClient->serverProfile($profileId);
+            if ($serverProfile['enableAcl']) {
                 $userGroups = $this->serverClient->userGroups($userId);
-                if (false === self::isMember($userGroups, $serverPool['aclGroupList'])) {
+                if (false === self::isMember($userGroups, $serverProfile['aclGroupList'])) {
                     $this->logger->error('user is not a member of required group', $envData);
 
                     return false;
@@ -89,7 +89,7 @@ class Connection
 
     private static function isMember(array $memberOf, array $aclGroupList)
     {
-        // one of the groups must be listed in the pool ACL list
+        // one of the groups must be listed in the profile ACL list
         foreach ($memberOf as $memberGroup) {
             if (in_array($memberGroup['id'], $aclGroupList)) {
                 return true;

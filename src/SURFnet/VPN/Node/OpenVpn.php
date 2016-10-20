@@ -60,7 +60,7 @@ class OpenVpn
         }
     }
 
-    public function writePool($instanceNumber, $instanceId, $poolId, ProfileConfig $profileConfig)
+    public function writeProfile($instanceNumber, $instanceId, $profileId, ProfileConfig $profileConfig)
     {
         $range = new IP($profileConfig->v('range'));
         $range6 = new IP($profileConfig->v('range6'));
@@ -72,7 +72,7 @@ class OpenVpn
         if ($profileConfig->e('managementIp')) {
             $managementIp = $profileConfig->v('managementIp');
         } else {
-            $managementIp = sprintf('127.42.%d.%d', 100 + $instanceNumber, 100 + $profileConfig->v('poolNumber'));
+            $managementIp = sprintf('127.42.%d.%d', 100 + $instanceNumber, 100 + $profileConfig->v('profileNumber'));
         }
 
         $processConfig = [
@@ -84,7 +84,7 @@ class OpenVpn
 
             $processConfig['range'] = $splitRange[$i];
             $processConfig['range6'] = $splitRange6[$i];
-            $processConfig['dev'] = sprintf('tun-%d-%d-%d', $instanceNumber, $profileConfig->v('poolNumber'), $i);
+            $processConfig['dev'] = sprintf('tun-%d-%d-%d', $instanceNumber, $profileConfig->v('profileNumber'), $i);
             $processConfig['proto'] = $proto;
             $processConfig['port'] = $port;
             $processConfig['local'] = $local;
@@ -92,17 +92,17 @@ class OpenVpn
             $processConfig['configName'] = sprintf(
                 'server-%s-%s-%d.conf',
                 $instanceId,
-                $poolId,
+                $profileId,
                 $i
             );
 
-            $this->writeProcess($instanceId, $poolId, $profileConfig, $processConfig);
+            $this->writeProcess($instanceId, $profileId, $profileConfig, $processConfig);
         }
     }
 
-    private function writeProcess($instanceId, $poolId, ProfileConfig $profileConfig, array $processConfig)
+    private function writeProcess($instanceId, $profileId, ProfileConfig $profileConfig, array $processConfig)
     {
-        $tlsDir = sprintf('/etc/openvpn/tls/%s/%s', $instanceId, $poolId);
+        $tlsDir = sprintf('/etc/openvpn/tls/%s/%s', $instanceId, $profileId);
 
         $rangeIp = new IP($processConfig['range']);
         $range6Ip = new IP($processConfig['range6']);
@@ -141,7 +141,7 @@ class OpenVpn
             sprintf('port %d', $processConfig['port']),
             sprintf('management %s %d', $processConfig['managementIp'], $processConfig['managementPort']),
             sprintf('setenv INSTANCE_ID %s', $instanceId),
-            sprintf('setenv POOL_ID %s', $poolId),
+            sprintf('setenv PROFILE_ID %s', $profileId),
             sprintf('proto %s', $processConfig['proto']),
             sprintf('local %s', $processConfig['local']),
 

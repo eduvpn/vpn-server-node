@@ -34,13 +34,13 @@ class InputValidation
         return $instanceId;
     }
 
-    public static function poolId($poolId)
+    public static function profileId($profileId)
     {
-        if (0 === preg_match('/^[a-zA-Z0-9]{2,}$/', $poolId)) {
-            throw new InputValidationException('invalid poolId pattern');
+        if (0 === preg_match('/^[a-zA-Z0-9]{2,}$/', $profileId)) {
+            throw new InputValidationException('invalid profileId pattern');
         }
 
-        return $poolId;
+        return $profileId;
     }
 
     public static function userName($userName)

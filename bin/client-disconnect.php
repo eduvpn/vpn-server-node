@@ -33,7 +33,7 @@ try {
     $envData = [];
     $envKeys = [
         'INSTANCE_ID',
-        'POOL_ID',
+        'PROFILE_ID',
         'common_name',
         'time_unix',
         'ifconfig_pool_remote_ip',

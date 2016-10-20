@@ -39,11 +39,11 @@ class TestHttpClient implements HttpClientInterface
                 return self::wrap('is_disabled_common_name', false);
             case 'connectionServerClient/is_disabled_common_name?common_name=foo_baz':
                 return self::wrap('is_disabled_common_name', true);
-            case 'connectionServerClient/server_pool?pool_id=internet':
+            case 'connectionServerClient/server_profile?profile_id=internet':
                 $profileConfig = new ProfileConfig([]);
 
-                return self::wrap('server_pool', $profileConfig->v());
-            case 'connectionServerClient/server_pool?pool_id=acl':
+                return self::wrap('server_profile', $profileConfig->v());
+            case 'connectionServerClient/server_profile?profile_id=acl':
                 $profileConfig = new ProfileConfig(
                     [
                         'enableAcl' => true,
@@ -51,8 +51,8 @@ class TestHttpClient implements HttpClientInterface
                     ]
                 );
 
-                return self::wrap('server_pool', $profileConfig->v());
-            case 'connectionServerClient/server_pool?pool_id=acl2':
+                return self::wrap('server_profile', $profileConfig->v());
+            case 'connectionServerClient/server_profile?profile_id=acl2':
                 $profileConfig = new ProfileConfig(
                     [
                         'enableAcl' => true,
@@ -60,7 +60,7 @@ class TestHttpClient implements HttpClientInterface
                     ]
                 );
 
-                return self::wrap('server_pool', $profileConfig->v());
+                return self::wrap('server_profile', $profileConfig->v());
             case 'connectionServerClient/user_groups?user_id=foo':
                 return self::wrap(
                     'user_groups',

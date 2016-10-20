@@ -33,7 +33,7 @@ try {
     $envData = [];
     $envKeys = [
         'INSTANCE_ID',
-        'POOL_ID',
+        'PROFILE_ID',
         'common_name',
         'username',
         'password',
