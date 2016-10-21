@@ -72,7 +72,7 @@ class OpenVpn
         if ($profileConfig->e('managementIp')) {
             $managementIp = $profileConfig->v('managementIp');
         } else {
-            $managementIp = sprintf('127.42.%d.%d', 100 + $instanceNumber, 100 + $profileConfig->v('profileNumber'));
+            $managementIp = sprintf('10.42.%d.%d', 100 + $instanceNumber, 100 + $profileConfig->v('profileNumber'));
         }
 
         $processConfig = [
