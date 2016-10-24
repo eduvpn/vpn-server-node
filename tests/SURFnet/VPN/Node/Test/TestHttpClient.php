@@ -19,7 +19,6 @@ namespace SURFnet\VPN\Node\Test;
 
 use SURFnet\VPN\Common\HttpClient\HttpClientInterface;
 use RuntimeException;
-use SURFnet\VPN\Common\ProfileConfig;
 
 class TestHttpClient implements HttpClientInterface
 {
@@ -30,44 +29,6 @@ class TestHttpClient implements HttpClientInterface
                 return self::wrap('has_otp_secret', true);
             case 'serverClient/has_otp_secret?user_id=bar':
                 return self::wrap('has_otp_secret', false);
-
-            case 'connectionServerClient/is_disabled_user?user_id=foo':
-                return self::wrap('is_disabled_user', false);
-            case 'connectionServerClient/is_disabled_user?user_id=bar':
-                return self::wrap('is_disabled_user', true);
-            case 'connectionServerClient/is_disabled_common_name?common_name=foo_bar':
-                return self::wrap('is_disabled_common_name', false);
-            case 'connectionServerClient/is_disabled_common_name?common_name=foo_baz':
-                return self::wrap('is_disabled_common_name', true);
-            case 'connectionServerClient/server_profile?profile_id=internet':
-                $profileConfig = new ProfileConfig([]);
-
-                return self::wrap('server_profile', $profileConfig->v());
-            case 'connectionServerClient/server_profile?profile_id=acl':
-                $profileConfig = new ProfileConfig(
-                    [
-                        'enableAcl' => true,
-                        'aclGroupList' => ['all'],
-                    ]
-                );
-
-                return self::wrap('server_profile', $profileConfig->v());
-            case 'connectionServerClient/server_profile?profile_id=acl2':
-                $profileConfig = new ProfileConfig(
-                    [
-                        'enableAcl' => true,
-                        'aclGroupList' => ['students'],
-                    ]
-                );
-
-                return self::wrap('server_profile', $profileConfig->v());
-            case 'connectionServerClient/user_groups?user_id=foo':
-                return self::wrap(
-                    'user_groups',
-                    [
-                        ['id' => 'all', 'displayName' => 'All'],
-                    ]
-                );
             default:
                 throw new RuntimeException(sprintf('unexpected requestUri "%s"', $requestUri));
         }
@@ -76,16 +37,22 @@ class TestHttpClient implements HttpClientInterface
     public function post($requestUri, array $postData)
     {
         switch ($requestUri) {
+            case 'connectionServerClient/connect':
+                if ('foo_bar' === $postData['common_name']) {
+                    return self::wrap('connect', true);
+                }
+
+                return self::wrap('connect', false);
+
+            case 'connectionServerClient/disconnect':
+                return self::wrap('disconnect', true);
+
             case 'serverClient/verify_otp_key':
                 if ('123456' === $postData['otp_key']) {
                     return self::wrap('verify_otp_key', true);
                 }
 
                 return self::wrap('verify_otp_key', false);
-            case 'connectionServerClient/log_connect':
-                return self::wrap('log_connect', true);
-            case 'connectionServerClient/log_disconnect':
-                return self::wrap('log_disconnect', true);
             default:
                 throw new RuntimeException(sprintf('unexpected requestUri "%s"', $requestUri));
         }

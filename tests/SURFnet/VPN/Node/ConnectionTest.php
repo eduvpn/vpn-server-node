@@ -32,11 +32,11 @@ class ConnectionTest extends PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->connection = new Connection(
-            new NullLogger(),
             new ServerClient(
                 new TestHttpClient(),
                 'connectionServerClient'
-            )
+            ),
+            new NullLogger()
         );
     }
 
@@ -55,58 +55,13 @@ class ConnectionTest extends PHPUnit_Framework_TestCase
         );
     }
 
-    public function testDisabledUser()
-    {
-        $this->assertFalse(
-            $this->connection->connect(
-                [
-                    'common_name' => 'bar_bar',
-                    'PROFILE_ID' => 'internet',
-                    'time_unix' => '12345678',
-                    'ifconfig_pool_remote_ip' => '10.0.42.0',
-                    'ifconfig_pool_remote_ip6' => 'fd00:4242:4242:4242::',
-                ]
-            )
-        );
-    }
-
-    public function testDisabledCommonName()
+    public function testInvalidConnection()
     {
         $this->assertFalse(
             $this->connection->connect(
                 [
                     'common_name' => 'foo_baz',
                     'PROFILE_ID' => 'internet',
-                    'time_unix' => '12345678',
-                    'ifconfig_pool_remote_ip' => '10.0.42.0',
-                    'ifconfig_pool_remote_ip6' => 'fd00:4242:4242:4242::',
-                ]
-            )
-        );
-    }
-
-    public function testAclValid()
-    {
-        $this->assertTrue(
-            $this->connection->connect(
-                [
-                    'common_name' => 'foo_bar',
-                    'PROFILE_ID' => 'acl',
-                    'time_unix' => '12345678',
-                    'ifconfig_pool_remote_ip' => '10.0.42.0',
-                    'ifconfig_pool_remote_ip6' => 'fd00:4242:4242:4242::',
-                ]
-            )
-        );
-    }
-
-    public function testAclInvalid()
-    {
-        $this->assertFalse(
-            $this->connection->connect(
-                [
-                    'common_name' => 'foo_bar',
-                    'PROFILE_ID' => 'acl2',
                     'time_unix' => '12345678',
                     'ifconfig_pool_remote_ip' => '10.0.42.0',
                     'ifconfig_pool_remote_ip6' => 'fd00:4242:4242:4242::',

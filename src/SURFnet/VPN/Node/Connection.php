@@ -19,92 +19,50 @@ namespace SURFnet\VPN\Node;
 
 use Psr\Log\LoggerInterface;
 use SURFnet\VPN\Common\HttpClient\ServerClient;
-use SURFnet\VPN\Node\Exception\InputValidationException;
 
 class Connection
 {
-    /** @var \Psr\Log\LoggerInterface */
-    private $logger;
-
     /** @var \SURFnet\VPN\Common\HttpClient\ServerClient */
     private $serverClient;
 
-    public function __construct(LoggerInterface $logger, ServerClient $serverClient)
+    /** @var \Psr\Log\LoggerInterface */
+    private $logger;
+
+    public function __construct(ServerClient $serverClient, LoggerInterface $logger)
     {
-        $this->logger = $logger;
         $this->serverClient = $serverClient;
+        $this->logger = $logger;
     }
 
     public function connect(array $envData)
     {
-        try {
-            $profileId = InputValidation::profileId($envData['PROFILE_ID']);
-            $commonName = InputValidation::commonName($envData['common_name']);
-            $userId = self::getUserId($commonName);
+        $this->logger->info(
+            json_encode($envData)
+        );
 
-            // XXX turn the >= 3 calls below into one call
-
-            // check if user is disabled
-            if (true === $this->serverClient->isDisabledUser($userId)) {
-                $this->logger->error('user is disabled', $envData);
-
-                return false;
-            }
-
-            // check if the common_name is disabled
-            if (true === $this->serverClient->isDisabledCommonName($commonName)) {
-                $this->logger->error('common_name is disabled', $envData);
-
-                return false;
-            }
-
-            // if the ACL is enabled, verify that the user is allowed to
-            // connect
-            $serverProfile = $this->serverClient->serverProfile($profileId);
-            if ($serverProfile['enableAcl']) {
-                $userGroups = $this->serverClient->userGroups($userId);
-                if (false === self::isMember($userGroups, $serverProfile['aclGroupList'])) {
-                    $this->logger->error('user is not a member of required group', $envData);
-
-                    return false;
-                }
-            }
-
-            $this->logger->info(json_encode(array_merge($envData, ['ok' => true])));
-
-            return true;
-        } catch (InputValidationException $e) {
-            $this->logger->error($e->getMessage(), $envData);
-
-            return false;
-        }
+        return $this->serverClient->connect(
+            $envData['PROFILE_ID'],
+            $envData['common_name'],
+            $envData['ifconfig_pool_remote_ip'],
+            $envData['ifconfig_pool_remote_ip6'],
+            $envData['time_unix']
+        );
     }
 
     public function disconnect(array $envData)
     {
-        $this->logger->info(json_encode(array_merge($envData, ['ok' => true])));
+        $this->logger->info(
+            json_encode($envData)
+        );
 
-        return true;
-    }
-
-    private static function isMember(array $memberOf, array $aclGroupList)
-    {
-        // one of the groups must be listed in the profile ACL list
-        foreach ($memberOf as $memberGroup) {
-            if (in_array($memberGroup['id'], $aclGroupList)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    private static function getUserId($commonName)
-    {
-        // XXX share this with "Otp" class and possibly others
-
-        // return the part before the first underscore, it is already validated
-        // so we can be sure this is fine
-        return substr($commonName, 0, strpos($commonName, '_'));
+        return $this->serverClient->disconnect(
+            $envData['PROFILE_ID'],
+            $envData['common_name'],
+            $envData['ifconfig_pool_remote_ip'],
+            $envData['ifconfig_pool_remote_ip6'],
+            $envData['time_unix'],
+            $envData['bytes_received'] + $envData['bytes_sent'],
+            $envData['time_unix'] + $envData['time_duration']
+        );
     }
 }

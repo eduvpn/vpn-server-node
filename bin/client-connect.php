@@ -66,7 +66,7 @@ try {
         $config->v('apiProviders', 'vpn-server-api', 'apiUri')
     );
 
-    $connection = new Connection($logger, $serverClient);
+    $connection = new Connection($serverClient, $logger);
     if (false === $connection->connect($envData)) {
         exit(1);
     }
