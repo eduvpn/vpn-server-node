@@ -19,6 +19,7 @@
 require_once sprintf('%s/vendor/autoload.php', dirname(__DIR__));
 
 use SURFnet\VPN\Node\Connection;
+use SURFnet\VPN\Node\Exception\ConnectionException;
 use SURFnet\VPN\Common\Logger;
 use SURFnet\VPN\Common\Config;
 use SURFnet\VPN\Common\HttpClient\GuzzleHttpClient;
@@ -66,10 +67,11 @@ try {
         $config->v('apiProviders', 'vpn-server-api', 'apiUri')
     );
 
-    $connection = new Connection($serverClient, $logger);
-    if (false === $connection->connect($envData)) {
-        exit(1);
-    }
+    $connection = new Connection($serverClient);
+    $connection->connect($envData);
+} catch (ConnectionException $e) {
+    $logger->info($e->getMessage(), $e->getEnvData());
+    exit(1);
 } catch (Exception $e) {
     $logger->error($e->getMessage());
     exit(1);

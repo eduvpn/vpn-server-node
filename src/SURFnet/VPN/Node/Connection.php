@@ -17,45 +17,37 @@
  */
 namespace SURFnet\VPN\Node;
 
-use Psr\Log\LoggerInterface;
 use SURFnet\VPN\Common\HttpClient\ServerClient;
+use SURFnet\VPN\Node\Exception\ConnectionException;
 
 class Connection
 {
     /** @var \SURFnet\VPN\Common\HttpClient\ServerClient */
     private $serverClient;
 
-    /** @var \Psr\Log\LoggerInterface */
-    private $logger;
-
-    public function __construct(ServerClient $serverClient, LoggerInterface $logger)
+    public function __construct(ServerClient $serverClient)
     {
         $this->serverClient = $serverClient;
-        $this->logger = $logger;
     }
 
     public function connect(array $envData)
     {
-        $this->logger->info(
-            json_encode($envData)
-        );
-
-        return $this->serverClient->connect(
+        $connectStatus = $this->serverClient->connect(
             $envData['PROFILE_ID'],
             $envData['common_name'],
             $envData['ifconfig_pool_remote_ip'],
             $envData['ifconfig_pool_remote_ip6'],
             $envData['time_unix']
         );
+
+        if (!$connectStatus['ok']) {
+            throw new ConnectionException($connectStatus['error'], $envData);
+        }
     }
 
     public function disconnect(array $envData)
     {
-        $this->logger->info(
-            json_encode($envData)
-        );
-
-        return $this->serverClient->disconnect(
+        $disconnectStatus = $this->serverClient->disconnect(
             $envData['PROFILE_ID'],
             $envData['common_name'],
             $envData['ifconfig_pool_remote_ip'],
@@ -64,5 +56,9 @@ class Connection
             $envData['bytes_received'] + $envData['bytes_sent'],
             $envData['time_unix'] + $envData['time_duration']
         );
+
+        if (!$disconnectStatus['ok']) {
+            throw new ConnectionException($disconnectStatus['error'], $envData);
+        }
     }
 }

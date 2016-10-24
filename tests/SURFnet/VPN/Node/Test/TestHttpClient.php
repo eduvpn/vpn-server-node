@@ -39,13 +39,13 @@ class TestHttpClient implements HttpClientInterface
         switch ($requestUri) {
             case 'connectionServerClient/connect':
                 if ('foo_bar' === $postData['common_name']) {
-                    return self::wrap('connect', true);
+                    return self::wrap('connect', ['ok' => true]);
                 }
 
-                return self::wrap('connect', false);
+                return self::wrap('connect', ['ok' => false, 'error' => 'error from vpn-server-api']);
 
             case 'connectionServerClient/disconnect':
-                return self::wrap('disconnect', true);
+                return self::wrap('disconnect', ['ok' => true]);
 
             case 'serverClient/verify_otp_key':
                 if ('123456' === $postData['otp_key']) {

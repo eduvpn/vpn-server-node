@@ -42,49 +42,47 @@ class ConnectionTest extends PHPUnit_Framework_TestCase
 
     public function testValidConnection()
     {
-        $this->assertTrue(
-            $this->connection->connect(
-                [
-                    'common_name' => 'foo_bar',
-                    'PROFILE_ID' => 'internet',
-                    'time_unix' => '12345678',
-                    'ifconfig_pool_remote_ip' => '10.0.42.0',
-                    'ifconfig_pool_remote_ip6' => 'fd00:4242:4242:4242::',
-                ]
-            )
+        $this->connection->connect(
+            [
+                'common_name' => 'foo_bar',
+                'PROFILE_ID' => 'internet',
+                'time_unix' => '12345678',
+                'ifconfig_pool_remote_ip' => '10.0.42.0',
+                'ifconfig_pool_remote_ip6' => 'fd00:4242:4242:4242::',
+            ]
         );
     }
 
+    /**
+     * @expectedException SURFnet\VPN\Node\Exception\ConnectionException
+     * @expectedExceptionMessage error from vpn-server-api
+     */
     public function testInvalidConnection()
     {
-        $this->assertFalse(
-            $this->connection->connect(
-                [
-                    'common_name' => 'foo_baz',
-                    'PROFILE_ID' => 'internet',
-                    'time_unix' => '12345678',
-                    'ifconfig_pool_remote_ip' => '10.0.42.0',
-                    'ifconfig_pool_remote_ip6' => 'fd00:4242:4242:4242::',
-                ]
-            )
+        $this->connection->connect(
+            [
+                'common_name' => 'foo_baz',
+                'PROFILE_ID' => 'internet',
+                'time_unix' => '12345678',
+                'ifconfig_pool_remote_ip' => '10.0.42.0',
+                'ifconfig_pool_remote_ip6' => 'fd00:4242:4242:4242::',
+            ]
         );
     }
 
     public function testDisconnect()
     {
-        $this->assertTrue(
-            $this->connection->disconnect(
-                [
-                    'common_name' => 'foo_bar',
-                    'PROFILE_ID' => 'acl2',
-                    'time_unix' => '12345678',
-                    'ifconfig_pool_remote_ip' => '10.0.42.0',
-                    'ifconfig_pool_remote_ip6' => 'fd00:4242:4242:4242::',
-                    'time_duration' => '3600',
-                    'bytes_sent' => '123456',
-                    'bytes_received' => '444444',
-                ]
-            )
+        $this->connection->disconnect(
+            [
+                'common_name' => 'foo_bar',
+                'PROFILE_ID' => 'acl2',
+                'time_unix' => '12345678',
+                'ifconfig_pool_remote_ip' => '10.0.42.0',
+                'ifconfig_pool_remote_ip6' => 'fd00:4242:4242:4242::',
+                'time_duration' => '3600',
+                'bytes_sent' => '123456',
+                'bytes_received' => '444444',
+            ]
         );
     }
 }
