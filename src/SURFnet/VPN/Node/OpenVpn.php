@@ -80,14 +80,18 @@ class OpenVpn
         ];
 
         for ($i = 0; $i < $processCount; ++$i) {
-            list($proto, $port, $local) = self::determineProtoPortLocal($profileConfig, $i, $managementIp);
+            list($proto, $port) = self::getProtoPortListen(
+                $profileConfig->v('processCount'),
+                $profileConfig->v('listen'),
+                $profileConfig->v('portShare')
+            )[$i];
 
             $processConfig['range'] = $splitRange[$i];
             $processConfig['range6'] = $splitRange6[$i];
             $processConfig['dev'] = sprintf('tun-%d-%d-%d', $instanceNumber, $profileConfig->v('profileNumber'), $i);
             $processConfig['proto'] = $proto;
             $processConfig['port'] = $port;
-            $processConfig['local'] = $local;
+            $processConfig['local'] = $profileConfig->v('listen');
             $processConfig['managementPort'] = 11940 + $i;
             $processConfig['configName'] = sprintf(
                 'server-%s-%s-%d.conf',
@@ -251,37 +255,48 @@ class OpenVpn
         ];
     }
 
-    private static function determineProtoPortLocal(ProfileConfig $profileConfig, $i, $managementIp)
+    public static function getVpnProto($listenAddress)
     {
-        $processCount = $profileConfig->v('processCount');
-        if ($profileConfig->v('dedicatedNode')) {
-            // we listen on all IPs, both IPv4 and IPv6
-            if (1 === $processCount || $i !== $processCount - 1) {
-                // UDP
-                $proto = 'udp6';
-                $port = 1194 + $i;
-                $local = '::';
-            } else {
-                // TCP
-                $proto = 'tcp6-server';
-                $port = 443;
-                $local = '::';
-            }
-        } else {
-            // not dedicated, we share with SNI Proxy, we listen on IPv4 only
-            if (1 === $processCount || $i !== $processCount - 1) {
-                // UDP
-                $proto = 'udp';
-                $port = 1194 + $i;
-                $local = $profileConfig->v('listen');
-            } else {
-                // TCP
-                $proto = 'tcp-server';
-                $port = 1194;
-                $local = $managementIp;
-            }
+        if (false !== strpos($listenAddress, ':')) {
+            return ['udp6', 'tcp6-server'];
         }
 
-        return [$proto, $port, $local];
+        return ['udp', 'tcp-server'];
+    }
+
+    public static function getProtoPortListen($processCount, $listenAddress, $portShare)
+    {
+        $vpnProto = self::getVpnProto($listenAddress);
+
+        switch ($processCount) {
+            case 1:
+                return [
+                    [$vpnProto[0], 1194],
+                ];
+            case 2:
+                return [
+                    [$vpnProto[0], 1194],
+                    [$vpnProto[1], $portShare ? 1194 : 443],
+                ];
+            case 4:
+            default:
+                return [
+                    [$vpnProto[0], 1194],
+                    [$vpnProto[0], 1195],
+                    [$vpnProto[1], 1194],
+                    [$vpnProto[1], $portShare ? 1195 : 443],
+                ];
+            case 8:
+                return [
+                    [$vpnProto[0], 1194],
+                    [$vpnProto[0], 1195],
+                    [$vpnProto[0], 1196],
+                    [$vpnProto[0], 1197],
+                    [$vpnProto[0], 1198],
+                    [$vpnProto[1], 1194],
+                    [$vpnProto[1], 1195],
+                    [$vpnProto[1], $portShare ? 1196 : 443],
+                ];
+        }
     }
 }
