@@ -30,7 +30,7 @@ class FirewallConfig extends Config
     {
         return [
             'inputChain' => [
-                'tcp' => ['22', '80', '443'],
+                'tcp' => ['22', '80', '443', '1194:1195'],
                 'udp' => ['1194:1201'],
                 'trustedInterfaces' => [],
             ],
