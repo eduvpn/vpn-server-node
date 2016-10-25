@@ -53,8 +53,8 @@ class Connection
             $envData['ifconfig_pool_remote_ip'],
             $envData['ifconfig_pool_remote_ip6'],
             $envData['time_unix'],
-            $envData['bytes_received'] + $envData['bytes_sent'],
-            $envData['time_unix'] + $envData['time_duration']
+            $envData['time_unix'] + $envData['time_duration'],
+            $envData['bytes_received'] + $envData['bytes_sent']
         );
 
         if (!$disconnectStatus['ok']) {
