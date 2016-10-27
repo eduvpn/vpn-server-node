@@ -22,7 +22,7 @@ use RuntimeException;
 
 class TestHttpClient implements HttpClientInterface
 {
-    public function get($requestUri)
+    public function get($requestUri, array $getData = [], array $requestHeaders = [])
     {
         switch ($requestUri) {
             case 'serverClient/has_otp_secret?user_id=foo':
@@ -34,7 +34,7 @@ class TestHttpClient implements HttpClientInterface
         }
     }
 
-    public function post($requestUri, array $postData)
+    public function post($requestUri, array $postData, array $requestHeaders = [])
     {
         switch ($requestUri) {
             case 'connectionServerClient/connect':
@@ -58,12 +58,15 @@ class TestHttpClient implements HttpClientInterface
         }
     }
 
-    private static function wrap($key, $response)
+    private static function wrap($key, $response, $statusCode = 200)
     {
         return [
-            'data' => [
-                $key => $response,
-            ],
+            $statusCode,
+            [
+                'data' => [
+                    $key => $response,
+                ],
+            ]
         ];
     }
 }

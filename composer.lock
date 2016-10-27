@@ -13,12 +13,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/eduvpn/vpn-lib-common.git",
-                "reference": "98fc98886f524b8dc8428eab3d6f72664c3b45c3"
+                "reference": "467fd653e89d846548e1018154b9d574cda8bdbe"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/98fc98886f524b8dc8428eab3d6f72664c3b45c3",
-                "reference": "98fc98886f524b8dc8428eab3d6f72664c3b45c3",
+                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/467fd653e89d846548e1018154b9d574cda8bdbe",
+                "reference": "467fd653e89d846548e1018154b9d574cda8bdbe",
                 "shasum": ""
             },
             "require": {
@@ -54,7 +54,7 @@
                 }
             ],
             "description": "Common VPN library",
-            "time": "2016-10-24 20:59:05"
+            "time": "2016-10-27 11:09:32"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -392,7 +392,7 @@
         },
         {
             "name": "symfony/intl",
-            "version": "v2.8.12",
+            "version": "v2.8.13",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/intl.git",
@@ -555,16 +555,16 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v2.8.12",
+            "version": "v2.8.13",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
-                "reference": "e7540734bad981fe59f8ef14b6fc194ae9df8d9c"
+                "reference": "396784cd06b91f3db576f248f2402d547a077787"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/e7540734bad981fe59f8ef14b6fc194ae9df8d9c",
-                "reference": "e7540734bad981fe59f8ef14b6fc194ae9df8d9c",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/396784cd06b91f3db576f248f2402d547a077787",
+                "reference": "396784cd06b91f3db576f248f2402d547a077787",
                 "shasum": ""
             },
             "require": {
@@ -600,7 +600,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2016-09-02 01:57:56"
+            "time": "2016-10-21 20:59:10"
         }
     ],
     "packages-dev": [],
