@@ -15,7 +15,7 @@
     "license": "AGPL-3.0",
     "name": "eduvpn/vpn-server-node",
     "require": {
-        "eduvpn/common": "dev-master",
+        "eduvpn/common": "^1.0",
         "ext-filter": "*",
         "ext-json": "*",
         "ext-mbstring": "*",

@@ -4,21 +4,21 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "7fd3d7d0daeba284f3cbc9c9c6efd019",
-    "content-hash": "d7486dbd71965af6b240cb13ac0c2d04",
+    "hash": "56bdd23c3fe05082908f171c45bd1868",
+    "content-hash": "fee7e0da1f2d9c16c3a82491c8cea03f",
     "packages": [
         {
             "name": "eduvpn/common",
-            "version": "dev-master",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/eduvpn/vpn-lib-common.git",
-                "reference": "467fd653e89d846548e1018154b9d574cda8bdbe"
+                "reference": "73649ee100aa589164ba0330ccbb64ef76dffc65"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/467fd653e89d846548e1018154b9d574cda8bdbe",
-                "reference": "467fd653e89d846548e1018154b9d574cda8bdbe",
+                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/73649ee100aa589164ba0330ccbb64ef76dffc65",
+                "reference": "73649ee100aa589164ba0330ccbb64ef76dffc65",
                 "shasum": ""
             },
             "require": {
@@ -33,7 +33,7 @@
                 "guzzlehttp/guzzle": "^5.3",
                 "php": ">= 5.4.0",
                 "psr/log": "^1.0",
-                "symfony/intl": "~2.3",
+                "symfony/intl": "~2.8",
                 "symfony/polyfill": "^1.2",
                 "symfony/yaml": "^2.8"
             },
@@ -54,7 +54,7 @@
                 }
             ],
             "description": "Common VPN library",
-            "time": "2016-10-27 11:09:32"
+            "time": "2016-11-08 13:37:44"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -253,16 +253,16 @@
         },
         {
             "name": "paragonie/random_compat",
-            "version": "v2.0.3",
+            "version": "v2.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paragonie/random_compat.git",
-                "reference": "c0125896dbb151380ab47e96c621741e79623beb"
+                "reference": "a9b97968bcde1c4de2a5ec6cbd06a0f6c919b46e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/c0125896dbb151380ab47e96c621741e79623beb",
-                "reference": "c0125896dbb151380ab47e96c621741e79623beb",
+                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/a9b97968bcde1c4de2a5ec6cbd06a0f6c919b46e",
+                "reference": "a9b97968bcde1c4de2a5ec6cbd06a0f6c919b46e",
                 "shasum": ""
             },
             "require": {
@@ -297,7 +297,7 @@
                 "pseudorandom",
                 "random"
             ],
-            "time": "2016-10-17 15:23:22"
+            "time": "2016-11-07 23:38:38"
         },
         {
             "name": "psr/log",
@@ -606,9 +606,7 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "eduvpn/common": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
