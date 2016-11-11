@@ -12,9 +12,9 @@ inputChain:
         - 1194:1195
     udp:
         - 1194:1201
-        # PeerVPN
-        #- 7000
+        # tinc
+        #- 655
 
     #trustedInterfaces:
-        # PeerVPN
-        #- tap0
+        # tinc
+        #- br0
