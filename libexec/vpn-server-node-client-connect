@@ -1,4 +1,4 @@
-#!/usr/bin/php
+#!/usr/bin/env php
 <?php
 /**
  *  Copyright (C) 2016 SURFnet.
@@ -18,9 +18,9 @@
  */
 require_once sprintf('%s/vendor/autoload.php', dirname(__DIR__));
 
-use SURFnet\VPN\Common\Logger;
 use SURFnet\VPN\Node\Connection;
 use SURFnet\VPN\Node\Exception\ConnectionException;
+use SURFnet\VPN\Common\Logger;
 use SURFnet\VPN\Common\Config;
 use SURFnet\VPN\Common\HttpClient\GuzzleHttpClient;
 use SURFnet\VPN\Common\HttpClient\ServerClient;
@@ -30,8 +30,8 @@ $logger = new Logger(
     basename($argv[0])
 );
 
+$envData = [];
 try {
-    $envData = [];
     $envKeys = [
         'INSTANCE_ID',
         'PROFILE_ID',
@@ -39,9 +39,6 @@ try {
         'time_unix',
         'ifconfig_pool_remote_ip',
         'ifconfig_pool_remote_ip6',
-        'bytes_received',
-        'bytes_sent',
-        'time_duration',
     ];
 
     // read environment variables
@@ -71,7 +68,7 @@ try {
     );
 
     $connection = new Connection($serverClient);
-    $connection->disconnect($envData);
+    $connection->connect($envData);
 } catch (ConnectionException $e) {
     $logger->info($e->getMessage(), $e->getEnvData());
     exit(1);

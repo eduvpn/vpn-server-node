@@ -15,6 +15,7 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 namespace SURFnet\VPN\Node;
 
 use SURFnet\VPN\Common\FileIO;
@@ -128,8 +129,8 @@ class OpenVpn
             'tls-cipher TLS-DHE-RSA-WITH-AES-128-GCM-SHA256:TLS-DHE-RSA-WITH-AES-256-GCM-SHA384:TLS-DHE-RSA-WITH-AES-256-CBC-SHA',
             'auth SHA256',
             'cipher AES-256-CBC',
-            'client-connect /usr/sbin/vpn-server-node-client-connect',
-            'client-disconnect /usr/sbin/vpn-server-node-client-disconnect',
+            'client-connect /usr/libexec/vpn-server-node-client-connect',
+            'client-disconnect /usr/libexec/vpn-server-node-client-disconnect',
             'push "comp-lzo no"',
             'push "explicit-exit-notify 3"',
             sprintf('ca %s/ca.crt', $tlsDir),
@@ -164,7 +165,7 @@ class OpenVpn
         }
 
         if ($profileConfig->v('twoFactor')) {
-            $serverConfig[] = 'auth-user-pass-verify /usr/sbin/vpn-server-node-verify-otp via-env';
+            $serverConfig[] = 'auth-user-pass-verify /usr/libexec/vpn-server-node-verify-otp via-env';
         }
 
         // Routes
