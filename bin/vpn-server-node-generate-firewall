@@ -31,6 +31,7 @@ try {
         'Generate firewall rules for all instances',
         [
             'install' => ['install the firewall', false, false],
+            'debian' => ['install the firewall for Debian iptables-persistent', false, false],
         ]
     );
 
@@ -76,9 +77,17 @@ try {
     $firewall = Firewall::getFirewall4($configList, $firewallConfig);
     $firewall6 = Firewall::getFirewall6($configList, $firewallConfig);
 
+    // determine file location for writing firewall data
+    $iptablesFile = '/etc/sysconfig/iptables';
+    $ip6tablesFile = '/etc/sysconfig/ip6tables';
+    if ($opt->e('debian')) {
+        $iptablesFile = '/etc/iptables/rules.v4';
+        $ip6tablesFile = '/etc/iptables/rules.v6';
+    }
+
     if ($opt->e('install')) {
-        FileIO::writeFile('/etc/sysconfig/iptables', $firewall, 0600);
-        FileIO::writeFile('/etc/sysconfig/ip6tables', $firewall6, 0600);
+        FileIO::writeFile($iptablesFile, $firewall, 0600);
+        FileIO::writeFile($ip6tablesFile, $firewall6, 0600);
     } else {
         echo '##########################################'.PHP_EOL;
         echo '# IPv4'.PHP_EOL;
