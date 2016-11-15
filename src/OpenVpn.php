@@ -70,9 +70,7 @@ class OpenVpn
         $splitRange = $range->split($processCount);
         $splitRange6 = $range6->split($processCount);
 
-        if ($profileConfig->e('managementIp')) {
-            $managementIp = $profileConfig->v('managementIp');
-        } else {
+        if ('auto' === $managementIp = $profileConfig->v('managementIp')) {
             $managementIp = sprintf('10.42.%d.%d', 100 + $instanceNumber, 100 + $profileConfig->v('profileNumber'));
         }
 
