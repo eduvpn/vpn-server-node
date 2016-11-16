@@ -15,6 +15,7 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 namespace SURFnet\VPN\Node;
 
 use SURFnet\VPN\Common\Config;
@@ -29,6 +30,9 @@ class FirewallConfig extends Config
     public static function defaultConfig()
     {
         return [
+            'instanceList' => [
+                'default',
+            ],
             'inputChain' => [
                 'tcp' => ['22', '80', '443', '1194:1195'],
                 'udp' => ['1194:1201'],

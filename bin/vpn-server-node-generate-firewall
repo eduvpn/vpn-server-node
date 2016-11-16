@@ -51,9 +51,10 @@ try {
     }
 
     // detect all instances
+    $instanceList = $firewallConfig->v('instanceList');
+
     $configList = [];
-    foreach (glob(sprintf('%s/*', $configDir), GLOB_ONLYDIR | GLOB_ERR) as $instanceDir) {
-        $instanceId = basename($instanceDir);
+    foreach ($instanceList as $instanceId) {
         $config = Config::fromFile(sprintf('%s/%s/config.yaml', $configDir, $instanceId));
 
         $serverClient = new ServerClient(
