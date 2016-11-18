@@ -33,7 +33,6 @@ try {
             'instance' => ['the instance', true, true],
             'profile' => ['the profile identifier', true, true],
             'generate' => ['generate a new certificate for the server', false, false],
-            'cn' => ['the CN of the certificate to generate', true, false],
         ]
     );
 
@@ -81,6 +80,12 @@ try {
     $o = new OpenVpn($vpnConfigDir, $vpnTlsDir);
     $o->writeProfile($instanceNumber, $instanceId, $profileId, $profileConfig);
     if ($generateCerts) {
+        // generate a CN based on date and profile, instance
+        $dateTime = new DateTime('now', new DateTimeZone('UTC'));
+        $dateString = $dateTime->format('YmdHis');
+
+        $cn = sprintf('%s.%s.%s', $dateString, $profileId, $instanceId);
+
         $caClient = new CaClient(
             new GuzzleHttpClient(
                 [
@@ -95,7 +100,7 @@ try {
             $config->v('apiProviders', 'vpn-ca-api', 'apiUri')
         );
         $dhSourceFile = sprintf('%s/config/dh.pem', dirname(__DIR__));
-        $o->generateKeys($caClient, $opt->v('cn'), $dhSourceFile);
+        $o->generateKeys($caClient, $cn, $dhSourceFile);
     }
 } catch (Exception $e) {
     echo sprintf('ERROR: %s', $e->getMessage()).PHP_EOL;
