@@ -15,6 +15,7 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 namespace SURFnet\VPN\Node;
 
 use SURFnet\VPN\Common\Config;
@@ -149,8 +150,14 @@ class Firewall
         foreach (array_keys($config->v('vpnProfiles')) as $profileId) {
             $profileConfig = new Config($config->v('vpnProfiles', $profileId));
             $profileNumber = $profileConfig->v('profileNumber');
-            if (6 === $inetFamily && !$profileConfig->v('forward6')) {
-                // IPv6 forwarding was disabled
+
+            if (4 === $inetFamily && $profileConfig->v('reject4')) {
+                // IPv4 forwarding is disabled
+                continue;
+            }
+
+            if (6 === $inetFamily && $profileConfig->v('reject6')) {
+                // IPv6 forwarding is disabled
                 continue;
             }
 
