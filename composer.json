@@ -14,6 +14,12 @@
     "description": "OpenVPN node controller",
     "license": "AGPL-3.0",
     "name": "eduvpn/vpn-server-node",
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/eduvpn/vpn-lib-common"
+        }
+    ],
     "require": {
         "eduvpn/common": "^1.0",
         "ext-filter": "*",
