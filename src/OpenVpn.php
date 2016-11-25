@@ -229,6 +229,11 @@ class OpenVpn
 
         $dnsEntries = [];
         foreach ($profileConfig->v('dns') as $dnsAddress) {
+            // also add DNS6 for OpenVPN >= 2.4beta2
+            if (false !== strpos($dnsAddress, ':')) {
+                $dnsEntries[] = sprintf('push "dhcp-option DNS6 %s"', $dnsAddress);
+                continue;
+            }
             $dnsEntries[] = sprintf('push "dhcp-option DNS %s"', $dnsAddress);
         }
 
