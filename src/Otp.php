@@ -45,14 +45,14 @@ class Otp
             $userId = self::getUserId($commonName);
 
             // user has OTP secret registered?
-            if (false === $this->serverClient->hasOtpSecret($userId)) {
+            if (false === $this->serverClient->hasTotpSecret($userId)) {
                 $this->logger->error('no OTP secret registered', $envData);
 
                 return false;
             }
 
             // verify the OTP key
-            if (false === $this->serverClient->verifyOtpKey($userId, $otpKey)) {
+            if (false === $this->serverClient->verifyTotpKey($userId, $otpKey)) {
                 $this->logger->error('invalid OTP key', $envData);
 
                 return false;

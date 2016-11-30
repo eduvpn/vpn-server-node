@@ -18,7 +18,6 @@
 
 namespace SURFnet\VPN\Node;
 
-use SURFnet\VPN\Common\Config;
 use SURFnet\VPN\Common\ProfileConfig;
 
 class Firewall
@@ -49,8 +48,8 @@ class Firewall
             ]
         );
         // add all instances
-        foreach ($configList as $config) {
-            $firewall = array_merge($firewall, self::getNat($config, $inetFamily));
+        foreach ($configList as $instanceConfig) {
+            $firewall = array_merge($firewall, self::getNat($instanceConfig, $inetFamily));
         }
         $firewall[] = 'COMMIT';
 
@@ -77,8 +76,8 @@ class Firewall
         );
 
         // add all instances
-        foreach ($configList as $config) {
-            $firewall = array_merge($firewall, self::getForwardChain($config, $inetFamily));
+        foreach ($configList as $instanceConfig) {
+            $firewall = array_merge($firewall, self::getForwardChain($instanceConfig, $inetFamily));
         }
         $firewall[] = sprintf('-A FORWARD -j REJECT --reject-with %s', 4 === $inetFamily ? 'icmp-host-prohibited' : 'icmp6-adm-prohibited');
         $firewall[] = 'COMMIT';
@@ -90,12 +89,12 @@ class Firewall
         return implode(PHP_EOL, $firewall).PHP_EOL;
     }
 
-    private static function getNat(Config $config, $inetFamily)
+    private static function getNat(array $instanceConfig, $inetFamily)
     {
         $nat = [];
 
-        foreach (array_keys($config->v('vpnProfiles')) as $profileId) {
-            $profileConfig = new ProfileConfig($config->v('vpnProfiles', $profileId));
+        foreach ($instanceConfig['profileList'] as $profileId => $profileData) {
+            $profileConfig = new ProfileConfig($profileData);
             if ($profileConfig->v('useNat')) {
                 if (4 === $inetFamily) {
                     // get the IPv4 range
@@ -143,12 +142,13 @@ class Firewall
         return $inputChain;
     }
 
-    private static function getForwardChain(Config $config, $inetFamily)
+    private static function getForwardChain(array $instanceConfig, $inetFamily)
     {
         $forwardChain = [];
 
-        foreach (array_keys($config->v('vpnProfiles')) as $profileId) {
-            $profileConfig = new Config($config->v('vpnProfiles', $profileId));
+        $instanceNumber = $instanceConfig['instanceNumber'];
+        foreach ($instanceConfig['profileList'] as $profileId => $profileData) {
+            $profileConfig = new ProfileConfig($profileData);
             $profileNumber = $profileConfig->v('profileNumber');
 
             if (4 === $inetFamily && $profileConfig->v('reject4')) {
@@ -168,27 +168,27 @@ class Firewall
                 // get the IPv6 range
                 $srcNet = $profileConfig->v('range6');
             }
-            $forwardChain[] = sprintf('-N vpn-%s-%s', $config->v('instanceNumber'), $profileNumber);
+            $forwardChain[] = sprintf('-N vpn-%s-%s', $instanceNumber, $profileNumber);
 
-            $forwardChain[] = sprintf('-A FORWARD -i tun-%s-%s+ -s %s -j vpn-%s-%s', $config->v('instanceNumber'), $profileNumber, $srcNet, $config->v('instanceNumber'), $profileNumber);
+            $forwardChain[] = sprintf('-A FORWARD -i tun-%s-%s+ -s %s -j vpn-%s-%s', $instanceNumber, $profileNumber, $srcNet, $instanceNumber, $profileNumber);
 
             // merge outgoing forwarding firewall rules to prevent certain
             // traffic
-            $forwardChain = array_merge($forwardChain, self::getForwardFirewall($config->v('instanceNumber'), $profileNumber, $profileConfig, $inetFamily));
+            $forwardChain = array_merge($forwardChain, self::getForwardFirewall($instanceNumber, $profileNumber, $profileConfig, $inetFamily));
 
             if ($profileConfig->v('clientToClient')) {
                 // allow client-to-client
-                $forwardChain[] = sprintf('-A vpn-%s-%s -o tun-%s-%s+ -d %s -j ACCEPT', $config->v('instanceNumber'), $profileNumber, $config->v('instanceNumber'), $profileNumber, $srcNet);
+                $forwardChain[] = sprintf('-A vpn-%s-%s -o tun-%s-%s+ -d %s -j ACCEPT', $instanceNumber, $profileNumber, $instanceNumber, $profileNumber, $srcNet);
             }
             if ($profileConfig->v('defaultGateway')) {
                 // allow traffic to all outgoing destinations
-                $forwardChain[] = sprintf('-A vpn-%s-%s -o %s -j ACCEPT', $config->v('instanceNumber'), $profileNumber, $profileConfig->v('extIf'), $srcNet);
+                $forwardChain[] = sprintf('-A vpn-%s-%s -o %s -j ACCEPT', $instanceNumber, $profileNumber, $profileConfig->v('extIf'), $srcNet);
             } else {
                 // only allow certain traffic to the external interface
                 foreach ($profileConfig->v('routes') as $route) {
                     $routeIp = new IP($route);
                     if ($inetFamily === $routeIp->getFamily()) {
-                        $forwardChain[] = sprintf('-A vpn-%s-%s -o %s -d %s -j ACCEPT', $config->v('instanceNumber'), $profileNumber, $profileConfig->v('extIf'), $route);
+                        $forwardChain[] = sprintf('-A vpn-%s-%s -o %s -d %s -j ACCEPT', $instanceNumber, $profileNumber, $profileConfig->v('extIf'), $route);
                     }
                 }
             }
@@ -197,7 +197,7 @@ class Firewall
         return $forwardChain;
     }
 
-    private static function getForwardFirewall($instanceNumber, $profileNumber, Config $profileConfig, $inetFamily)
+    private static function getForwardFirewall($instanceNumber, $profileNumber, ProfileConfig $profileConfig, $inetFamily)
     {
         $forwardFirewall = [];
         if ($profileConfig->v('blockSmb')) {

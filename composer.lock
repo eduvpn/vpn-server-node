@@ -4,21 +4,21 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "c981166191b15971d85b8d43ed46f48d",
-    "content-hash": "a49e88ed4bedce74ed1b4515fcb76ba0",
+    "hash": "e1f4dd756a3cf9fe6123416383eba732",
+    "content-hash": "9e8d60abdd32aa0c12d4c8c111917e53",
     "packages": [
         {
             "name": "eduvpn/common",
-            "version": "1.0.7",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/eduvpn/vpn-lib-common",
-                "reference": "c1fdf04b377aa248e82be92d9699aac5f41a2797"
+                "reference": "9a70b4f6a86617933d5984c0b33f03e235a4460e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/c1fdf04b377aa248e82be92d9699aac5f41a2797",
-                "reference": "c1fdf04b377aa248e82be92d9699aac5f41a2797",
+                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/9a70b4f6a86617933d5984c0b33f03e235a4460e",
+                "reference": "9a70b4f6a86617933d5984c0b33f03e235a4460e",
                 "shasum": ""
             },
             "require": {
@@ -43,18 +43,17 @@
                     "SURFnet\\VPN\\Common\\": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "AGPL-3.0"
             ],
             "authors": [
                 {
-                    "name": "François Kooman",
-                    "email": "fkooman@tuxed.net"
+                    "email": "fkooman@tuxed.net",
+                    "name": "François Kooman"
                 }
             ],
             "description": "Common VPN library",
-            "time": "2016-11-20 22:09:54"
+            "time": "2016-11-30 10:55:32"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -608,7 +607,9 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "eduvpn/common": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

@@ -1,12 +1,8 @@
 # API providers & credentials for servers this service is connecting to
 apiProviders:
-    vpn-ca-api:
-        userName: vpn-server-node
-        userPass: aabbcc
-        apiUri: 'http://localhost/vpn-ca-api/api.php' 
     vpn-server-api:
         userName: vpn-server-node
-        userPass: ccbbaa 
+        userPass: XXX-vpn-server-node/vpn-server-api-XXX 
         apiUri: 'http://localhost/vpn-server-api/api.php'
 
 # Override the user/group under which OpenVPN will run, on CentOS/Fedora this 

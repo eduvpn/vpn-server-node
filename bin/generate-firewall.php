@@ -18,13 +18,13 @@
  */
 require_once sprintf('%s/vendor/autoload.php', dirname(__DIR__));
 
-use SURFnet\VPN\Node\Firewall;
-use SURFnet\VPN\Node\FirewallConfig;
+use SURFnet\VPN\Common\CliParser;
 use SURFnet\VPN\Common\Config;
 use SURFnet\VPN\Common\FileIO;
-use SURFnet\VPN\Common\CliParser;
 use SURFnet\VPN\Common\HttpClient\GuzzleHttpClient;
 use SURFnet\VPN\Common\HttpClient\ServerClient;
+use SURFnet\VPN\Node\Firewall;
+use SURFnet\VPN\Node\FirewallConfig;
 
 try {
     $p = new CliParser(
@@ -71,8 +71,10 @@ try {
             $config->v('apiProviders', 'vpn-server-api', 'apiUri')
         );
 
-        $instanceConfig = $serverClient->instanceConfig();
-        $configList[$instanceId] = new Config($instanceConfig);
+        $instanceNumber = $serverClient->instanceNumber();
+        $profileList = $serverClient->profileList();
+
+        $configList[] = ['instanceNumber' => $instanceNumber, 'profileList' => $profileList];
     }
 
     $firewall = Firewall::getFirewall4($configList, $firewallConfig);

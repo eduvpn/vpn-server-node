@@ -20,7 +20,7 @@ namespace SURFnet\VPN\Node;
 
 use RuntimeException;
 use SURFnet\VPN\Common\FileIO;
-use SURFnet\VPN\Common\HttpClient\CaClient;
+use SURFnet\VPN\Common\HttpClient\ServerClient;
 use SURFnet\VPN\Common\ProfileConfig;
 
 class OpenVpn
@@ -39,14 +39,14 @@ class OpenVpn
         $this->vpnTlsDir = $vpnTlsDir;
     }
 
-    public function generateKeys(CaClient $caClient, $commonName, $dhSourceFile)
+    public function generateKeys(ServerClient $serverClient, $commonName, $dhSourceFile)
     {
-        $certData = $caClient->addServerCertificate($commonName);
+        $certData = $serverClient->addServerCertificate($commonName);
 
         $certFileMapping = [
             'ca' => sprintf('%s/ca.crt', $this->vpnTlsDir),
-            'cert' => sprintf('%s/server.crt', $this->vpnTlsDir),
-            'key' => sprintf('%s/server.key', $this->vpnTlsDir),
+            'certificate' => sprintf('%s/server.crt', $this->vpnTlsDir),
+            'private_key' => sprintf('%s/server.key', $this->vpnTlsDir),
             'ta' => sprintf('%s/ta.key', $this->vpnTlsDir),
         ];
 

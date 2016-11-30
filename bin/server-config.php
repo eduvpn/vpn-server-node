@@ -18,13 +18,12 @@
  */
 require_once sprintf('%s/vendor/autoload.php', dirname(__DIR__));
 
-use SURFnet\VPN\Common\Config;
-use SURFnet\VPN\Node\OpenVpn;
 use SURFnet\VPN\Common\CliParser;
-use SURFnet\VPN\Common\ProfileConfig;
+use SURFnet\VPN\Common\Config;
 use SURFnet\VPN\Common\HttpClient\GuzzleHttpClient;
-use SURFnet\VPN\Common\HttpClient\CaClient;
 use SURFnet\VPN\Common\HttpClient\ServerClient;
+use SURFnet\VPN\Common\ProfileConfig;
+use SURFnet\VPN\Node\OpenVpn;
 
 try {
     $p = new CliParser(
@@ -69,10 +68,10 @@ try {
         $config->v('apiProviders', 'vpn-server-api', 'apiUri')
     );
 
-    $instanceConfig = $serverClient->instanceConfig();
-    $instanceNumber = $instanceConfig['instanceNumber'];
+    $instanceNumber = $serverClient->instanceNumber();
+    $profileList = $serverClient->profileList();
+    $profileConfigData = $profileList[$profileId];
 
-    $profileConfigData = $serverClient->serverProfile($profileId);
     $profileConfigData['_user'] = $vpnUser;
     $profileConfigData['_group'] = $vpnGroup;
     $profileConfig = new ProfileConfig($profileConfigData);
@@ -86,21 +85,21 @@ try {
 
         $cn = sprintf('%s.%s.%s', $dateString, $profileId, $instanceId);
 
-        $caClient = new CaClient(
+        $serverClient = new ServerClient(
             new GuzzleHttpClient(
                 [
                     'defaults' => [
                         'auth' => [
-                            $config->v('apiProviders', 'vpn-ca-api', 'userName'),
-                            $config->v('apiProviders', 'vpn-ca-api', 'userPass'),
+                            $config->v('apiProviders', 'vpn-server-api', 'userName'),
+                            $config->v('apiProviders', 'vpn-server-api', 'userPass'),
                         ],
                     ],
                 ]
             ),
-            $config->v('apiProviders', 'vpn-ca-api', 'apiUri')
+            $config->v('apiProviders', 'vpn-server-api', 'apiUri')
         );
         $dhSourceFile = sprintf('%s/config/dh.pem', dirname(__DIR__));
-        $o->generateKeys($caClient, $cn, $dhSourceFile);
+        $o->generateKeys($serverClient, $cn, $dhSourceFile);
     }
 } catch (Exception $e) {
     echo sprintf('ERROR: %s', $e->getMessage()).PHP_EOL;
