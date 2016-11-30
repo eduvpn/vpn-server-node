@@ -18,25 +18,27 @@
  */
 require_once sprintf('%s/vendor/autoload.php', dirname(__DIR__));
 
-use SURFnet\VPN\Common\Logger;
 use SURFnet\VPN\Common\Config;
+use SURFnet\VPN\Common\Http\InputValidation;
 use SURFnet\VPN\Common\HttpClient\GuzzleHttpClient;
 use SURFnet\VPN\Common\HttpClient\ServerClient;
-use SURFnet\VPN\Node\Otp;
-use SURFnet\VPN\Node\InputValidation;
+use SURFnet\VPN\Common\Logger;
+use SURFnet\VPN\Node\Connection;
+use SURFnet\VPN\Node\Exception\ConnectionException;
 
 $logger = new Logger(
     basename($argv[0])
 );
 
+$envData = [];
 try {
-    $envData = [];
     $envKeys = [
         'INSTANCE_ID',
         'PROFILE_ID',
         'common_name',
-        'username',
-        'password',
+        'time_unix',
+        'ifconfig_pool_remote_ip',
+        'ifconfig_pool_remote_ip6',
     ];
 
     // read environment variables
@@ -65,10 +67,11 @@ try {
         $config->v('apiProviders', 'vpn-server-api', 'apiUri')
     );
 
-    $otp = new Otp($logger, $serverClient);
-    if (false === $otp->verify($envData)) {
-        exit(1);
-    }
+    $connection = new Connection($serverClient);
+    $connection->connect($envData);
+} catch (ConnectionException $e) {
+    $logger->info($e->getMessage(), $e->getEnvData());
+    exit(1);
 } catch (Exception $e) {
     $logger->error($e->getMessage());
     exit(1);

@@ -19,8 +19,9 @@
 namespace SURFnet\VPN\Node;
 
 use Psr\Log\LoggerInterface;
+use SURFnet\VPN\Common\Http\Exception\HttpException;
+use SURFnet\VPN\Common\Http\InputValidation;
 use SURFnet\VPN\Common\HttpClient\ServerClient;
-use SURFnet\VPN\Node\Exception\InputValidationException;
 
 class Otp
 {
@@ -39,21 +40,15 @@ class Otp
     public function verify(array $envData)
     {
         try {
-            InputValidation::userName($envData['username']);
+            $userName = InputValidation::userName($envData['username']);
             $commonName = InputValidation::commonName($envData['common_name']);
-            $otpKey = InputValidation::otpKey($envData['password']);
-            $userId = self::getUserId($commonName);
+            $totpKey = InputValidation::totpKey($envData['password']);
 
-            // user has OTP secret registered?
-            if (false === $this->serverClient->hasTotpSecret($userId)) {
-                $this->logger->error('no OTP secret registered', $envData);
-
-                return false;
-            }
-
-            // verify the OTP key
-            if (false === $this->serverClient->verifyTotpKey($userId, $otpKey)) {
-                $this->logger->error('invalid OTP key', $envData);
+            // verify OTP
+            // XXX make sure it actually checks the correct stuff, it probably
+            // gets array with ok=>true/false instead of direct true/false
+            if (false === $this->serverClient->verifyOtp($commonName, $userName, $totpKey)) {
+                $this->logger->error('OTP verification failed', $envData);
 
                 return false;
             }
@@ -61,19 +56,12 @@ class Otp
             $this->logger->info('OTP verified', $envData);
 
             return true;
-        } catch (InputValidationException $e) {
+        } catch (HttpException $e) {
+            // HttpException here is a bit ugly, as we do not get the data
+            // via HTTP as in the other VPN modules...
             $this->logger->error($e->getMessage(), $envData);
 
             return false;
         }
-    }
-
-    private static function getUserId($commonName)
-    {
-        // XXX share this with "Connection" class and possibly others
-
-        // return the part before the first underscore, it is already validated
-        // so we can be sure this is fine
-        return substr($commonName, 0, strpos($commonName, '_'));
     }
 }

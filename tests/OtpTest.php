@@ -47,20 +47,7 @@ class OtpTest extends PHPUnit_Framework_TestCase
             $this->otp->verify(
                 [
                     'username' => 'totp',
-                    'common_name' => 'foo_bar',
-                    'password' => '123456',
-                ]
-            )
-        );
-    }
-
-    public function testNoOtpSecret()
-    {
-        $this->assertFalse(
-            $this->otp->verify(
-                [
-                    'username' => 'totp',
-                    'common_name' => 'bar_foo',
+                    'common_name' => '12345678901234567890123456789012',
                     'password' => '123456',
                 ]
             )
@@ -73,7 +60,7 @@ class OtpTest extends PHPUnit_Framework_TestCase
             $this->otp->verify(
                 [
                     'username' => 'totp',
-                    'common_name' => 'foo_bar',
+                    'common_name' => '12345678901234567890123456789012',
                     'password' => '654321',
                 ]
             )
@@ -86,7 +73,7 @@ class OtpTest extends PHPUnit_Framework_TestCase
             $this->otp->verify(
                 [
                     'username' => 'totp',
-                    'common_name' => 'foo_bar',
+                    'common_name' => '12345678901234567890123456789012',
                     'password' => '123',
                 ]
             )
