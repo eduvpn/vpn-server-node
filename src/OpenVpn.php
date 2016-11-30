@@ -18,10 +18,10 @@
 
 namespace SURFnet\VPN\Node;
 
-use SURFnet\VPN\Common\FileIO;
-use SURFnet\VPN\Common\ProfileConfig;
 use RuntimeException;
+use SURFnet\VPN\Common\FileIO;
 use SURFnet\VPN\Common\HttpClient\CaClient;
+use SURFnet\VPN\Common\ProfileConfig;
 
 class OpenVpn
 {
