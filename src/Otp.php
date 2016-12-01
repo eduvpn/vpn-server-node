@@ -19,7 +19,6 @@
 namespace SURFnet\VPN\Node;
 
 use Psr\Log\LoggerInterface;
-use SURFnet\VPN\Common\Http\Exception\InputValidationException;
 use SURFnet\VPN\Common\Http\InputValidation;
 use SURFnet\VPN\Common\HttpClient\ServerClient;
 
@@ -39,27 +38,10 @@ class Otp
 
     public function verify(array $envData)
     {
-        try {
-            $userName = InputValidation::userName($envData['username']);
-            $commonName = InputValidation::commonName($envData['common_name']);
-            $totpKey = InputValidation::totpKey($envData['password']);
+        $otpType = InputValidation::otpType($envData['username']);
+        $commonName = InputValidation::commonName($envData['common_name']);
+        $otpKey = InputValidation::otpKey($envData['password']);
 
-            // verify OTP
-            // XXX make sure it actually checks the correct stuff, it probably
-            // gets array with ok=>true/false instead of direct true/false
-            if (false === $this->serverClient->verifyOtp($commonName, $userName, $totpKey)) {
-                $this->logger->error('OTP verification failed', $envData);
-
-                return false;
-            }
-
-            $this->logger->info('OTP verified', $envData);
-
-            return true;
-        } catch (InputValidationException $e) {
-            $this->logger->error($e->getMessage(), $envData);
-
-            return false;
-        }
+        $this->serverClient->verifyOtp($commonName, $otpType, $otpKey);
     }
 }

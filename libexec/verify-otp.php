@@ -66,9 +66,10 @@ try {
     );
 
     $otp = new Otp($logger, $serverClient);
-    if (false === $otp->verify($envData)) {
-        exit(1);
-    }
+    $otp->verify($envData);
+} catch (ApiException $e) {
+    $logger->warning($e->getMessage());
+    exit(1);
 } catch (Exception $e) {
     $logger->error($e->getMessage());
     exit(1);

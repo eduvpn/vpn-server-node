@@ -55,8 +55,8 @@ class ConnectionTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException SURFnet\VPN\Node\Exception\ConnectionException
-     * @expectedExceptionMessage error from vpn-server-api
+     * @expectedException SURFnet\VPN\Common\HttpClient\Exception\ApiException
+     * @expectedExceptionMessage error message
      */
     public function testInvalidConnection()
     {

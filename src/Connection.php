@@ -19,7 +19,6 @@
 namespace SURFnet\VPN\Node;
 
 use SURFnet\VPN\Common\HttpClient\ServerClient;
-use SURFnet\VPN\Node\Exception\ConnectionException;
 
 class Connection
 {
@@ -33,22 +32,18 @@ class Connection
 
     public function connect(array $envData)
     {
-        $connectStatus = $this->serverClient->connect(
+        $this->serverClient->connect(
             $envData['PROFILE_ID'],
             $envData['common_name'],
             $envData['ifconfig_pool_remote_ip'],
             $envData['ifconfig_pool_remote_ip6'],
             $envData['time_unix']
         );
-
-        if (!$connectStatus['ok']) {
-            throw new ConnectionException($connectStatus['error'], $envData);
-        }
     }
 
     public function disconnect(array $envData)
     {
-        $disconnectStatus = $this->serverClient->disconnect(
+        $this->serverClient->disconnect(
             $envData['PROFILE_ID'],
             $envData['common_name'],
             $envData['ifconfig_pool_remote_ip'],
@@ -57,9 +52,5 @@ class Connection
             $envData['time_unix'] + $envData['time_duration'],
             $envData['bytes_received'] + $envData['bytes_sent']
         );
-
-        if (!$disconnectStatus['ok']) {
-            throw new ConnectionException($disconnectStatus['error'], $envData);
-        }
     }
 }

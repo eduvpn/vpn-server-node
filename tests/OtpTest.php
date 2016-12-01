@@ -36,47 +36,34 @@ class OtpTest extends PHPUnit_Framework_TestCase
             new NullLogger(),
             new ServerClient(
                 new TestHttpClient(),
-                'serverClient'
+                'otpServerClient'
             )
         );
     }
 
     public function testValidOtp()
     {
-        $this->assertTrue(
-            $this->otp->verify(
-                [
-                    'username' => 'totp',
-                    'common_name' => '12345678901234567890123456789012',
-                    'password' => '123456',
-                ]
-            )
+        $this->otp->verify(
+            [
+                'username' => 'totp',
+                'common_name' => '12345678901234567890123456789012',
+                'password' => '123456',
+            ]
         );
     }
 
+    /**
+     * @expectedException SURFnet\VPN\Common\HttpClient\Exception\ApiException
+     * @expectedExceptionMessage invalid OTP key
+     */
     public function testNoInvalidOtpKey()
     {
-        $this->assertFalse(
-            $this->otp->verify(
-                [
-                    'username' => 'totp',
-                    'common_name' => '12345678901234567890123456789012',
-                    'password' => '654321',
-                ]
-            )
-        );
-    }
-
-    public function testInvalidOtpPattern()
-    {
-        $this->assertFalse(
-            $this->otp->verify(
-                [
-                    'username' => 'totp',
-                    'common_name' => '12345678901234567890123456789012',
-                    'password' => '123',
-                ]
-            )
+        $this->otp->verify(
+            [
+                'username' => 'totp',
+                'common_name' => '12345678901234567890123456789012',
+                'password' => '654321',
+            ]
         );
     }
 }

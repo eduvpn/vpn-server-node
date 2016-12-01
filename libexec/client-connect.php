@@ -24,7 +24,6 @@ use SURFnet\VPN\Common\HttpClient\GuzzleHttpClient;
 use SURFnet\VPN\Common\HttpClient\ServerClient;
 use SURFnet\VPN\Common\Logger;
 use SURFnet\VPN\Node\Connection;
-use SURFnet\VPN\Node\Exception\ConnectionException;
 
 $logger = new Logger(
     basename($argv[0])
@@ -69,8 +68,8 @@ try {
 
     $connection = new Connection($serverClient);
     $connection->connect($envData);
-} catch (ConnectionException $e) {
-    $logger->info($e->getMessage(), $e->getEnvData());
+} catch (ApiException $e) {
+    $logger->warning($e->getMessage());
     exit(1);
 } catch (Exception $e) {
     $logger->error($e->getMessage());

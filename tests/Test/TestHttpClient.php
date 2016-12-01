@@ -36,26 +36,44 @@ class TestHttpClient implements HttpClientInterface
         switch ($requestUri) {
             case 'connectionServerClient/connect':
                 if ('foo_bar' === $postData['common_name']) {
-                    return self::wrap('connect', ['ok' => true]);
+                    return self::wrap('connect');
                 }
 
-                return self::wrap('connect', ['ok' => false, 'error' => 'error from vpn-server-api']);
+                return self::wrapError('connect', 'error message');
             case 'connectionServerClient/disconnect':
-                return self::wrap('disconnect', ['ok' => true]);
-            case 'serverClient/verify_otp':
-                return self::wrap('verify_otp', true);
+                return self::wrap('disconnect');
+
+            case 'otpServerClient/verify_otp':
+                if ('123456' === $postData['otp_key']) {
+                    return self::wrap('verify_otp');
+                }
+
+                return self::wrapError('verify_otp', 'invalid OTP key');
             default:
                 throw new RuntimeException(sprintf('unexpected requestUri "%s"', $requestUri));
         }
     }
 
-    private static function wrap($key, $response, $statusCode = 200)
+    private static function wrap($key, $statusCode = 200)
     {
         return [
             $statusCode,
             [
-                'data' => [
-                    $key => $response,
+                $key => [
+                    'ok' => true,
+                ],
+            ],
+        ];
+    }
+
+    private static function wrapError($key, $errorMessage, $statusCode = 200)
+    {
+        return [
+            $statusCode,
+            [
+                $key => [
+                    'ok' => false,
+                    'error' => $errorMessage,
                 ],
             ],
         ];
