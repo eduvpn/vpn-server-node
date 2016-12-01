@@ -19,7 +19,7 @@
 namespace SURFnet\VPN\Node;
 
 use Psr\Log\LoggerInterface;
-use SURFnet\VPN\Common\Http\Exception\HttpException;
+use SURFnet\VPN\Common\Http\Exception\InputValidationException;
 use SURFnet\VPN\Common\Http\InputValidation;
 use SURFnet\VPN\Common\HttpClient\ServerClient;
 
@@ -56,9 +56,7 @@ class Otp
             $this->logger->info('OTP verified', $envData);
 
             return true;
-        } catch (HttpException $e) {
-            // HttpException here is a bit ugly, as we do not get the data
-            // via HTTP as in the other VPN modules...
+        } catch (InputValidationException $e) {
             $this->logger->error($e->getMessage(), $envData);
 
             return false;
