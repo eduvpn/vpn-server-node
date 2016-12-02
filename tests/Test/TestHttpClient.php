@@ -44,7 +44,7 @@ class TestHttpClient implements HttpClientInterface
                 return self::wrap('disconnect');
 
             case 'otpServerClient/verify_otp':
-                if ('123456' === $postData['otp_key']) {
+                if ('123456' === $postData['totp_key']) {
                     return self::wrap('verify_otp');
                 }
 
