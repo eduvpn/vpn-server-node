@@ -4,6 +4,7 @@ return [
     'directory_list' => [
         'src',
         'bin',
+        'libexec',
         'vendor/eduvpn/common',
         'vendor/psr/log',
     ],
