@@ -68,8 +68,8 @@ try {
         $config->v('apiProviders', 'vpn-server-api', 'apiUri')
     );
 
-    $instanceNumber = $serverClient->instanceNumber();
-    $profileList = $serverClient->profileList();
+    $instanceNumber = $serverClient->getInstanceNumber();
+    $profileList = $serverClient->getProfileList();
     $profileConfigData = $profileList[$profileId];
 
     $profileConfigData['_user'] = $vpnUser;

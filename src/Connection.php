@@ -32,25 +32,29 @@ class Connection
 
     public function connect(array $envData)
     {
-        $this->serverClient->connect(
-            $envData['PROFILE_ID'],
-            $envData['common_name'],
-            $envData['ifconfig_pool_remote_ip'],
-            $envData['ifconfig_pool_remote_ip6'],
-            $envData['time_unix']
+        $this->serverClient->postConnect(
+            [
+                'profile_id' => $envData['PROFILE_ID'],
+                'common_name' => $envData['common_name'],
+                'ip4' => $envData['ifconfig_pool_remote_ip'],
+                'ip6' => $envData['ifconfig_pool_remote_ip6'],
+                'connected_at' => $envData['time_unix'],
+            ]
         );
     }
 
     public function disconnect(array $envData)
     {
-        $this->serverClient->disconnect(
-            $envData['PROFILE_ID'],
-            $envData['common_name'],
-            $envData['ifconfig_pool_remote_ip'],
-            $envData['ifconfig_pool_remote_ip6'],
-            $envData['time_unix'],
-            $envData['time_unix'] + $envData['time_duration'],
-            $envData['bytes_received'] + $envData['bytes_sent']
+        $this->serverClient->postDisconnect(
+            [
+                'profile_id' => $envData['PROFILE_ID'],
+                'common_name' => $envData['common_name'],
+                'ip4' => $envData['ifconfig_pool_remote_ip'],
+                'ip6' => $envData['ifconfig_pool_remote_ip6'],
+                'connected_at' => $envData['time_unix'],
+                'disconnected_at' => $envData['time_unix'] + $envData['time_duration'],
+                'bytes_transferred' => $envData['bytes_received'] + $envData['bytes_sent'],
+            ]
         );
     }
 }

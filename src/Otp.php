@@ -42,6 +42,6 @@ class Otp
         $commonName = InputValidation::commonName($envData['common_name']);
         $otpKey = InputValidation::totpKey($envData['password']);
 
-        $this->serverClient->verifyOtp($commonName, $otpType, $otpKey);
+        $this->serverClient->postVerifyOtp(['common_name' => $commonName, 'otp_type' => $otpType, 'totp_key' => $otpKey]);
     }
 }
