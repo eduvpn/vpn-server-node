@@ -29,7 +29,7 @@ try {
     $p = new CliParser(
         'Generate VPN server configuration for an instance',
         [
-            'instance' => ['the instance', true, true],
+            'instance' => ['the VPN instance', true, false],
             'profile' => ['the profile identifier', true, true],
             'generate' => ['generate a new certificate for the server', false, false],
         ]
@@ -41,7 +41,8 @@ try {
         exit(0);
     }
 
-    $instanceId = $opt->v('instance');
+    $instanceId = $opt->e('instance') ? $opt->v('instance') : 'default';
+
     $profileId = $opt->v('profile');
     $generateCerts = $opt->e('generate');
 
