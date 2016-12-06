@@ -103,6 +103,51 @@ class OpenVpn
         }
     }
 
+    public static function getVpnProto($listenAddress)
+    {
+        if (false !== strpos($listenAddress, ':')) {
+            return ['udp6', 'tcp6-server'];
+        }
+
+        return ['udp', 'tcp-server'];
+    }
+
+    public static function getProtoPortListen($processCount, $listenAddress, $portShare)
+    {
+        $vpnProto = self::getVpnProto($listenAddress);
+
+        switch ($processCount) {
+            case 1:
+                return [
+                    [$vpnProto[0], 1194],
+                ];
+            case 2:
+                return [
+                    [$vpnProto[0], 1194],
+                    [$vpnProto[1], $portShare ? 1194 : 443],
+                ];
+            case 4:
+            default:
+                return [
+                    [$vpnProto[0], 1194],
+                    [$vpnProto[0], 1195],
+                    [$vpnProto[1], 1194],
+                    [$vpnProto[1], $portShare ? 1195 : 443],
+                ];
+            case 8:
+                return [
+                    [$vpnProto[0], 1194],
+                    [$vpnProto[0], 1195],
+                    [$vpnProto[0], 1196],
+                    [$vpnProto[0], 1197],
+                    [$vpnProto[0], 1198],
+                    [$vpnProto[1], 1194],
+                    [$vpnProto[1], 1195],
+                    [$vpnProto[1], $portShare ? 1196 : 443],
+                ];
+        }
+    }
+
     private function writeProcess($instanceId, $profileId, ProfileConfig $profileConfig, array $processConfig)
     {
         $tlsDir = sprintf('tls/%s/%s', $instanceId, $profileId);
@@ -257,50 +302,5 @@ class OpenVpn
             sprintf('push "route %s %s"', $rangeIp->getAddress(), $rangeIp->getNetmask()),
             sprintf('push "route-ipv6 %s"', $range6Ip->getAddressPrefix()),
         ];
-    }
-
-    public static function getVpnProto($listenAddress)
-    {
-        if (false !== strpos($listenAddress, ':')) {
-            return ['udp6', 'tcp6-server'];
-        }
-
-        return ['udp', 'tcp-server'];
-    }
-
-    public static function getProtoPortListen($processCount, $listenAddress, $portShare)
-    {
-        $vpnProto = self::getVpnProto($listenAddress);
-
-        switch ($processCount) {
-            case 1:
-                return [
-                    [$vpnProto[0], 1194],
-                ];
-            case 2:
-                return [
-                    [$vpnProto[0], 1194],
-                    [$vpnProto[1], $portShare ? 1194 : 443],
-                ];
-            case 4:
-            default:
-                return [
-                    [$vpnProto[0], 1194],
-                    [$vpnProto[0], 1195],
-                    [$vpnProto[1], 1194],
-                    [$vpnProto[1], $portShare ? 1195 : 443],
-                ];
-            case 8:
-                return [
-                    [$vpnProto[0], 1194],
-                    [$vpnProto[0], 1195],
-                    [$vpnProto[0], 1196],
-                    [$vpnProto[0], 1197],
-                    [$vpnProto[0], 1198],
-                    [$vpnProto[1], 1194],
-                    [$vpnProto[1], 1195],
-                    [$vpnProto[1], $portShare ? 1196 : 443],
-                ];
-        }
     }
 }

@@ -73,6 +73,11 @@ class IP
         $this->ipFamily = $is6 ? 6 : 4;
     }
 
+    public function __toString()
+    {
+        return $this->getAddressPrefix();
+    }
+
     public function getAddress()
     {
         return $this->ipAddress;
@@ -188,11 +193,6 @@ class IP
         }
 
         return $splitRanges;
-    }
-
-    public function __toString()
-    {
-        return $this->getAddressPrefix();
     }
 
     private function requireIPv4()

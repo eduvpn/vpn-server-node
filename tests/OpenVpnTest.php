@@ -191,7 +191,6 @@ class OpenVpnTest extends PHPUnit_Framework_TestCase
                 ['tcp6-server', 1194],
                 ['tcp6-server', 1195],
                 ['tcp6-server', 1196],
-
             ],
             OpenVpn::getProtoPortListen(8, '::', true)
         );
