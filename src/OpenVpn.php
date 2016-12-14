@@ -41,7 +41,7 @@ class OpenVpn
 
     public function generateKeys(ServerClient $serverClient, $commonName, $dhSourceFile)
     {
-        $certData = $serverClient->postAddServerCertificate(['common_name' => $commonName]);
+        $certData = $serverClient->post('add_server_certificate', ['common_name' => $commonName]);
 
         $certFileMapping = [
             'ca' => sprintf('%s/ca.crt', $this->vpnTlsDir),

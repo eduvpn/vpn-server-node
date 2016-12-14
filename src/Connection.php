@@ -32,7 +32,8 @@ class Connection
 
     public function connect(array $envData)
     {
-        $this->serverClient->postConnect(
+        $this->serverClient->post(
+            'connect',
             [
                 'profile_id' => $envData['PROFILE_ID'],
                 'common_name' => $envData['common_name'],
@@ -45,7 +46,8 @@ class Connection
 
     public function disconnect(array $envData)
     {
-        $this->serverClient->postDisconnect(
+        $this->serverClient->post(
+            'disconnect',
             [
                 'profile_id' => $envData['PROFILE_ID'],
                 'common_name' => $envData['common_name'],

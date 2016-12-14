@@ -71,8 +71,8 @@ try {
             $config->v('apiProviders', 'vpn-server-api', 'apiUri')
         );
 
-        $instanceNumber = $serverClient->getInstanceNumber();
-        $profileList = $serverClient->getProfileList();
+        $instanceNumber = $serverClient->get('instance_number');
+        $profileList = $serverClient->get('profile_list');
 
         $configList[] = ['instanceNumber' => $instanceNumber, 'profileList' => $profileList];
     }
