@@ -60,13 +60,13 @@ try {
             [
                 'defaults' => [
                     'auth' => [
-                        $config->v('apiProviders', 'vpn-server-api', 'userName'),
-                        $config->v('apiProviders', 'vpn-server-api', 'userPass'),
+                        $config->v('apiUser'),
+                        $config->v('apiPass'),
                     ],
                 ],
             ]
         ),
-        $config->v('apiProviders', 'vpn-server-api', 'apiUri')
+        $config->v('apiUri')
     );
 
     $instanceNumber = $serverClient->get('instance_number');
@@ -83,22 +83,7 @@ try {
         // generate a CN based on date and profile, instance
         $dateTime = new DateTime('now', new DateTimeZone('UTC'));
         $dateString = $dateTime->format('YmdHis');
-
         $cn = sprintf('%s.%s.%s', $dateString, $profileId, $instanceId);
-
-        $serverClient = new ServerClient(
-            new GuzzleHttpClient(
-                [
-                    'defaults' => [
-                        'auth' => [
-                            $config->v('apiProviders', 'vpn-server-api', 'userName'),
-                            $config->v('apiProviders', 'vpn-server-api', 'userPass'),
-                        ],
-                    ],
-                ]
-            ),
-            $config->v('apiProviders', 'vpn-server-api', 'apiUri')
-        );
         $dhSourceFile = sprintf('%s/config/dh.pem', dirname(__DIR__));
         $o->generateKeys($serverClient, $cn, $dhSourceFile);
     }
