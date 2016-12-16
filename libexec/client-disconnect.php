@@ -23,6 +23,7 @@ use SURFnet\VPN\Common\Http\InputValidation;
 use SURFnet\VPN\Common\HttpClient\GuzzleHttpClient;
 use SURFnet\VPN\Common\HttpClient\ServerClient;
 use SURFnet\VPN\Common\Logger;
+use SURFnet\VPN\Common\Random;
 use SURFnet\VPN\Node\Connection;
 use SURFnet\VPN\Node\Exception\ConnectionException;
 
@@ -70,7 +71,7 @@ try {
         $config->v('apiUri')
     );
 
-    $connection = new Connection($serverClient);
+    $connection = new Connection($serverClient, new Random());
     $connection->disconnect($envData);
 } catch (ConnectionException $e) {
     $logger->info($e->getMessage(), $e->getEnvData());

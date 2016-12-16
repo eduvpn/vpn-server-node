@@ -21,8 +21,8 @@ namespace SURFnet\VPN\Node;
 require_once sprintf('%s/Test/TestHttpClient.php', __DIR__);
 
 use PHPUnit_Framework_TestCase;
-use Psr\Log\NullLogger;
 use SURFnet\VPN\Common\HttpClient\ServerClient;
+use SURFnet\VPN\Common\Random;
 use SURFnet\VPN\Node\Test\TestHttpClient;
 
 class ConnectionTest extends PHPUnit_Framework_TestCase
@@ -37,7 +37,7 @@ class ConnectionTest extends PHPUnit_Framework_TestCase
                 new TestHttpClient(),
                 'connectionServerClient'
             ),
-            new NullLogger()
+            new Random()
         );
     }
 
