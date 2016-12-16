@@ -50,7 +50,8 @@ class ConnectionTest extends PHPUnit_Framework_TestCase
                 'time_unix' => '12345678',
                 'ifconfig_pool_remote_ip' => '10.0.42.0',
                 'ifconfig_pool_remote_ip6' => 'fd00:4242:4242:4242::',
-            ]
+            ],
+            tempnam(sys_get_temp_dir(), 'test')
         );
     }
 
@@ -67,7 +68,8 @@ class ConnectionTest extends PHPUnit_Framework_TestCase
                 'time_unix' => '12345678',
                 'ifconfig_pool_remote_ip' => '10.0.42.0',
                 'ifconfig_pool_remote_ip6' => 'fd00:4242:4242:4242::',
-            ]
+            ],
+            tempnam(sys_get_temp_dir(), 'test')
         );
     }
 
