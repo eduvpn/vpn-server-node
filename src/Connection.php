@@ -18,7 +18,6 @@
 
 namespace SURFnet\VPN\Node;
 
-use SURFnet\VPN\Common\FileIO;
 use SURFnet\VPN\Common\HttpClient\ServerClient;
 
 class Connection
@@ -31,7 +30,7 @@ class Connection
         $this->serverClient = $serverClient;
     }
 
-    public function connect(array $envData, $tmpFile)
+    public function connect(array $envData)
     {
         $this->serverClient->post(
             'connect',
@@ -43,9 +42,6 @@ class Connection
                 'connected_at' => $envData['time_unix'],
             ]
         );
-
-        $uniqueTokenValue = bin2hex(random_bytes(16));
-        FileIO::writeFile($tmpFile, sprintf('push "auth-token %s"', $uniqueTokenValue));
     }
 
     public function disconnect(array $envData)

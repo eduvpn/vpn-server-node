@@ -192,6 +192,11 @@ class OpenVpn
             sprintf('setenv PROFILE_ID %s', $profileId),
             sprintf('proto %s', $processConfig['proto']),
             sprintf('local %s', $processConfig['local']),
+
+            // increase the renegotiation time to 8h from the default of 1h when
+            // using 2FA, otherwise the user would be asked for the 2FA key every
+            // hour
+            sprintf('reneg-sec %d', $profileConfig->v('twoFactor') ? 28800 : 3600),
         ];
 
         if (!$profileConfig->v('enableLog')) {

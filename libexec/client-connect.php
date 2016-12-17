@@ -68,7 +68,7 @@ try {
     );
 
     $connection = new Connection($serverClient);
-    $connection->connect($envData, $argv[1]);
+    $connection->connect($envData);
 } catch (ApiException $e) {
     $logger->warning($e->getMessage());
     exit(1);
