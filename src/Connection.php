@@ -20,20 +20,15 @@ namespace SURFnet\VPN\Node;
 
 use SURFnet\VPN\Common\FileIO;
 use SURFnet\VPN\Common\HttpClient\ServerClient;
-use SURFnet\VPN\Common\RandomInterface;
 
 class Connection
 {
     /** @var \SURFnet\VPN\Common\HttpClient\ServerClient */
     private $serverClient;
 
-    /** @var \SURFnet\VPN\Common\RandomInterface */
-    private $random;
-
-    public function __construct(ServerClient $serverClient, RandomInterface $random)
+    public function __construct(ServerClient $serverClient)
     {
         $this->serverClient = $serverClient;
-        $this->random = $random;
     }
 
     public function connect(array $envData, $tmpFile)
@@ -49,7 +44,7 @@ class Connection
             ]
         );
 
-        $uniqueTokenValue = $this->random->get(16);
+        $uniqueTokenValue = bin2hex(random_bytes(16));
         FileIO::writeFile($tmpFile, sprintf('push "auth-token %s"', $uniqueTokenValue));
     }
 

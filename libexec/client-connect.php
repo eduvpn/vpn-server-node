@@ -24,7 +24,6 @@ use SURFnet\VPN\Common\HttpClient\Exception\ApiException;
 use SURFnet\VPN\Common\HttpClient\GuzzleHttpClient;
 use SURFnet\VPN\Common\HttpClient\ServerClient;
 use SURFnet\VPN\Common\Logger;
-use SURFnet\VPN\Common\Random;
 use SURFnet\VPN\Node\Connection;
 
 $logger = new Logger(
@@ -68,7 +67,7 @@ try {
         $config->v('apiUri')
     );
 
-    $connection = new Connection($serverClient, new Random());
+    $connection = new Connection($serverClient);
     $connection->connect($envData, $argv[1]);
 } catch (ApiException $e) {
     $logger->warning($e->getMessage());
