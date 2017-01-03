@@ -24,7 +24,7 @@ use SURFnet\VPN\Common\HttpClient\Exception\ApiException;
 use SURFnet\VPN\Common\HttpClient\GuzzleHttpClient;
 use SURFnet\VPN\Common\HttpClient\ServerClient;
 use SURFnet\VPN\Common\Logger;
-use SURFnet\VPN\Node\Otp;
+use SURFnet\VPN\Node\TwoFactor;
 
 $logger = new Logger(
     basename($argv[0])
@@ -66,8 +66,8 @@ try {
         $config->v('apiUri')
     );
 
-    $otp = new Otp($logger, $serverClient);
-    $otp->verify($envData);
+    $twoFactor = new TwoFactor($logger, $serverClient);
+    $twoFactor->verify($envData);
 } catch (ApiException $e) {
     $logger->warning($e->getMessage());
     exit(1);

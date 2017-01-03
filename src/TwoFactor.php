@@ -22,7 +22,7 @@ use Psr\Log\LoggerInterface;
 use SURFnet\VPN\Common\Http\InputValidation;
 use SURFnet\VPN\Common\HttpClient\ServerClient;
 
-class Otp
+class TwoFactor
 {
     /** @var \Psr\Log\LoggerInterface */
     private $logger;
@@ -38,10 +38,10 @@ class Otp
 
     public function verify(array $envData)
     {
-        $otpType = InputValidation::otpType($envData['username']);
+        $otpType = InputValidation::twoFactorType($envData['username']);
         $commonName = InputValidation::commonName($envData['common_name']);
-        $otpKey = InputValidation::totpKey($envData['password']);
+        $otpValue = InputValidation::twoFactorValue($envData['password']);
 
-        $this->serverClient->post('verify_otp', ['common_name' => $commonName, 'otp_type' => $otpType, 'totp_key' => $otpKey]);
+        $this->serverClient->post('verify_two_factor', ['common_name' => $commonName, 'two_factor_type' => $otpType, 'two_factor_value' => $otpValue]);
     }
 }

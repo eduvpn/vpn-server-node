@@ -25,14 +25,14 @@ use Psr\Log\NullLogger;
 use SURFnet\VPN\Common\HttpClient\ServerClient;
 use SURFnet\VPN\Node\Test\TestHttpClient;
 
-class OtpTest extends PHPUnit_Framework_TestCase
+class TwoFactorTest extends PHPUnit_Framework_TestCase
 {
-    /** @var Otp */
-    private $otp;
+    /** @var TwoFactor */
+    private $twoFactor;
 
     public function setUp()
     {
-        $this->otp = new Otp(
+        $this->twoFactor = new TwoFactor(
             new NullLogger(),
             new ServerClient(
                 new TestHttpClient(),
@@ -41,9 +41,9 @@ class OtpTest extends PHPUnit_Framework_TestCase
         );
     }
 
-    public function testValidOtp()
+    public function testValidTwoFactor()
     {
-        $this->otp->verify(
+        $this->twoFactor->verify(
             [
                 'username' => 'totp',
                 'common_name' => '12345678901234567890123456789012',
@@ -54,11 +54,11 @@ class OtpTest extends PHPUnit_Framework_TestCase
 
     /**
      * @expectedException \SURFnet\VPN\Common\HttpClient\Exception\ApiException
-     * @expectedExceptionMessage invalid OTP key
+     * @expectedExceptionMessage invalid TOTP key
      */
-    public function testNoInvalidOtpKey()
+    public function testNoInvalidTwoFactorKey()
     {
-        $this->otp->verify(
+        $this->twoFactor->verify(
             [
                 'username' => 'totp',
                 'common_name' => '12345678901234567890123456789012',

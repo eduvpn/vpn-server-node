@@ -43,12 +43,12 @@ class TestHttpClient implements HttpClientInterface
             case 'connectionServerClient/disconnect':
                 return self::wrap('disconnect');
 
-            case 'otpServerClient/verify_otp':
-                if ('123456' === $postData['totp_key']) {
-                    return self::wrap('verify_otp');
+            case 'otpServerClient/verify_two_factor':
+                if ('123456' === $postData['two_factor_value']) {
+                    return self::wrap('verify_two_factor');
                 }
 
-                return self::wrapError('verify_otp', 'invalid OTP key');
+                return self::wrapError('verify_two_factor', 'invalid TOTP key');
             default:
                 throw new RuntimeException(sprintf('unexpected requestUri "%s"', $requestUri));
         }
