@@ -1,5 +1,5 @@
 /vendor
 /data
 /openvpn-config
-/config/*.yaml
-/config/*/*.yaml
+/config/*.php
+/config/*/*.php

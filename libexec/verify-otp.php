@@ -48,7 +48,7 @@ try {
     $instanceId = InputValidation::instanceId($envData['INSTANCE_ID']);
     $configDir = sprintf('%s/config/%s', dirname(__DIR__), $instanceId);
     $config = Config::fromFile(
-        sprintf('%s/config.yaml', $configDir)
+        sprintf('%s/config.php', $configDir)
     );
 
     // vpn-server-api
@@ -57,13 +57,13 @@ try {
             [
                 'defaults' => [
                     'auth' => [
-                        $config->v('apiUser'),
-                        $config->v('apiPass'),
+                        $config->getItem('apiUser'),
+                        $config->getItem('apiPass'),
                     ],
                 ],
             ]
         ),
-        $config->v('apiUri')
+        $config->getItem('apiUri')
     );
 
     $twoFactor = new TwoFactor($logger, $serverClient);

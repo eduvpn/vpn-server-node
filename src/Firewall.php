@@ -95,16 +95,16 @@ class Firewall
 
         foreach ($instanceConfig['profileList'] as $profileId => $profileData) {
             $profileConfig = new ProfileConfig($profileData);
-            if ($profileConfig->v('useNat')) {
+            if ($profileConfig->getItem('useNat')) {
                 if (4 === $inetFamily) {
                     // get the IPv4 range
-                    $srcNet = $profileConfig->v('range');
+                    $srcNet = $profileConfig->getItem('range');
                 } else {
                     // get the IPv6 range
-                    $srcNet = $profileConfig->v('range6');
+                    $srcNet = $profileConfig->getItem('range6');
                 }
                 // -i (--in-interface) cannot be specified for POSTROUTING
-                $nat[] = sprintf('-A POSTROUTING -s %s -o %s -j MASQUERADE', $srcNet, $profileConfig->v('extIf'));
+                $nat[] = sprintf('-A POSTROUTING -s %s -o %s -j MASQUERADE', $srcNet, $profileConfig->getItem('extIf'));
             }
         }
 
@@ -120,8 +120,8 @@ class Firewall
         ];
 
         // add trusted interfaces
-        if ($firewallConfig->e('inputChain', 'trustedInterfaces')) {
-            foreach ($firewallConfig->v('inputChain', 'trustedInterfaces') as $trustedIf) {
+        if ($firewallConfig->getSection('inputChain')->hasSection('trustedInterfaces')) {
+            foreach ($firewallConfig->getSection('inputChain')->getSection('trustedInterfaces')->toArray() as $trustedIf) {
                 $inputChain[] = sprintf('-A INPUT -i %s -j ACCEPT', $trustedIf);
             }
         }
@@ -129,12 +129,12 @@ class Firewall
         // NOTE: multiport is limited to 15 ports (a range counts as two)
         $inputChain[] = sprintf(
             '-A INPUT -m state --state NEW -m multiport -p udp --dports %s -j ACCEPT',
-            implode(',', $firewallConfig->v('inputChain', 'udp'))
+            implode(',', $firewallConfig->getSection('inputChain')->getSection('udp')->toArray())
         );
 
         $inputChain[] = sprintf(
             '-A INPUT -m state --state NEW -m multiport -p tcp --dports %s -j ACCEPT',
-            implode(',', $firewallConfig->v('inputChain', 'tcp'))
+            implode(',', $firewallConfig->getSection('inputChain')->getSection('tcp')->toArray())
         );
 
         $inputChain[] = sprintf('-A INPUT -j REJECT --reject-with %s', 4 === $inetFamily ? 'icmp-host-prohibited' : 'icmp6-adm-prohibited');
@@ -149,24 +149,24 @@ class Firewall
         $instanceNumber = $instanceConfig['instanceNumber'];
         foreach ($instanceConfig['profileList'] as $profileId => $profileData) {
             $profileConfig = new ProfileConfig($profileData);
-            $profileNumber = $profileConfig->v('profileNumber');
+            $profileNumber = $profileConfig->getItem('profileNumber');
 
-            if (4 === $inetFamily && $profileConfig->v('reject4')) {
+            if (4 === $inetFamily && $profileConfig->getItem('reject4')) {
                 // IPv4 forwarding is disabled
                 continue;
             }
 
-            if (6 === $inetFamily && $profileConfig->v('reject6')) {
+            if (6 === $inetFamily && $profileConfig->getItem('reject6')) {
                 // IPv6 forwarding is disabled
                 continue;
             }
 
             if (4 === $inetFamily) {
                 // get the IPv4 range
-                $srcNet = $profileConfig->v('range');
+                $srcNet = $profileConfig->getItem('range');
             } else {
                 // get the IPv6 range
-                $srcNet = $profileConfig->v('range6');
+                $srcNet = $profileConfig->getItem('range6');
             }
             $forwardChain[] = sprintf('-N vpn-%s-%s', $instanceNumber, $profileNumber);
 
@@ -176,19 +176,19 @@ class Firewall
             // traffic
             $forwardChain = array_merge($forwardChain, self::getForwardFirewall($instanceNumber, $profileNumber, $profileConfig, $inetFamily));
 
-            if ($profileConfig->v('clientToClient')) {
+            if ($profileConfig->getItem('clientToClient')) {
                 // allow client-to-client
                 $forwardChain[] = sprintf('-A vpn-%s-%s -o tun-%s-%s+ -d %s -j ACCEPT', $instanceNumber, $profileNumber, $instanceNumber, $profileNumber, $srcNet);
             }
-            if ($profileConfig->v('defaultGateway')) {
+            if ($profileConfig->getItem('defaultGateway')) {
                 // allow traffic to all outgoing destinations
-                $forwardChain[] = sprintf('-A vpn-%s-%s -o %s -j ACCEPT', $instanceNumber, $profileNumber, $profileConfig->v('extIf'), $srcNet);
+                $forwardChain[] = sprintf('-A vpn-%s-%s -o %s -j ACCEPT', $instanceNumber, $profileNumber, $profileConfig->getItem('extIf'), $srcNet);
             } else {
                 // only allow certain traffic to the external interface
-                foreach ($profileConfig->v('routes') as $route) {
+                foreach ($profileConfig->getSection('routes')->toArray() as $route) {
                     $routeIp = new IP($route);
                     if ($inetFamily === $routeIp->getFamily()) {
-                        $forwardChain[] = sprintf('-A vpn-%s-%s -o %s -d %s -j ACCEPT', $instanceNumber, $profileNumber, $profileConfig->v('extIf'), $route);
+                        $forwardChain[] = sprintf('-A vpn-%s-%s -o %s -d %s -j ACCEPT', $instanceNumber, $profileNumber, $profileConfig->getItem('extIf'), $route);
                     }
                 }
             }
@@ -200,7 +200,7 @@ class Firewall
     private static function getForwardFirewall($instanceNumber, $profileNumber, ProfileConfig $profileConfig, $inetFamily)
     {
         $forwardFirewall = [];
-        if ($profileConfig->v('blockSmb')) {
+        if ($profileConfig->getItem('blockSmb')) {
             // drop SMB outgoing traffic
             // @see https://medium.com/@ValdikSS/deanonymizing-windows-users-and-capturing-microsoft-and-vpn-accounts-f7e53fe73834
             foreach (['tcp', 'udp'] as $proto) {
@@ -208,7 +208,7 @@ class Firewall
                     '-A vpn-%s-%s -o %s -m multiport -p %s --dports 137:139,445 -j REJECT --reject-with %s',
                     $instanceNumber,
                     $profileNumber,
-                    $profileConfig->v('extIf'),
+                    $profileConfig->getItem('extIf'),
                     $proto,
                     4 === $inetFamily ? 'icmp-host-prohibited' : 'icmp6-adm-prohibited');
             }

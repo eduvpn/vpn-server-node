@@ -36,21 +36,21 @@ try {
     );
 
     $opt = $p->parse($argv);
-    if ($opt->e('help')) {
+    if ($opt->hasItem('help')) {
         echo $p->help();
         exit(0);
     }
 
-    $instanceId = $opt->e('instance') ? $opt->v('instance') : 'default';
+    $instanceId = $opt->hasItem('instance') ? $opt->getItem('instance') : 'default';
 
-    $profileId = $opt->v('profile');
-    $generateCerts = $opt->e('generate');
+    $profileId = $opt->getItem('profile');
+    $generateCerts = $opt->hasItem('generate');
 
-    $configFile = sprintf('%s/config/%s/config.yaml', dirname(__DIR__), $instanceId);
+    $configFile = sprintf('%s/config/%s/config.php', dirname(__DIR__), $instanceId);
     $config = Config::fromFile($configFile);
 
-    $vpnUser = $config->e('vpnUser') ? $config->v('vpnUser') : 'openvpn';
-    $vpnGroup = $config->e('vpnGroup') ? $config->v('vpnGroup') : 'openvpn';
+    $vpnUser = $config->hasItem('vpnUser') ? $config->getItem('vpnUser') : 'openvpn';
+    $vpnGroup = $config->hasItem('vpnGroup') ? $config->getItem('vpnGroup') : 'openvpn';
 
     $vpnConfigDir = sprintf('%s/openvpn-config', dirname(__DIR__));
     $vpnTlsDir = sprintf('%s/openvpn-config/tls/%s/%s', dirname(__DIR__), $instanceId, $profileId);
@@ -60,13 +60,13 @@ try {
             [
                 'defaults' => [
                     'auth' => [
-                        $config->v('apiUser'),
-                        $config->v('apiPass'),
+                        $config->getItem('apiUser'),
+                        $config->getItem('apiPass'),
                     ],
                 ],
             ]
         ),
-        $config->v('apiUri')
+        $config->getItem('apiUri')
     );
 
     $instanceNumber = $serverClient->get('instance_number');

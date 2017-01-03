@@ -13,12 +13,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/eduvpn/vpn-lib-common",
-                "reference": "7b27a5135979c7be2ad05680b52a1e3bd7d8cf35"
+                "reference": "ec485f019b92209f6b3e288e4009388e6121fc51"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/7b27a5135979c7be2ad05680b52a1e3bd7d8cf35",
-                "reference": "7b27a5135979c7be2ad05680b52a1e3bd7d8cf35",
+                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/ec485f019b92209f6b3e288e4009388e6121fc51",
+                "reference": "ec485f019b92209f6b3e288e4009388e6121fc51",
                 "shasum": ""
             },
             "require": {
@@ -34,8 +34,7 @@
                 "php": ">= 5.4.0",
                 "psr/log": "^1.0",
                 "symfony/intl": "~2.8",
-                "symfony/polyfill": "^1.2",
-                "symfony/yaml": "^2.8"
+                "symfony/polyfill": "^1.2"
             },
             "type": "library",
             "autoload": {
@@ -53,7 +52,7 @@
                 }
             ],
             "description": "Common VPN library",
-            "time": "2017-01-02 11:07:38"
+            "time": "2017-01-03 15:49:32"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -552,55 +551,6 @@
                 "shim"
             ],
             "time": "2016-11-14 01:15:23"
-        },
-        {
-            "name": "symfony/yaml",
-            "version": "v2.8.15",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/yaml.git",
-                "reference": "befb26a3713c97af90d25dd12e75621ef14d91ff"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/befb26a3713c97af90d25dd12e75621ef14d91ff",
-                "reference": "befb26a3713c97af90d25dd12e75621ef14d91ff",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.9"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.8-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Symfony\\Component\\Yaml\\": ""
-                },
-                "exclude-from-classmap": [
-                    "/Tests/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "Symfony Yaml Component",
-            "homepage": "https://symfony.com",
-            "time": "2016-11-14 16:15:57"
         }
     ],
     "packages-dev": [],

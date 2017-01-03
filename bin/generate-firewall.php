@@ -36,7 +36,7 @@ try {
     );
 
     $opt = $p->parse($argv);
-    if ($opt->e('help')) {
+    if ($opt->hasItem('help')) {
         echo $p->help();
         exit(0);
     }
@@ -45,30 +45,30 @@ try {
 
     // load generic firewall configuration
     try {
-        $firewallConfig = FirewallConfig::fromFile(sprintf('%s/firewall.yaml', $configDir));
+        $firewallConfig = FirewallConfig::fromFile(sprintf('%s/firewall.php', $configDir));
     } catch (RuntimeException $e) {
         $firewallConfig = new FirewallConfig([]);
     }
 
     // detect all instances
-    $instanceList = $firewallConfig->v('instanceList');
+    $instanceList = $firewallConfig->getSection('instanceList')->toArray();
 
     $configList = [];
     foreach ($instanceList as $instanceId) {
-        $config = Config::fromFile(sprintf('%s/%s/config.yaml', $configDir, $instanceId));
+        $config = Config::fromFile(sprintf('%s/%s/config.php', $configDir, $instanceId));
 
         $serverClient = new ServerClient(
             new GuzzleHttpClient(
                 [
                     'defaults' => [
                         'auth' => [
-                            $config->v('apiUser'),
-                            $config->v('apiPass'),
+                            $config->getItem('apiUser'),
+                            $config->getItem('apiPass'),
                         ],
                     ],
                 ]
             ),
-            $config->v('apiUri')
+            $config->getItem('apiUri')
         );
 
         $instanceNumber = $serverClient->get('instance_number');
@@ -83,12 +83,12 @@ try {
     // determine file location for writing firewall data
     $iptablesFile = '/etc/sysconfig/iptables';
     $ip6tablesFile = '/etc/sysconfig/ip6tables';
-    if ($opt->e('debian')) {
+    if ($opt->hasItem('debian')) {
         $iptablesFile = '/etc/iptables/rules.v4';
         $ip6tablesFile = '/etc/iptables/rules.v6';
     }
 
-    if ($opt->e('install')) {
+    if ($opt->hasItem('install')) {
         FileIO::writeFile($iptablesFile, $firewall, 0600);
         FileIO::writeFile($ip6tablesFile, $firewall6, 0600);
     } else {

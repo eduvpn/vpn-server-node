@@ -63,15 +63,15 @@ class OpenVpn
 
     public function writeProfile($instanceNumber, $instanceId, $profileId, ProfileConfig $profileConfig)
     {
-        $range = new IP($profileConfig->v('range'));
-        $range6 = new IP($profileConfig->v('range6'));
-        $processCount = $profileConfig->v('processCount');
+        $range = new IP($profileConfig->getItem('range'));
+        $range6 = new IP($profileConfig->getItem('range6'));
+        $processCount = $profileConfig->getItem('processCount');
 
         $splitRange = $range->split($processCount);
         $splitRange6 = $range6->split($processCount);
 
-        if ('auto' === $managementIp = $profileConfig->v('managementIp')) {
-            $managementIp = sprintf('10.42.%d.%d', 100 + $instanceNumber, 100 + $profileConfig->v('profileNumber'));
+        if ('auto' === $managementIp = $profileConfig->getItem('managementIp')) {
+            $managementIp = sprintf('10.42.%d.%d', 100 + $instanceNumber, 100 + $profileConfig->getItem('profileNumber'));
         }
 
         $processConfig = [
@@ -80,17 +80,17 @@ class OpenVpn
 
         for ($i = 0; $i < $processCount; ++$i) {
             list($proto, $port) = self::getProtoPortListen(
-                $profileConfig->v('processCount'),
-                $profileConfig->v('listen'),
-                $profileConfig->v('portShare')
+                $profileConfig->getItem('processCount'),
+                $profileConfig->getItem('listen'),
+                $profileConfig->getItem('portShare')
             )[$i];
 
             $processConfig['range'] = $splitRange[$i];
             $processConfig['range6'] = $splitRange6[$i];
-            $processConfig['dev'] = sprintf('tun-%d-%d-%d', $instanceNumber, $profileConfig->v('profileNumber'), $i);
+            $processConfig['dev'] = sprintf('tun-%d-%d-%d', $instanceNumber, $profileConfig->getItem('profileNumber'), $i);
             $processConfig['proto'] = $proto;
             $processConfig['port'] = $port;
-            $processConfig['local'] = $profileConfig->v('listen');
+            $processConfig['local'] = $profileConfig->getItem('listen');
             $processConfig['managementPort'] = 11940 + $i;
             $processConfig['configName'] = sprintf(
                 '%s-%s-%d.conf',
@@ -160,8 +160,8 @@ class OpenVpn
             '# OpenVPN Server Configuration',
             'verb 3',
             'dev-type tun',
-            sprintf('user %s', $profileConfig->v('_user')),
-            sprintf('group %s', $profileConfig->v('_group')),
+            sprintf('user %s', $profileConfig->getItem('_user')),
+            sprintf('group %s', $profileConfig->getItem('_group')),
             'topology subnet',
             'persist-key',
             'persist-tun',
@@ -185,7 +185,7 @@ class OpenVpn
             sprintf('server %s %s', $rangeIp->getNetwork(), $rangeIp->getNetmask()),
             sprintf('server-ipv6 %s', $range6Ip->getAddressPrefix()),
             sprintf('max-clients %d', $rangeIp->getNumberOfHosts() - 1),
-            sprintf('script-security %d', $profileConfig->v('twoFactor') ? 3 : 2),
+            sprintf('script-security %d', $profileConfig->getItem('twoFactor') ? 3 : 2),
             sprintf('dev %s', $processConfig['dev']),
             sprintf('port %d', $processConfig['port']),
             sprintf('management %s %d', $processConfig['managementIp'], $processConfig['managementPort']),
@@ -195,7 +195,7 @@ class OpenVpn
             sprintf('local %s', $processConfig['local']),
         ];
 
-        if (!$profileConfig->v('enableLog')) {
+        if (!$profileConfig->getItem('enableLog')) {
             $serverConfig[] = 'log /dev/null';
         }
 
@@ -203,7 +203,7 @@ class OpenVpn
             $serverConfig[] = 'tcp-nodelay';
         }
 
-        if ($profileConfig->v('twoFactor')) {
+        if ($profileConfig->getItem('twoFactor')) {
             $serverConfig[] = 'auth-user-pass-verify /usr/libexec/vpn-server-node-verify-otp via-env';
         }
 
@@ -226,7 +226,7 @@ class OpenVpn
     private static function getRoutes(ProfileConfig $profileConfig)
     {
         $routeConfig = [];
-        if ($profileConfig->v('defaultGateway')) {
+        if ($profileConfig->getItem('defaultGateway')) {
             $routeConfig[] = 'push "redirect-gateway def1 bypass-dhcp"';
 
             // for Windows clients we need this extra route to mark the TAP adapter as
@@ -246,7 +246,7 @@ class OpenVpn
             $routeConfig[] = 'push "route-ipv6 2000::/3"';
         } else {
             // there may be some routes specified, push those, and not the default
-            foreach ($profileConfig->v('routes') as $route) {
+            foreach ($profileConfig->getSection('routes')->toArray() as $route) {
                 $routeIp = new IP($route);
                 if (6 === $routeIp->getFamily()) {
                     // IPv6
@@ -264,12 +264,12 @@ class OpenVpn
     private static function getDns(ProfileConfig $profileConfig)
     {
         // only push DNS if we are the default route
-        if (!$profileConfig->v('defaultGateway')) {
+        if (!$profileConfig->getItem('defaultGateway')) {
             return [];
         }
 
         $dnsEntries = [];
-        foreach ($profileConfig->v('dns') as $dnsAddress) {
+        foreach ($profileConfig->getSection('dns')->toArray() as $dnsAddress) {
             // also add DNS6 for OpenVPN >= 2.4beta2
             if (false !== strpos($dnsAddress, ':')) {
                 $dnsEntries[] = sprintf('push "dhcp-option DNS6 %s"', $dnsAddress);
@@ -286,12 +286,12 @@ class OpenVpn
 
     private static function getClientToClient(ProfileConfig $profileConfig)
     {
-        if (!$profileConfig->v('clientToClient')) {
+        if (!$profileConfig->getItem('clientToClient')) {
             return [];
         }
 
-        $rangeIp = new IP($profileConfig->v('range'));
-        $range6Ip = new IP($profileConfig->v('range6'));
+        $rangeIp = new IP($profileConfig->getItem('range'));
+        $range6Ip = new IP($profileConfig->getItem('range6'));
 
         return [
             'client-to-client',
