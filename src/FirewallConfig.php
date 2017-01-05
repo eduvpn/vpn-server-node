@@ -22,9 +22,9 @@ use SURFnet\VPN\Common\Config;
 
 class FirewallConfig extends Config
 {
-    public function __construct(array $configData, $mergeDefaults = true)
+    public function __construct(array $configData)
     {
-        parent::__construct($configData, $mergeDefaults);
+        parent::__construct($configData);
     }
 
     public static function defaultConfig()
