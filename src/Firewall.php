@@ -144,7 +144,9 @@ class Firewall
 
     private static function getForwardChain(array $instanceConfig, $inetFamily)
     {
-        $forwardChain = [];
+        $forwardChain = [
+            sprintf('-A FORWARD -p %s -j ACCEPT', 4 === $inetFamily ? 'icmp' : 'ipv6-icmp'),
+        ];
 
         $instanceNumber = $instanceConfig['instanceNumber'];
         foreach ($instanceConfig['profileList'] as $profileId => $profileData) {
