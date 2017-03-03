@@ -71,6 +71,7 @@ class Firewall
         $firewall = array_merge(
             $firewall,
             [
+                sprintf('-A FORWARD -p %s -j ACCEPT', 4 === $inetFamily ? 'icmp' : 'ipv6-icmp'),
                 '-A FORWARD -m state --state ESTABLISHED,RELATED -j ACCEPT',
             ]
         );
@@ -144,9 +145,7 @@ class Firewall
 
     private static function getForwardChain(array $instanceConfig, $inetFamily)
     {
-        $forwardChain = [
-            sprintf('-A FORWARD -p %s -j ACCEPT', 4 === $inetFamily ? 'icmp' : 'ipv6-icmp'),
-        ];
+        $forwardChain = [];
 
         $instanceNumber = $instanceConfig['instanceNumber'];
         foreach ($instanceConfig['profileList'] as $profileId => $profileData) {
