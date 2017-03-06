@@ -164,32 +164,31 @@ class IP
 
     private function split6($networkCount)
     {
-        // NOTE: if networkCount == 1, then there will be one /64 returned, and not
-        // the whole net!
-        if (64 <= $this->getPrefix()) {
-            throw new IPException('network too small to split up, must be bigger than /64');
+        if (124 < $this->getPrefix()) {
+            throw new IPException('network too small to split up, must be >= /124');
         }
 
         if (0 !== $this->getPrefix() % 4) {
             throw new IPException('network prefix length must be divisible by 4');
         }
 
-        if (pow(2, 64 - $this->getPrefix()) < $networkCount) {
-            throw new IPException('network too small to split in this many networks');
-        }
-
         $hexAddress = bin2hex(inet_pton($this->getAddress()));
         // strip the last digits based on prefix size
-        $hexAddress = mb_substr($hexAddress, 0, 16 - ((64 - $this->getPrefix()) / 4));
-
+        $hexAddress = substr($hexAddress, 0, 32 - ((128 - $this->getPrefix()) / 4));
         $splitRanges = [];
         for ($i = 0; $i < $networkCount; ++$i) {
-            // pad with zeros until there is enough space for or network number
-            $paddedHexAddress = str_pad($hexAddress, 16 - mb_strlen(dechex($i)), '0');
-            // append the network number
-            $hexAddressWithNetwork = $paddedHexAddress.dechex($i);
-            // pad it to the end and convert back to IPv6 address
-            $splitRanges[] = new self(sprintf('%s/64', inet_ntop(hex2bin(str_pad($hexAddressWithNetwork, 32, '0')))));
+            $tmpHexAddress = $hexAddress.dechex($i);
+            $splitRanges[] = new self(
+                sprintf(
+                    '%s/%d',
+                    inet_ntop(
+                        hex2bin(
+                            str_pad($tmpHexAddress, 32, '0')
+                        )
+                    ),
+                    $this->getPrefix() + 4
+                )
+            );
         }
 
         return $splitRanges;
