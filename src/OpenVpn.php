@@ -176,7 +176,6 @@ class OpenVpn
             'client-disconnect /usr/libexec/vpn-server-node-client-disconnect',
             'push "comp-lzo no"',
             'push "explicit-exit-notify 3"',
-            // 'auth-gen-token',  // Added in OpenVPN 2.4, see #6
             sprintf('ca %s/ca.crt', $tlsDir),
             sprintf('cert %s/server.crt', $tlsDir),
             sprintf('key %s/server.key', $tlsDir),
@@ -204,6 +203,7 @@ class OpenVpn
         }
 
         if ($profileConfig->getItem('twoFactor')) {
+            $serverConfig[] = 'auth-gen-token';  // Added in OpenVPN 2.4
             $serverConfig[] = 'auth-user-pass-verify /usr/libexec/vpn-server-node-verify-otp via-env';
         }
 
