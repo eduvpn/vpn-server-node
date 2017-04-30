@@ -8,7 +8,8 @@
     ],
     "autoload": {
         "psr-4": {
-            "SURFnet\\VPN\\Node\\": "src/"
+            "SURFnet\\VPN\\Node\\": "src/",
+            "SURFnet\\VPN\\Node\\Tests\\": "tests/"
         }
     },
     "description": "OpenVPN node controller",
@@ -30,5 +31,8 @@
         "ext-spl": "*",
         "php": ">=5.4.0",
         "psr/log": "^1.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^4.8"
     }
 }

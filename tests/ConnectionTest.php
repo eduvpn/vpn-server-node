@@ -16,14 +16,11 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace SURFnet\VPN\Node;
-
-require_once sprintf('%s/Test/TestHttpClient.php', __DIR__);
+namespace SURFnet\VPN\Node\Tests;
 
 use PHPUnit_Framework_TestCase;
-use Psr\Log\NullLogger;
 use SURFnet\VPN\Common\HttpClient\ServerClient;
-use SURFnet\VPN\Node\Test\TestHttpClient;
+use SURFnet\VPN\Node\Connection;
 
 class ConnectionTest extends PHPUnit_Framework_TestCase
 {
@@ -36,8 +33,7 @@ class ConnectionTest extends PHPUnit_Framework_TestCase
             new ServerClient(
                 new TestHttpClient(),
                 'connectionServerClient'
-            ),
-            new NullLogger()
+            )
         );
     }
 

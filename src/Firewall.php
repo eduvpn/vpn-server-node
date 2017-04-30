@@ -183,7 +183,7 @@ class Firewall
             }
             if ($profileConfig->getItem('defaultGateway')) {
                 // allow traffic to all outgoing destinations
-                $forwardChain[] = sprintf('-A vpn-%s-%s -o %s -j ACCEPT', $instanceNumber, $profileNumber, $profileConfig->getItem('extIf'), $srcNet);
+                $forwardChain[] = sprintf('-A vpn-%s-%s -o %s -j ACCEPT', $instanceNumber, $profileNumber, $profileConfig->getItem('extIf'));
             } else {
                 // only allow certain traffic to the external interface
                 foreach ($profileConfig->getSection('routes')->toArray() as $route) {
