@@ -202,6 +202,12 @@ class OpenVpn
             $serverConfig[] = 'tcp-nodelay';
         }
 
+        if ('udp' === $processConfig['proto']) {
+            // notify the clients to reconnect when restarting OpenVPN on the server
+            // OpenVPN server >= 2.4
+            $serverConfig[] = 'explicit-exit-notify 1';
+        }
+
         if ($profileConfig->getItem('twoFactor')) {
             $serverConfig[] = 'auth-gen-token';  // Added in OpenVPN 2.4
             $serverConfig[] = 'auth-user-pass-verify /usr/libexec/vpn-server-node-verify-otp via-env';
@@ -243,6 +249,8 @@ class OpenVpn
 
             // we use 2000::/3 instead of ::/0 because it seems to break on native IPv6
             // networks where the ::/0 default route already exists
+            // XXX: no longer needed in OpenVPN 2.4! But not all our clients are
+            // up to date, e.g. NetAidKit...
             $routeConfig[] = 'push "route-ipv6 2000::/3"';
         } else {
             // there may be some routes specified, push those, and not the default
