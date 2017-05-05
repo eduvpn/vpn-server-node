@@ -198,11 +198,11 @@ class OpenVpn
             $serverConfig[] = 'log /dev/null';
         }
 
-        if ('tcp' === $processConfig['proto']) {
+        if ('tcp-server' === $processConfig['proto'] || 'tcp6-server' === $processConfig['proto']) {
             $serverConfig[] = 'tcp-nodelay';
         }
 
-        if ('udp' === $processConfig['proto']) {
+        if ('udp' === $processConfig['proto'] || 'udp6' === $processConfig['proto']) {
             // notify the clients to reconnect when restarting OpenVPN on the server
             // OpenVPN server >= 2.4
             $serverConfig[] = 'explicit-exit-notify 1';
