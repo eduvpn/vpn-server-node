@@ -176,6 +176,12 @@ class OpenVpn
             'client-disconnect /usr/libexec/vpn-server-node-client-disconnect',
             'push "comp-lzo no"',
             'push "explicit-exit-notify 3"',
+
+            // we probably do NOT want this, it is up to the client to decide
+            // about this!
+            //'push "persist-key"',
+            //'push "persist-tun"',
+
             sprintf('ca %s/ca.crt', $tlsDir),
             sprintf('cert %s/server.crt', $tlsDir),
             sprintf('key %s/server.key', $tlsDir),
