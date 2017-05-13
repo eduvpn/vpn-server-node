@@ -65,7 +65,7 @@ class OpenVpn
     {
         $range = new IP($profileConfig->getItem('range'));
         $range6 = new IP($profileConfig->getItem('range6'));
-        $processCount = $profileConfig->getItem('processCount');
+        $processCount = count($profileConfig->getItem('vpnProtoPorts'));
 
         $splitRange = $range->split($processCount);
         $splitRange6 = $range6->split($processCount);
@@ -79,12 +79,7 @@ class OpenVpn
         ];
 
         for ($i = 0; $i < $processCount; ++$i) {
-            list($proto, $port) = self::getProtoPortListen(
-                $profileConfig->getItem('processCount'),
-                $profileConfig->getItem('listen'),
-                $profileConfig->getItem('portShare')
-            )[$i];
-
+            list($proto, $port) = self::getProtoPort($profileConfig->getItem('vpnProtoPorts'), $profileConfig->getItem('listen'))[$i];
             $processConfig['range'] = $splitRange[$i];
             $processConfig['range6'] = $splitRange6[$i];
             $processConfig['dev'] = sprintf('tun-%d-%d-%d', $instanceNumber, $profileConfig->getItem('profileNumber'), $i);
@@ -103,49 +98,29 @@ class OpenVpn
         }
     }
 
-    public static function getVpnProto($listenAddress)
+    private static function getFamilyProto($listenAddress, $proto)
     {
-        if (false !== strpos($listenAddress, ':')) {
-            return ['udp6', 'tcp6-server'];
+        $v6 = false !== strpos($listenAddress, ':');
+        if ('udp' === $proto) {
+            return $v6 ? 'udp6' : 'udp';
+        }
+        if ('tcp' === $proto) {
+            return $v6 ? 'tcp6-server' : 'tcp-server';
         }
 
-        return ['udp', 'tcp-server'];
+        throw new RuntimeException('only "tcp" and "udp" are supported as protocols');
     }
 
-    public static function getProtoPortListen($processCount, $listenAddress, $portShare)
+    private static function getProtoPort(array $vpnProcesses, $listenAddress)
     {
-        $vpnProto = self::getVpnProto($listenAddress);
+        $convertedPortProto = [];
 
-        switch ($processCount) {
-            case 1:
-                return [
-                    [$vpnProto[0], 1194],
-                ];
-            case 2:
-                return [
-                    [$vpnProto[0], 1194],
-                    [$vpnProto[1], $portShare ? 1194 : 443],
-                ];
-            case 4:
-            default:
-                return [
-                    [$vpnProto[0], 1194],
-                    [$vpnProto[0], 1195],
-                    [$vpnProto[1], 1194],
-                    [$vpnProto[1], $portShare ? 1195 : 443],
-                ];
-            case 8:
-                return [
-                    [$vpnProto[0], 1194],
-                    [$vpnProto[0], 1195],
-                    [$vpnProto[0], 1196],
-                    [$vpnProto[0], 1197],
-                    [$vpnProto[0], 1198],
-                    [$vpnProto[1], 1194],
-                    [$vpnProto[1], 1195],
-                    [$vpnProto[1], $portShare ? 1196 : 443],
-                ];
+        foreach ($vpnProcesses as $vpnProcess) {
+            list($proto, $port) = explode('/', $vpnProcess);
+            $convertedPortProto[] = [self::getFamilyProto($listenAddress, $proto), $port];
         }
+
+        return $convertedPortProto;
     }
 
     private function writeProcess($instanceId, $profileId, ProfileConfig $profileConfig, array $processConfig)

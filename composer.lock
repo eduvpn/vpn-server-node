@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/eduvpn/vpn-lib-common",
-                "reference": "59c35afd232a6733db0f9f3a743829abd54ea708"
+                "reference": "c4f983d1f048e6ff35db3b2a575064c582be689e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/59c35afd232a6733db0f9f3a743829abd54ea708",
-                "reference": "59c35afd232a6733db0f9f3a743829abd54ea708",
+                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/c4f983d1f048e6ff35db3b2a575064c582be689e",
+                "reference": "c4f983d1f048e6ff35db3b2a575064c582be689e",
                 "shasum": ""
             },
             "require": {
@@ -57,7 +57,7 @@
                 }
             ],
             "description": "Common VPN library",
-            "time": "2017-04-29 19:11:16"
+            "time": "2017-05-13 14:27:41"
         },
         {
             "name": "ircmaxell/password-compat",
@@ -1277,16 +1277,16 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v3.2.7",
+            "version": "v3.2.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
-                "reference": "62b4cdb99d52cb1ff253c465eb1532a80cebb621"
+                "reference": "acec26fcf7f3031e094e910b94b002fa53d4e4d6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/62b4cdb99d52cb1ff253c465eb1532a80cebb621",
-                "reference": "62b4cdb99d52cb1ff253c465eb1532a80cebb621",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/acec26fcf7f3031e094e910b94b002fa53d4e4d6",
+                "reference": "acec26fcf7f3031e094e910b94b002fa53d4e4d6",
                 "shasum": ""
             },
             "require": {
@@ -1328,7 +1328,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2017-03-20T09:45:15+00:00"
+            "time": "2017-05-01T14:55:58+00:00"
         },
         {
             "name": "webmozart/assert",
