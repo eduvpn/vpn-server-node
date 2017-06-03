@@ -83,6 +83,19 @@ class Firewall
         $firewall[] = sprintf('-A FORWARD -j REJECT --reject-with %s', 4 === $inetFamily ? 'icmp-host-prohibited' : 'icmp6-adm-prohibited');
         $firewall[] = 'COMMIT';
 
+        $firewall = array_merge(
+            [
+                '#',
+                '# VPN Firewall Configuration',
+                '#',
+                '# ******************************************',
+                '# * THIS FILE IS GENERATED, DO NOT MODIFY! *',
+                '# ******************************************',
+                '#',
+            ],
+            $firewall
+        );
+
         if ($asArray) {
             return $firewall;
         }

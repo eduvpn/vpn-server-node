@@ -132,7 +132,6 @@ class OpenVpn
 
         // static options
         $serverConfig = [
-            '# OpenVPN Server Configuration',
             'verb 3',
             'dev-type tun',
             sprintf('user %s', $profileConfig->getItem('_user')),
@@ -211,6 +210,19 @@ class OpenVpn
         $serverConfig = array_merge($serverConfig, self::getClientToClient($profileConfig));
 
         sort($serverConfig, SORT_STRING);
+
+        $serverConfig = array_merge(
+            [
+                '#',
+                '# OpenVPN Server Configuration',
+                '#',
+                '# ******************************************',
+                '# * THIS FILE IS GENERATED, DO NOT MODIFY! *',
+                '# ******************************************',
+                '#',
+            ],
+            $serverConfig
+        );
 
         $configFile = sprintf('%s/%s', $this->vpnConfigDir, $processConfig['configName']);
 
