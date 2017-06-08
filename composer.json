@@ -29,6 +29,7 @@
         "ext-mbstring": "*",
         "ext-pcre": "*",
         "ext-spl": "*",
+        "fkooman/secookie": "dev-master",
         "php": ">=5.4.0",
         "psr/log": "^1.0"
     },
