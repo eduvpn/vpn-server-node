@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/eduvpn/vpn-lib-common",
-                "reference": "1bda5adbbcc64d8efbcfc73bcc9212cfabcc06c4"
+                "reference": "64097c7a3dd670cc22b19a5fb0a5936a81cf33f9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/1bda5adbbcc64d8efbcfc73bcc9212cfabcc06c4",
-                "reference": "1bda5adbbcc64d8efbcfc73bcc9212cfabcc06c4",
+                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/64097c7a3dd670cc22b19a5fb0a5936a81cf33f9",
+                "reference": "64097c7a3dd670cc22b19a5fb0a5936a81cf33f9",
                 "shasum": ""
             },
             "require": {
@@ -58,7 +58,7 @@
                 }
             ],
             "description": "Common VPN library",
-            "time": "2017-06-08 11:31:43"
+            "time": "2017-06-08 20:24:02"
         },
         {
             "name": "fkooman/secookie",
@@ -66,12 +66,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/fkooman/php-secookie.git",
-                "reference": "a5ec58c122d781c4b8ab94503c034ddd5945039b"
+                "reference": "587c2dbb32d30954e8e076049dcca0be4694fd66"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fkooman/php-secookie/zipball/a5ec58c122d781c4b8ab94503c034ddd5945039b",
-                "reference": "a5ec58c122d781c4b8ab94503c034ddd5945039b",
+                "url": "https://api.github.com/repos/fkooman/php-secookie/zipball/587c2dbb32d30954e8e076049dcca0be4694fd66",
+                "reference": "587c2dbb32d30954e8e076049dcca0be4694fd66",
                 "shasum": ""
             },
             "require": {
@@ -99,8 +99,8 @@
                     "email": "fkooman@tuxed.net"
                 }
             ],
-            "description": "Very simple Cookie and PHP Session library",
-            "time": "2017-06-08 11:20:37"
+            "description": "Secure Cookie and Session library for PHP",
+            "time": "2017-06-08 15:17:52"
         },
         {
             "name": "ircmaxell/password-compat",
@@ -193,16 +193,16 @@
         },
         {
             "name": "twig/extensions",
-            "version": "v1.5.0",
+            "version": "v1.5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig-extensions.git",
-                "reference": "d6d74d6f3213a9574c460c4390c25a1a67c17cc3"
+                "reference": "d188c76168b853481cc75879ea045bf93d718e9c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig-extensions/zipball/d6d74d6f3213a9574c460c4390c25a1a67c17cc3",
-                "reference": "d6d74d6f3213a9574c460c4390c25a1a67c17cc3",
+                "url": "https://api.github.com/repos/twigphp/Twig-extensions/zipball/d188c76168b853481cc75879ea045bf93d718e9c",
+                "reference": "d188c76168b853481cc75879ea045bf93d718e9c",
                 "shasum": ""
             },
             "require": {
@@ -245,7 +245,7 @@
                 "i18n",
                 "text"
             ],
-            "time": "2017-05-24T06:24:07+00:00"
+            "time": "2017-06-08T18:19:53+00:00"
         },
         {
             "name": "twig/twig",

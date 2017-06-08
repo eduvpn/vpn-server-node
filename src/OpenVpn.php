@@ -70,9 +70,8 @@ class OpenVpn
         $splitRange = $range->split($processCount);
         $splitRange6 = $range6->split($processCount);
 
-        if ('auto' === $managementIp = $profileConfig->getItem('managementIp')) {
-            $managementIp = sprintf('10.42.%d.%d', 100 + $instanceNumber, 100 + $profileConfig->getItem('profileNumber'));
-        }
+        $managementIp = $profileConfig->getItem('managementIp');
+        $profileNumber = $profileConfig->getItem('profileNumber');
 
         $processConfig = [
             'managementIp' => $managementIp,
@@ -86,7 +85,7 @@ class OpenVpn
             $processConfig['proto'] = $proto;
             $processConfig['port'] = $port;
             $processConfig['local'] = $profileConfig->getItem('listen');
-            $processConfig['managementPort'] = 11940 + $i;
+            $processConfig['managementPort'] = 11940 + $this->toPort($instanceNumber, $profileNumber, $i);
             $processConfig['configName'] = sprintf(
                 '%s-%s-%d.conf',
                 $instanceId,
@@ -308,5 +307,15 @@ class OpenVpn
             sprintf('push "route %s %s"', $rangeIp->getAddress(), $rangeIp->getNetmask()),
             sprintf('push "route-ipv6 %s"', $range6Ip->getAddressPrefix()),
         ];
+    }
+
+    private function toPort($instanceNumber, $profileNumber, $processNumber)
+    {
+        // convert an instanceNumber, $profileNumber and $processNumber to a management port
+
+        // instanceId = 6 bits (max 64)
+        // profileNumber = 4 bits (max 16)
+        // processNumber = 4 bits  (max 16)
+        return ($instanceNumber - 1 << 8) | ($profileNumber - 1 << 4) | ($processNumber);
     }
 }
