@@ -166,7 +166,6 @@ class OpenVpn
             sprintf('key %s/server.key', $tlsDir),
             // 2.4 only clients: 'dh none',   // then we can also remove the complete DH stuff in the init stage!
             sprintf('dh %s/dh.pem', $tlsDir),
-            sprintf('tls-auth %s/ta.key 0', $tlsDir),
             sprintf('server %s %s', $rangeIp->getNetwork(), $rangeIp->getNetmask()),
             sprintf('server-ipv6 %s', $range6Ip->getAddressPrefix()),
             sprintf('max-clients %d', $rangeIp->getNumberOfHosts() - 1),
@@ -197,6 +196,12 @@ class OpenVpn
         if ($profileConfig->getItem('twoFactor')) {
             $serverConfig[] = 'auth-gen-token';  // Added in OpenVPN 2.4
             $serverConfig[] = 'auth-user-pass-verify /usr/libexec/vpn-server-node-verify-otp via-env';
+        }
+
+        if ($profileConfig->getItem('tlsCrypt')) {
+            $serverConfig[] = sprintf('tls-crypt %s/ta.key', $tlsDir);
+        } else {
+            $serverConfig[] = sprintf('tls-auth %s/ta.key 0', $tlsDir);
         }
 
         // Routes
