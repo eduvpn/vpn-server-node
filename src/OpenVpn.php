@@ -39,7 +39,7 @@ class OpenVpn
         $this->vpnTlsDir = $vpnTlsDir;
     }
 
-    public function generateKeys(ServerClient $serverClient, $commonName, $dhSourceFile)
+    public function generateKeys(ServerClient $serverClient, $commonName)
     {
         $certData = $serverClient->post('add_server_certificate', ['common_name' => $commonName]);
 
@@ -52,12 +52,6 @@ class OpenVpn
 
         foreach ($certFileMapping as $k => $v) {
             FileIO::writeFile($v, $certData[$k], 0600);
-        }
-
-        // copy the DH parameter file
-        $dhTargetFile = sprintf('%s/dh.pem', $this->vpnTlsDir);
-        if (false === copy($dhSourceFile, $dhTargetFile)) {
-            throw new RuntimeException('unable to copy DH file');
         }
     }
 
@@ -142,11 +136,9 @@ class OpenVpn
             'comp-lzo no',
             'remote-cert-tls client',
             'tls-version-min 1.2',
-
-            // 2.4 only clients: 'tls-cipher TLS-ECDHE-RSA-WITH-AES-256-GCM-SHA384',
-            'tls-cipher TLS-ECDHE-RSA-WITH-AES-256-GCM-SHA384:TLS-DHE-RSA-WITH-AES-256-GCM-SHA384',
-
+            'tls-cipher TLS-ECDHE-RSA-WITH-AES-256-GCM-SHA384',
             'auth SHA256',
+            'dh none',  // Only ECDHE
 
             // 2.4 only clients: 'ncp-ciphers AES-256-GCM',
             // 2.4 only clients: 'cipher AES-256-GCM', // also should update the client config to set this, but ncp overrides --cipher
@@ -164,8 +156,6 @@ class OpenVpn
             sprintf('ca %s/ca.crt', $tlsDir),
             sprintf('cert %s/server.crt', $tlsDir),
             sprintf('key %s/server.key', $tlsDir),
-            // 2.4 only clients: 'dh none',   // then we can also remove the complete DH stuff in the init stage!
-            sprintf('dh %s/dh.pem', $tlsDir),
             sprintf('server %s %s', $rangeIp->getNetwork(), $rangeIp->getNetmask()),
             sprintf('server-ipv6 %s', $range6Ip->getAddressPrefix()),
             sprintf('max-clients %d', $rangeIp->getNumberOfHosts() - 1),

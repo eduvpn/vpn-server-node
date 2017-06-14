@@ -75,8 +75,7 @@ try {
         $dateTime = new DateTime('now', new DateTimeZone('UTC'));
         $dateString = $dateTime->format('YmdHis');
         $cn = sprintf('%s.%s.%s', $dateString, $profileId, $instanceId);
-        $dhSourceFile = sprintf('%s/config/dh.pem', dirname(__DIR__));
-        $o->generateKeys($serverClient, $cn, $dhSourceFile);
+        $o->generateKeys($serverClient, $cn);
     }
 } catch (Exception $e) {
     echo sprintf('ERROR: %s', $e->getMessage()).PHP_EOL;
