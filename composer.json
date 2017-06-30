@@ -23,13 +23,12 @@
         }
     ],
     "require": {
-        "eduvpn/common": "dev-master",
+        "eduvpn/common": "^1",
         "ext-filter": "*",
         "ext-json": "*",
         "ext-mbstring": "*",
         "ext-pcre": "*",
         "ext-spl": "*",
-        "fkooman/secookie": "dev-master",
         "php": ">=5.4.0",
         "psr/log": "^1.0"
     },
