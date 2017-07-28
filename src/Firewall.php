@@ -131,16 +131,52 @@ class Firewall
             }
         }
 
-        // NOTE: multiport is limited to 15 ports (a range counts as two)
-        $inputChain[] = sprintf(
-            '-A INPUT -m state --state NEW -m multiport -p udp --dports %s -j ACCEPT',
-            implode(',', $firewallConfig->getSection('inputChain')->getSection('udp')->toArray())
-        );
+        $udpPorts = $firewallConfig->getSection('inputChain')->getSection('udp')->toArray();
+        $tcpPorts = $firewallConfig->getSection('inputChain')->getSection('tcp')->toArray();
 
-        $inputChain[] = sprintf(
-            '-A INPUT -m state --state NEW -m multiport -p tcp --dports %s -j ACCEPT',
-            implode(',', $firewallConfig->getSection('inputChain')->getSection('tcp')->toArray())
-        );
+        foreach ($udpPorts as $udpPort) {
+            if (!is_array($udpPort)) {
+                $inputChain[] = sprintf(
+                    '-A INPUT -m state --state NEW -m udp -p udp --dport %s -j ACCEPT',
+                    $udpPort
+                );
+
+                continue;
+            }
+
+            foreach ($udpPort['src'] as $src) {
+                $ipSource = new IP($src);
+                if ($inetFamily === $ipSource->getFamily()) {
+                    $inputChain[] = sprintf(
+                        '-A INPUT -m state --state NEW -m udp -p udp --source %s --dport %s -j ACCEPT',
+                        $src,
+                        $udpPort['port']
+                    );
+                }
+            }
+        }
+
+        foreach ($tcpPorts as $tcpPort) {
+            if (!is_array($tcpPort)) {
+                $inputChain[] = sprintf(
+                    '-A INPUT -m state --state NEW -m tcp -p tcp --dport %s -j ACCEPT',
+                    $tcpPort
+                );
+
+                continue;
+            }
+
+            foreach ($tcpPort['src'] as $src) {
+                $ipSource = new IP($src);
+                if ($inetFamily === $ipSource->getFamily()) {
+                    $inputChain[] = sprintf(
+                        '-A INPUT -m state --state NEW -m tcp -p tcp --source %s --dport %s -j ACCEPT',
+                        $src,
+                        $tcpPort['port']
+                    );
+                }
+            }
+        }
 
         $inputChain[] = sprintf('-A INPUT -j REJECT --reject-with %s', 4 === $inetFamily ? 'icmp-host-prohibited' : 'icmp6-adm-prohibited');
 

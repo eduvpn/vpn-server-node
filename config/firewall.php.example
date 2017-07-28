@@ -4,20 +4,18 @@ return [
     //
     // Firewall Configuration
     //
-    // Due to iptables multiport, up to  15  ports  can  be  specified per protocol
-    // See iptables-extensions(8)
-    //
 
     // Generate a firewall for the instances listed here
     'instanceList' => [
         'default',
-        //'vpn.example',
         //'vpn.example.org',
     ],
 
     'inputChain' => [
         'tcp' => [
             22,
+            // limit source address for port
+            //['src' => ['192.168.1.0/24', 'fda9:c454:8bc1:89a0::/64'], 'port' => '22']
             80,
             443,
             1194,
