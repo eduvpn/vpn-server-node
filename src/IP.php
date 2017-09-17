@@ -41,7 +41,7 @@ class IP
 
         $is6 = false !== mb_strpos($ipAddress, ':');
         if ($is6) {
-            if (is_null($ipPrefix)) {
+            if (null === $ipPrefix) {
                 $ipPrefix = 128;
             }
 
@@ -51,7 +51,7 @@ class IP
             // normalize the IPv6 address
             $ipAddress = inet_ntop(inet_pton($ipAddress));
         } else {
-            if (is_null($ipPrefix)) {
+            if (null === $ipPrefix) {
                 $ipPrefix = 32;
             }
             if (!is_numeric($ipPrefix) || 0 > $ipPrefix || 32 < $ipPrefix) {
