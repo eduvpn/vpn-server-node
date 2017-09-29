@@ -175,7 +175,7 @@ class OpenVpn
         }
 
         if ($profileConfig->getItem('twoFactor')) {
-            $serverConfig[] = 'auth-gen-token';  // Added in OpenVPN 2.4
+            $serverConfig[] = sprintf('auth-gen-token %d', 60 * 60 * 8);  // Added in OpenVPN 2.4
             $serverConfig[] = 'auth-user-pass-verify /usr/libexec/vpn-server-node-verify-otp via-env';
         }
 

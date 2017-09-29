@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.2 (TBD)
+- expire 2FA connections after 8 hours, i.e. require new OTP code
+
 ## 1.0.1 (2017-07-28)
 - allow specifying source IP range(s) for INPUT packet filter (#13)
 
