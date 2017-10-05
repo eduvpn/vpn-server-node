@@ -137,7 +137,6 @@ class OpenVpn
             'client-connect /usr/libexec/vpn-server-node-client-connect',
             'client-disconnect /usr/libexec/vpn-server-node-client-disconnect',
             'push "comp-lzo no"',
-            'push "explicit-exit-notify 3"',
 
             // we probably do NOT want this, it is up to the client to decide
             // about this!
@@ -172,6 +171,8 @@ class OpenVpn
             // notify the clients to reconnect when restarting OpenVPN on the server
             // OpenVPN server >= 2.4
             $serverConfig[] = 'explicit-exit-notify 1';
+            // also ask the clients on UDP to tell us when they leave...
+            $serverConfig[] = 'push "explicit-exit-notify 3"';
         }
 
         if ($profileConfig->getItem('twoFactor')) {

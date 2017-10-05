@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.3 (TBD)
+- only push `explicit-exit-notify` when using UDP
+
 ## 1.0.2 (2017-09-29)
 - expire 2FA connections after 8 hours, i.e. require new OTP code (#15)
 
