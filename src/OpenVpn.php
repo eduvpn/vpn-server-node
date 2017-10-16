@@ -16,6 +16,9 @@ use SURFnet\VPN\Common\ProfileConfig;
 
 class OpenVpn
 {
+    // CentOS
+    const LIBEXEC_DIR = '/usr/libexec';
+
     /** @var string */
     private $vpnConfigDir;
 
@@ -134,8 +137,8 @@ class OpenVpn
             // 2.4 only clients: 'ncp-ciphers AES-256-GCM',
             // 2.4 only clients: 'cipher AES-256-GCM', // also should update the client config to set this, but ncp overrides --cipher
             'cipher AES-256-CBC',
-            'client-connect /usr/libexec/vpn-server-node-client-connect',
-            'client-disconnect /usr/libexec/vpn-server-node-client-disconnect',
+            sprintf('client-connect %s/vpn-server-node-client-connect', self::LIBEXEC_DIR),
+            sprintf('client-disconnect %s/vpn-server-node-client-disconnect', self::LIBEXEC_DIR),
             'push "comp-lzo no"',
 
             // we probably do NOT want this, it is up to the client to decide
@@ -177,7 +180,7 @@ class OpenVpn
 
         if ($profileConfig->getItem('twoFactor')) {
             $serverConfig[] = sprintf('auth-gen-token %d', 60 * 60 * 8);  // Added in OpenVPN 2.4
-            $serverConfig[] = 'auth-user-pass-verify /usr/libexec/vpn-server-node-verify-otp via-env';
+            $serverConfig[] = sprintf('auth-user-pass-verify %s/vpn-server-node-verify-otp via-env', self::LIBEXEC_DIR);
         }
 
         if ($profileConfig->getItem('tlsCrypt')) {
