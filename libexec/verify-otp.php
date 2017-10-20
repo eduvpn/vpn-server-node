@@ -21,21 +21,25 @@ $logger = new Logger(
     basename($argv[0])
 );
 
+$envData = [];
+$envKeys = [
+    'INSTANCE_ID',
+    'PROFILE_ID',
+    'common_name',
+    'username',
+    'password',
+    'auth_control_file', // when "auth-script-openvpn" plugin is used this
+                         // field is set to the file we will write the status
+                         // to, otherwise return values of this script are used
+                         // by OpenVPN
+];
+
+// read environment variables
+foreach ($envKeys as $envKey) {
+    $envData[$envKey] = getenv($envKey);
+}
+
 try {
-    $envData = [];
-    $envKeys = [
-        'INSTANCE_ID',
-        'PROFILE_ID',
-        'common_name',
-        'username',
-        'password',
-    ];
-
-    // read environment variables
-    foreach ($envKeys as $envKey) {
-        $envData[$envKey] = getenv($envKey);
-    }
-
     $instanceId = InputValidation::instanceId($envData['INSTANCE_ID']);
     $configDir = sprintf('%s/config/%s', dirname(__DIR__), $instanceId);
     $config = Config::fromFile(
@@ -49,10 +53,26 @@ try {
 
     $twoFactor = new TwoFactor($logger, $serverClient);
     $twoFactor->verify($envData);
+
+    if (null !== $envData['auth_control_file']) {
+        // we were started from the plugin, and not --auth-user-pass-verify
+        // '1' indicates success
+        @file_put_contents($envData['auth_control_file'], '1');
+    }
 } catch (ApiException $e) {
     $logger->warning($e->getMessage());
+    if (null !== $envData['auth_control_file']) {
+        // we were started from the plugin, and not --auth-user-pass-verify
+        // '0' indicates failure
+        @file_put_contents($envData['auth_control_file'], '0');
+    }
     exit(1);
 } catch (Exception $e) {
     $logger->error($e->getMessage());
+    if (null !== $envData['auth_control_file']) {
+        // we were started from the plugin, and not --auth-user-pass-verify
+        // '0' indicates failure
+        @file_put_contents($envData['auth_control_file'], '0');
+    }
     exit(1);
 }

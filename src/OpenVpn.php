@@ -180,7 +180,14 @@ class OpenVpn
 
         if ($profileConfig->getItem('twoFactor')) {
             $serverConfig[] = sprintf('auth-gen-token %d', 60 * 60 * 8);  // Added in OpenVPN 2.4
-            $serverConfig[] = sprintf('auth-user-pass-verify %s/vpn-server-node-verify-otp via-env', self::LIBEXEC_DIR);
+
+            if ($profileConfig->getItem('authPlugin')) {
+                // undocumented option to trigger the use of the authentication
+                // plugin
+                $serverConfig[] = sprintf('plugin /usr/lib64/openvpn/plugins/auth_script.so %s/vpn-server-node-verify-otp', self::LIBEXEC_DIR);
+            } else {
+                $serverConfig[] = sprintf('auth-user-pass-verify %s/vpn-server-node-verify-otp via-env', self::LIBEXEC_DIR);
+            }
         }
 
         if ($profileConfig->getItem('tlsCrypt')) {
