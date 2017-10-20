@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.0.3 (TBD)
+## 1.0.3 (2017-10-20)
 - only push `explicit-exit-notify` when using UDP
 - support for "auth-script-openvpn" plugin for more efficient 2FA integration
 
