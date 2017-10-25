@@ -21,7 +21,6 @@ try {
         'Generate VPN server configuration for an instance',
         [
             'instance' => ['the VPN instance', true, false],
-            'profile' => ['the profile identifier', true, true],
             'generate' => ['generate a new certificate for the server', false, false],
         ]
     );
@@ -33,8 +32,6 @@ try {
     }
 
     $instanceId = $opt->hasItem('instance') ? $opt->getItem('instance') : 'default';
-
-    $profileId = $opt->getItem('profile');
     $generateCerts = $opt->hasItem('generate');
 
     $configFile = sprintf('%s/config/%s/config.php', dirname(__DIR__), $instanceId);
@@ -44,8 +41,6 @@ try {
     $vpnGroup = $config->hasItem('vpnGroup') ? $config->getItem('vpnGroup') : 'openvpn';
 
     $vpnConfigDir = sprintf('%s/openvpn-config', dirname(__DIR__));
-    $vpnTlsDir = sprintf('%s/openvpn-config/tls/%s/%s', dirname(__DIR__), $instanceId, $profileId);
-
     $serverClient = new ServerClient(
         new CurlHttpClient([$config->getItem('apiUser'), $config->getItem('apiPass')]),
         $config->getItem('apiUri')
@@ -53,20 +48,24 @@ try {
 
     $instanceNumber = $serverClient->get('instance_number');
     $profileList = $serverClient->get('profile_list');
-    $profileConfigData = $profileList[$profileId];
 
-    $profileConfigData['_user'] = $vpnUser;
-    $profileConfigData['_group'] = $vpnGroup;
-    $profileConfig = new ProfileConfig($profileConfigData);
+    $profileIdList = array_keys($profileList);
+    foreach ($profileIdList as $profileId) {
+        $vpnTlsDir = sprintf('%s/openvpn-config/tls/%s/%s', dirname(__DIR__), $instanceId, $profileId);
+        $profileConfigData = $profileList[$profileId];
+        $profileConfigData['_user'] = $vpnUser;
+        $profileConfigData['_group'] = $vpnGroup;
+        $profileConfig = new ProfileConfig($profileConfigData);
 
-    $o = new OpenVpn($vpnConfigDir, $vpnTlsDir);
-    $o->writeProfile($instanceNumber, $instanceId, $profileId, $profileConfig);
-    if ($generateCerts) {
-        // generate a CN based on date and profile, instance
-        $dateTime = new DateTime('now', new DateTimeZone('UTC'));
-        $dateString = $dateTime->format('YmdHis');
-        $cn = sprintf('%s.%s.%s', $dateString, $profileId, $instanceId);
-        $o->generateKeys($serverClient, $cn);
+        $o = new OpenVpn($vpnConfigDir, $vpnTlsDir);
+        $o->writeProfile($instanceNumber, $instanceId, $profileId, $profileConfig);
+        if ($generateCerts) {
+            // generate a CN based on date and profile, instance
+            $dateTime = new DateTime('now', new DateTimeZone('UTC'));
+            $dateString = $dateTime->format('YmdHis');
+            $cn = sprintf('%s.%s.%s', $dateString, $profileId, $instanceId);
+            $o->generateKeys($serverClient, $cn);
+        }
     }
 } catch (Exception $e) {
     echo sprintf('ERROR: %s', $e->getMessage()).PHP_EOL;
