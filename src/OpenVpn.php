@@ -175,6 +175,7 @@ class OpenVpn
             // OpenVPN server >= 2.4
             $serverConfig[] = 'explicit-exit-notify 1';
             // also ask the clients on UDP to tell us when they leave...
+            // https://github.com/OpenVPN/openvpn/commit/422ecdac4a2738cd269361e048468d8b58793c4e
             $serverConfig[] = 'push "explicit-exit-notify 3"';
         }
 
