@@ -17,7 +17,7 @@ use SURFnet\VPN\Common\ProfileConfig;
 class OpenVpn
 {
     // CentOS
-    const LIBEXEC_DIR = '/usr/libexec';
+    const LIBEXEC_DIR = '/usr/libexec/vpn-server-node';
 
     /** @var string */
     private $vpnConfigDir;
@@ -137,8 +137,8 @@ class OpenVpn
             // 2.4 only clients: 'ncp-ciphers AES-256-GCM',
             // 2.4 only clients: 'cipher AES-256-GCM', // also should update the client config to set this, but ncp overrides --cipher
             'cipher AES-256-CBC',
-            sprintf('client-connect %s/vpn-server-node-client-connect', self::LIBEXEC_DIR),
-            sprintf('client-disconnect %s/vpn-server-node-client-disconnect', self::LIBEXEC_DIR),
+            sprintf('client-connect %s/client-connect', self::LIBEXEC_DIR),
+            sprintf('client-disconnect %s/client-disconnect', self::LIBEXEC_DIR),
             'push "comp-lzo no"',
 
             // we probably do NOT want this, it is up to the client to decide
@@ -184,9 +184,9 @@ class OpenVpn
             if ($profileConfig->getItem('authPlugin')) {
                 // undocumented option to trigger the use of the authentication
                 // plugin
-                $serverConfig[] = sprintf('plugin /usr/lib64/openvpn/plugins/auth_script.so %s/vpn-server-node-verify-otp', self::LIBEXEC_DIR);
+                $serverConfig[] = sprintf('plugin /usr/lib64/openvpn/plugins/auth_script.so %s/verify-otp', self::LIBEXEC_DIR);
             } else {
-                $serverConfig[] = sprintf('auth-user-pass-verify %s/vpn-server-node-verify-otp via-env', self::LIBEXEC_DIR);
+                $serverConfig[] = sprintf('auth-user-pass-verify %s/verify-otp via-env', self::LIBEXEC_DIR);
             }
         }
 
