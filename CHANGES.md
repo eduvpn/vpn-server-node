@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.0.4 (...)
+## 1.0.4 (2017-10-25)
 - remove `--profile` option for generating server configuration, generate for
   all profiles by default
 
