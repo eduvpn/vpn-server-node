@@ -132,20 +132,15 @@ class OpenVpn
             'tls-version-min 1.2',
             'tls-cipher TLS-ECDHE-RSA-WITH-AES-256-GCM-SHA384',
             'auth SHA256',
-            'dh none',  // Only ECDHE
-
-            // 2.4 only clients: 'ncp-ciphers AES-256-GCM',
-            // 2.4 only clients: 'cipher AES-256-GCM', // also should update the client config to set this, but ncp overrides --cipher
+            'dh none', // Only ECDHE
+            'ncp-ciphers AES-256-GCM', // force AES-256-GCM for 2.4 clients
+            // 2.3 & 2.4
             'cipher AES-256-CBC',
+            // 2.4 only
+            //'cipher AES-256-GCM',
+            'push "comp-lzo no"',
             sprintf('client-connect %s/client-connect', self::LIBEXEC_DIR),
             sprintf('client-disconnect %s/client-disconnect', self::LIBEXEC_DIR),
-            'push "comp-lzo no"',
-
-            // we probably do NOT want this, it is up to the client to decide
-            // about this!
-            //'push "persist-key"',
-            //'push "persist-tun"',
-
             sprintf('ca %s/ca.crt', $tlsDir),
             sprintf('cert %s/server.crt', $tlsDir),
             sprintf('key %s/server.key', $tlsDir),
@@ -176,7 +171,7 @@ class OpenVpn
             $serverConfig[] = 'explicit-exit-notify 1';
             // also ask the clients on UDP to tell us when they leave...
             // https://github.com/OpenVPN/openvpn/commit/422ecdac4a2738cd269361e048468d8b58793c4e
-            $serverConfig[] = 'push "explicit-exit-notify 3"';
+            $serverConfig[] = 'push "explicit-exit-notify 1"';
         }
 
         if ($profileConfig->getItem('twoFactor')) {
@@ -230,38 +225,24 @@ class OpenVpn
     {
         $routeConfig = [];
         if ($profileConfig->getItem('defaultGateway')) {
-            // For OpenVPN >= 2.4 client only support:
-            //$routeConfig[] = 'push "redirect-gateway def1 ipv6"';
+            $routeConfig[] = 'push "redirect-gateway def1 bypass-dhcp ipv6"';
 
-            $routeConfig[] = 'push "redirect-gateway def1 bypass-dhcp"';
-            // for Windows clients we need this extra route to mark the TAP adapter as
-            // trusted and as having "Internet" access to allow the user to set it to
-            // "Home" or "Work" to allow accessing file shares and printers
-            // NOTE: this will break OS X tunnelblick because on disconnect it will
-            // remove all default routes, including the one set before the VPN
-            // was brought up
-            //$routeConfig[] = 'push "route 0.0.0.0 0.0.0.0"';
+            // 2.3 client compat
+            $routeConfig[] = 'push "route-ipv6 2000::/4"';
+            $routeConfig[] = 'push "route-ipv6 3000::/4"';
 
-            // for iOS we need this OpenVPN 2.4 "ipv6" flag to redirect-gateway
-            // See https://docs.openvpn.net/docs/openvpn-connect/openvpn-connect-ios-faq.html
-            $routeConfig[] = 'push "redirect-gateway ipv6"';
+            return $routeConfig;
+        }
 
-            // we use 2000::/3 instead of ::/0 because it seems to break on native IPv6
-            // networks where the ::/0 default route already exists
-            // XXX: no longer needed in OpenVPN 2.4! But not all our clients are
-            // up to date, e.g. NetAidKit...
-            $routeConfig[] = 'push "route-ipv6 2000::/3"';
-        } else {
-            // there may be some routes specified, push those, and not the default
-            foreach ($profileConfig->getSection('routes')->toArray() as $route) {
-                $routeIp = new IP($route);
-                if (6 === $routeIp->getFamily()) {
-                    // IPv6
-                    $routeConfig[] = sprintf('push "route-ipv6 %s"', $routeIp->getAddressPrefix());
-                } else {
-                    // IPv4
-                    $routeConfig[] = sprintf('push "route %s %s"', $routeIp->getAddress(), $routeIp->getNetmask());
-                }
+        // there may be some routes specified, push those, and not the default
+        foreach ($profileConfig->getSection('routes')->toArray() as $route) {
+            $routeIp = new IP($route);
+            if (6 === $routeIp->getFamily()) {
+                // IPv6
+                $routeConfig[] = sprintf('push "route-ipv6 %s"', $routeIp->getAddressPrefix());
+            } else {
+                // IPv4
+                $routeConfig[] = sprintf('push "route %s %s"', $routeIp->getAddress(), $routeIp->getNetmask());
             }
         }
 
