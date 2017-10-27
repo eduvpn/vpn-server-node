@@ -25,6 +25,10 @@ class OpenVpn
     /** @var string */
     private $vpnTlsDir;
 
+    /**
+     * @param string $vpnConfigDir
+     * @param string $vpnTlsDir
+     */
     public function __construct($vpnConfigDir, $vpnTlsDir)
     {
         FileIO::createDir($vpnConfigDir, 0700);
@@ -33,6 +37,11 @@ class OpenVpn
         $this->vpnTlsDir = $vpnTlsDir;
     }
 
+    /**
+     * @param string $commonName
+     *
+     * @return void
+     */
     public function generateKeys(ServerClient $serverClient, $commonName)
     {
         $certData = $serverClient->post('add_server_certificate', ['common_name' => $commonName]);
@@ -49,6 +58,13 @@ class OpenVpn
         }
     }
 
+    /**
+     * @param int    $instanceNumber
+     * @param string $instanceId
+     * @param string $profileId
+     *
+     * @return void
+     */
     public function writeProfile($instanceNumber, $instanceId, $profileId, ProfileConfig $profileConfig)
     {
         $range = new IP($profileConfig->getItem('range'));
@@ -85,6 +101,12 @@ class OpenVpn
         }
     }
 
+    /**
+     * @param string $listenAddress
+     * @param string $proto
+     *
+     * @return string
+     */
     private static function getFamilyProto($listenAddress, $proto)
     {
         $v6 = false !== strpos($listenAddress, ':');
@@ -98,6 +120,11 @@ class OpenVpn
         throw new RuntimeException('only "tcp" and "udp" are supported as protocols');
     }
 
+    /**
+     * @param string $listenAddress
+     *
+     * @return array
+     */
     private static function getProtoPort(array $vpnProcesses, $listenAddress)
     {
         $convertedPortProto = [];
@@ -110,6 +137,12 @@ class OpenVpn
         return $convertedPortProto;
     }
 
+    /**
+     * @param string $instanceId
+     * @param string $profileId
+     *
+     * @return void
+     */
     private function writeProcess($instanceId, $profileId, ProfileConfig $profileConfig, array $processConfig)
     {
         $tlsDir = sprintf('tls/%s/%s', $instanceId, $profileId);
@@ -221,6 +254,9 @@ class OpenVpn
         FileIO::writeFile($configFile, implode(PHP_EOL, $serverConfig), 0600);
     }
 
+    /**
+     * @return array
+     */
     private static function getRoutes(ProfileConfig $profileConfig)
     {
         $routeConfig = [];
@@ -249,6 +285,9 @@ class OpenVpn
         return $routeConfig;
     }
 
+    /**
+     * @return array
+     */
     private static function getDns(ProfileConfig $profileConfig)
     {
         // only push DNS if we are the default route
@@ -272,6 +311,9 @@ class OpenVpn
         return $dnsEntries;
     }
 
+    /**
+     * @return array
+     */
     private static function getClientToClient(ProfileConfig $profileConfig)
     {
         if (!$profileConfig->getItem('clientToClient')) {
@@ -288,6 +330,13 @@ class OpenVpn
         ];
     }
 
+    /**
+     * @param int $instanceNumber
+     * @param int $profileNumber
+     * @param int $processNumber
+     *
+     * @return int
+     */
     private function toPort($instanceNumber, $profileNumber, $processNumber)
     {
         // convert an instanceNumber, $profileNumber and $processNumber to a management port

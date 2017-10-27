@@ -23,6 +23,9 @@ class IP
     /** @var int */
     private $ipFamily;
 
+    /**
+     * @param string $ipAddressPrefix
+     */
     public function __construct($ipAddressPrefix)
     {
         // detect if there is a prefix
@@ -64,26 +67,41 @@ class IP
         $this->ipFamily = $is6 ? 6 : 4;
     }
 
+    /**
+     * @return string
+     */
     public function __toString()
     {
         return $this->getAddressPrefix();
     }
 
+    /**
+     * @return string
+     */
     public function getAddress()
     {
         return $this->ipAddress;
     }
 
+    /**
+     * @return int
+     */
     public function getPrefix()
     {
         return $this->ipPrefix;
     }
 
+    /**
+     * @return string
+     */
     public function getAddressPrefix()
     {
         return sprintf('%s/%d', $this->getAddress(), $this->getPrefix());
     }
 
+    /**
+     * @return int
+     */
     public function getFamily()
     {
         return $this->ipFamily;
@@ -91,6 +109,8 @@ class IP
 
     /**
      * IPv4 only.
+     *
+     * @return string
      */
     public function getNetmask()
     {
@@ -101,6 +121,8 @@ class IP
 
     /**
      * IPv4 only.
+     *
+     * @return string
      */
     public function getNetwork()
     {
@@ -111,14 +133,21 @@ class IP
 
     /**
      * IPv4 only.
+     *
+     * @return int
      */
     public function getNumberOfHosts()
     {
         $this->requireIPv4();
 
-        return pow(2, 32 - $this->getPrefix()) - 2;
+        return (int) pow(2, 32 - $this->getPrefix()) - 2;
     }
 
+    /**
+     * @param int $networkCount
+     *
+     * @return array
+     */
     public function split($networkCount)
     {
         if (!is_int($networkCount)) {
@@ -136,6 +165,11 @@ class IP
         return $this->split6($networkCount);
     }
 
+    /**
+     * @param int $networkCount
+     *
+     * @return array
+     */
     private function split4($networkCount)
     {
         if (pow(2, 32 - $this->getPrefix() - 2) < $networkCount) {
@@ -153,6 +187,11 @@ class IP
         return $splitRanges;
     }
 
+    /**
+     * @param int $networkCount
+     *
+     * @return array
+     */
     private function split6($networkCount)
     {
         if (124 < $this->getPrefix()) {
@@ -185,6 +224,9 @@ class IP
         return $splitRanges;
     }
 
+    /**
+     * @return void
+     */
     private function requireIPv4()
     {
         if (4 !== $this->getFamily()) {
