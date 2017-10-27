@@ -13,16 +13,32 @@ use SURFnet\VPN\Common\ProfileConfig;
 
 class Firewall
 {
+    /**
+     * @param bool $asArray
+     *
+     * @return array|string
+     */
     public static function getFirewall4(array $configList, FirewallConfig $firewallConfig, $asArray = false)
     {
         return self::getFirewall($configList, $firewallConfig, 4, $asArray);
     }
 
+    /**
+     * @param bool $asArray
+     *
+     * @return array|string
+     */
     public static function getFirewall6(array $configList, FirewallConfig $firewallConfig, $asArray = false)
     {
         return self::getFirewall($configList, $firewallConfig, 6, $asArray);
     }
 
+    /**
+     * @param int  $inetFamily
+     * @param bool $asArray
+     *
+     * @return array|string
+     */
     private static function getFirewall(array $configList, FirewallConfig $firewallConfig, $inetFamily, $asArray)
     {
         $firewall = [];
@@ -94,6 +110,11 @@ class Firewall
         return implode(PHP_EOL, $firewall).PHP_EOL;
     }
 
+    /**
+     * @param int $inetFamily
+     *
+     * @return array
+     */
     private static function getNat(array $instanceConfig, $inetFamily)
     {
         $nat = [];
@@ -116,6 +137,11 @@ class Firewall
         return $nat;
     }
 
+    /**
+     * @param int $inetFamily
+     *
+     * @return array
+     */
     private static function getInputChain($inetFamily, FirewallConfig $firewallConfig)
     {
         $inputChain = [
@@ -183,6 +209,11 @@ class Firewall
         return $inputChain;
     }
 
+    /**
+     * @param int $inetFamily
+     *
+     * @return array
+     */
     private static function getForwardChain(array $instanceConfig, $inetFamily)
     {
         $forwardChain = [];
@@ -238,6 +269,13 @@ class Firewall
         return $forwardChain;
     }
 
+    /**
+     * @param int $instanceNumber
+     * @param int $profileNumber
+     * @param int $inetFamily
+     *
+     * @return array
+     */
     private static function getForwardFirewall($instanceNumber, $profileNumber, ProfileConfig $profileConfig, $inetFamily)
     {
         $forwardFirewall = [];

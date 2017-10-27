@@ -21,6 +21,9 @@ class Connection
         $this->serverClient = $serverClient;
     }
 
+    /**
+     * @return void
+     */
     public function connect(array $envData)
     {
         $this->serverClient->post(
@@ -35,6 +38,9 @@ class Connection
         );
     }
 
+    /**
+     * @return void
+     */
     public function disconnect(array $envData)
     {
         $this->serverClient->post(

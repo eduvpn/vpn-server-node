@@ -27,6 +27,9 @@ class TwoFactor
         $this->serverClient = $serverClient;
     }
 
+    /**
+     * @return void
+     */
     public function verify(array $envData)
     {
         $otpType = InputValidation::twoFactorType($envData['username']);
