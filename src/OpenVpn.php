@@ -9,6 +9,8 @@
 
 namespace SURFnet\VPN\Node;
 
+use DateTime;
+use DateTimeZone;
 use RuntimeException;
 use SURFnet\VPN\Common\FileIO;
 use SURFnet\VPN\Common\HttpClient\ServerClient;
@@ -22,39 +24,67 @@ class OpenVpn
     /** @var string */
     private $vpnConfigDir;
 
-    /** @var string */
-    private $vpnTlsDir;
-
     /**
      * @param string $vpnConfigDir
-     * @param string $vpnTlsDir
      */
-    public function __construct($vpnConfigDir, $vpnTlsDir)
+    public function __construct($vpnConfigDir)
     {
         FileIO::createDir($vpnConfigDir, 0700);
         $this->vpnConfigDir = $vpnConfigDir;
-        FileIO::createDir($vpnTlsDir, 0700);
-        $this->vpnTlsDir = $vpnTlsDir;
     }
 
     /**
+     * @param string $vpnTlsDir
      * @param string $commonName
      *
      * @return void
      */
-    public function generateKeys(ServerClient $serverClient, $commonName)
+    public function generateKeys(ServerClient $serverClient, $vpnTlsDir, $commonName)
     {
+        FileIO::createDir($vpnTlsDir, 0700);
         $certData = $serverClient->post('add_server_certificate', ['common_name' => $commonName]);
 
         $certFileMapping = [
-            'ca' => sprintf('%s/ca.crt', $this->vpnTlsDir),
-            'certificate' => sprintf('%s/server.crt', $this->vpnTlsDir),
-            'private_key' => sprintf('%s/server.key', $this->vpnTlsDir),
-            'ta' => sprintf('%s/ta.key', $this->vpnTlsDir),
+            'ca' => sprintf('%s/ca.crt', $vpnTlsDir),
+            'certificate' => sprintf('%s/server.crt', $vpnTlsDir),
+            'private_key' => sprintf('%s/server.key', $vpnTlsDir),
+            'ta' => sprintf('%s/ta.key', $vpnTlsDir),
         ];
 
         foreach ($certFileMapping as $k => $v) {
             FileIO::writeFile($v, $certData[$k], 0600);
+        }
+    }
+
+    /**
+     * @param string $instanceId
+     * @param string $vpnUser
+     * @param string $vpnGroup
+     * @param bool   $generateCerts
+     *
+     * @return void
+     */
+    public function writeProfiles(ServerClient $serverClient, $instanceId, $vpnUser, $vpnGroup, $generateCerts)
+    {
+        $instanceNumber = $serverClient->get('instance_number');
+        $profileList = $serverClient->get('profile_list');
+
+        $profileIdList = array_keys($profileList);
+        foreach ($profileIdList as $profileId) {
+            $profileConfigData = $profileList[$profileId];
+            $profileConfigData['_user'] = $vpnUser;
+            $profileConfigData['_group'] = $vpnGroup;
+            $profileConfig = new ProfileConfig($profileConfigData);
+            $this->writeProfile($instanceNumber, $instanceId, $profileId, $profileConfig);
+            if ($generateCerts) {
+                // generate a CN based on date and profile, instance
+                $dateTime = new DateTime('now', new DateTimeZone('UTC'));
+                $dateString = $dateTime->format('YmdHis');
+                $cn = sprintf('%s.%s.%s', $dateString, $profileId, $instanceId);
+                $vpnTlsDir = sprintf('%s/tls/%s/%s', $this->vpnConfigDir, $instanceId, $profileId);
+
+                $this->generateKeys($serverClient, $vpnTlsDir, $cn);
+            }
         }
     }
 

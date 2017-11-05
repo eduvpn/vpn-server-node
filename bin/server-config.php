@@ -53,27 +53,8 @@ try {
         $config->getItem('apiUri')
     );
 
-    $instanceNumber = $serverClient->get('instance_number');
-    $profileList = $serverClient->get('profile_list');
-
-    $profileIdList = array_keys($profileList);
-    foreach ($profileIdList as $profileId) {
-        $vpnTlsDir = sprintf('%s/openvpn-config/tls/%s/%s', $baseDir, $instanceId, $profileId);
-        $profileConfigData = $profileList[$profileId];
-        $profileConfigData['_user'] = $vpnUser;
-        $profileConfigData['_group'] = $vpnGroup;
-        $profileConfig = new ProfileConfig($profileConfigData);
-
-        $o = new OpenVpn($vpnConfigDir, $vpnTlsDir);
-        $o->writeProfile($instanceNumber, $instanceId, $profileId, $profileConfig);
-        if ($generateCerts) {
-            // generate a CN based on date and profile, instance
-            $dateTime = new DateTime('now', new DateTimeZone('UTC'));
-            $dateString = $dateTime->format('YmdHis');
-            $cn = sprintf('%s.%s.%s', $dateString, $profileId, $instanceId);
-            $o->generateKeys($serverClient, $cn);
-        }
-    }
+    $o = new OpenVpn($vpnConfigDir);
+    $o->writeProfiles($serverClient, $instanceId, $vpnUser, $vpnGroup, $generateCerts);
 } catch (Exception $e) {
     echo sprintf('ERROR: %s', $e->getMessage()).PHP_EOL;
     exit(1);
