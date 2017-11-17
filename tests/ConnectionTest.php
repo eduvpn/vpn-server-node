@@ -9,11 +9,11 @@
 
 namespace SURFnet\VPN\Node\Tests;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use SURFnet\VPN\Common\HttpClient\ServerClient;
 use SURFnet\VPN\Node\Connection;
 
-class ConnectionTest extends PHPUnit_Framework_TestCase
+class ConnectionTest extends TestCase
 {
     /** @var Connection */
     private $connection;

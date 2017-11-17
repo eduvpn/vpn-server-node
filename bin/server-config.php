@@ -20,7 +20,6 @@ use SURFnet\VPN\Common\CliParser;
 use SURFnet\VPN\Common\Config;
 use SURFnet\VPN\Common\HttpClient\CurlHttpClient;
 use SURFnet\VPN\Common\HttpClient\ServerClient;
-use SURFnet\VPN\Common\ProfileConfig;
 use SURFnet\VPN\Node\OpenVpn;
 
 try {

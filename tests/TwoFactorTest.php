@@ -9,12 +9,12 @@
 
 namespace SURFnet\VPN\Node\Tests;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 use SURFnet\VPN\Common\HttpClient\ServerClient;
 use SURFnet\VPN\Node\TwoFactor;
 
-class TwoFactorTest extends PHPUnit_Framework_TestCase
+class TwoFactorTest extends TestCase
 {
     /** @var TwoFactor */
     private $twoFactor;
