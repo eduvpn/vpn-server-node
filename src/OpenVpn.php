@@ -57,6 +57,7 @@ class OpenVpn
     }
 
     /**
+     * @param string $dataDir
      * @param string $instanceId
      * @param string $vpnUser
      * @param string $vpnGroup
@@ -64,11 +65,12 @@ class OpenVpn
      *
      * @return void
      */
-    public function writeProfiles(ServerClient $serverClient, $instanceId, $vpnUser, $vpnGroup, $generateCerts)
+    public function writeProfiles($dataDir, ServerClient $serverClient, $instanceId, $vpnUser, $vpnGroup, $generateCerts)
     {
         $instanceNumber = $serverClient->get('instance_number');
         $profileList = $serverClient->get('profile_list');
 
+        $configMapping = [];
         $profileIdList = array_keys($profileList);
         foreach ($profileIdList as $profileId) {
             $profileConfigData = $profileList[$profileId];
@@ -85,7 +87,20 @@ class OpenVpn
 
                 $this->generateKeys($serverClient, $vpnTlsDir, $cn);
             }
+
+            $managementPortList = [];
+            for ($i = 0; $i < count($profileConfigData['vpnProtoPorts']); ++$i) {
+                $managementPortList[] = 11940 + self::toPort($instanceNumber, $profileConfigData['profileNumber'], $i);
+            }
+
+            $configMapping[$profileId] = [
+                'managementPortList' => $managementPortList,
+            ];
         }
+
+        $configMappingStr = serialize($configMapping);
+        FileIO::createDir($dataDir, 0710);
+        FileIO::writeFile(sprintf('%s/mapping.dat', $dataDir), $configMappingStr, 0640);
     }
 
     /**
@@ -119,7 +134,7 @@ class OpenVpn
             $processConfig['proto'] = $proto;
             $processConfig['port'] = $port;
             $processConfig['local'] = $profileConfig->getItem('listen');
-            $processConfig['managementPort'] = 11940 + $this->toPort($instanceNumber, $profileNumber, $i);
+            $processConfig['managementPort'] = 11940 + self::toPort($instanceNumber, $profileNumber, $i);
             $processConfig['configName'] = sprintf(
                 '%s-%s-%d.conf',
                 $instanceId,
@@ -129,6 +144,23 @@ class OpenVpn
 
             $this->writeProcess($instanceId, $profileId, $profileConfig, $processConfig);
         }
+    }
+
+    /**
+     * @param int $instanceNumber
+     * @param int $profileNumber
+     * @param int $processNumber
+     *
+     * @return int
+     */
+    private static function toPort($instanceNumber, $profileNumber, $processNumber)
+    {
+        // convert an instanceNumber, $profileNumber and $processNumber to a management port
+
+        // instanceId = 6 bits (max 64)
+        // profileNumber = 4 bits (max 16)
+        // processNumber = 4 bits  (max 16)
+        return ($instanceNumber - 1 << 8) | ($profileNumber - 1 << 4) | ($processNumber);
     }
 
     /**
@@ -358,22 +390,5 @@ class OpenVpn
             sprintf('push "route %s %s"', $rangeIp->getAddress(), $rangeIp->getNetmask()),
             sprintf('push "route-ipv6 %s"', $range6Ip->getAddressPrefix()),
         ];
-    }
-
-    /**
-     * @param int $instanceNumber
-     * @param int $profileNumber
-     * @param int $processNumber
-     *
-     * @return int
-     */
-    private function toPort($instanceNumber, $profileNumber, $processNumber)
-    {
-        // convert an instanceNumber, $profileNumber and $processNumber to a management port
-
-        // instanceId = 6 bits (max 64)
-        // profileNumber = 4 bits (max 16)
-        // processNumber = 4 bits  (max 16)
-        return ($instanceNumber - 1 << 8) | ($profileNumber - 1 << 4) | ($processNumber);
     }
 }

@@ -43,6 +43,8 @@ try {
     $configFile = sprintf('%s/config/%s/config.php', $baseDir, $instanceId);
     $config = Config::fromFile($configFile);
 
+    $dataDir = sprintf('%s/data/%s', $baseDir, $instanceId);
+
     $vpnUser = $config->hasItem('vpnUser') ? $config->getItem('vpnUser') : 'openvpn';
     $vpnGroup = $config->hasItem('vpnGroup') ? $config->getItem('vpnGroup') : 'openvpn';
 
@@ -53,7 +55,7 @@ try {
     );
 
     $o = new OpenVpn($vpnConfigDir);
-    $o->writeProfiles($serverClient, $instanceId, $vpnUser, $vpnGroup, $generateCerts);
+    $o->writeProfiles($dataDir, $serverClient, $instanceId, $vpnUser, $vpnGroup, $generateCerts);
 } catch (Exception $e) {
     echo sprintf('ERROR: %s', $e->getMessage()).PHP_EOL;
     exit(1);

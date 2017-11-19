@@ -1,6 +1,11 @@
 <?php
 
 return [
+    // API consumers & credentials
+    'apiConsumers' => [
+        'vpn-admin-portal' => 'XXX-vpn-admin-portal/vpn-server-node-XXX',
+    ],
+
     'apiUser' => 'vpn-server-node',
     'apiPass' => 'XXX-vpn-server-node/vpn-server-api-XXX',
     'apiUri' => 'http://localhost/vpn-server-api/api.php',
