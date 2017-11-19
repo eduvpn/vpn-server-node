@@ -99,8 +99,8 @@ class OpenVpn
         }
 
         $configMappingStr = serialize($configMapping);
-        FileIO::createDir($dataDir, 0710);
-        FileIO::writeFile(sprintf('%s/mapping.dat', $dataDir), $configMappingStr, 0640);
+        FileIO::createDir($dataDir, 0711);
+        FileIO::writeFile(sprintf('%s/mapping.dat', $dataDir), $configMappingStr, 0644);
     }
 
     /**
