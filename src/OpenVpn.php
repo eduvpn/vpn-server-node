@@ -190,7 +190,9 @@ class OpenVpn
             'persist-key',
             'persist-tun',
             'keepalive 10 60',
-            'comp-lzo no',
+            // use 'framing' for compression, but do not compress to regain
+            // backwards compatibility with old(er) configurations
+            'compress',
             'remote-cert-tls client',
             'tls-version-min 1.2',
             'tls-cipher TLS-ECDHE-RSA-WITH-AES-256-GCM-SHA384',
@@ -201,7 +203,6 @@ class OpenVpn
             'cipher AES-256-CBC',
             // 2.4 only
             //'cipher AES-256-GCM',
-            'push "comp-lzo no"',
             sprintf('client-connect %s/client-connect', self::LIBEXEC_DIR),
             sprintf('client-disconnect %s/client-disconnect', self::LIBEXEC_DIR),
             sprintf('ca %s/ca.crt', $tlsDir),
