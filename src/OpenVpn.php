@@ -190,10 +190,6 @@ class OpenVpn
             'persist-key',
             'persist-tun',
             'keepalive 10 60',
-            // we cannot switch to "--compress", it breaks clients for some
-            // reason even if not using compression, it seems the framing is
-            // different
-            'comp-lzo no',
             'remote-cert-tls client',
             'tls-version-min 1.2',
             'tls-cipher TLS-ECDHE-RSA-WITH-AES-256-GCM-SHA384',
@@ -221,6 +217,13 @@ class OpenVpn
             sprintf('proto %s', $processConfig['proto']),
             sprintf('local %s', $processConfig['local']),
         ];
+
+        if ($profileConfig->getItem('enableCompression')) {
+            // we cannot switch to "--compress", it breaks clients for some
+            // reason even if not using compression, it seems the framing is
+            // different
+            $serverConfig[] = 'comp-lzo no';
+        }
 
         if (!$profileConfig->getItem('enableLog')) {
             $serverConfig[] = 'log /dev/null';

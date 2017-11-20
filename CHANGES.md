@@ -10,6 +10,7 @@
 - use same IPv6 default gateway routes on 2.3 clients as are used for 2.4 
   clients
 - add tests for testing server configuration generation
+- support disabling compression
 
 ## 1.0.4 (2017-10-25)
 - remove `--profile` option for generating server configuration, generate for
