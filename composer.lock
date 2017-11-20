@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "50c424dbd7b5b0ab8ba4addf466c39bb",
+    "content-hash": "a151919f58afb18c0a3616cb32f390aa",
     "packages": [
         {
             "name": "eduvpn/common",
-            "version": "dev-master",
+            "version": "1.0.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/eduvpn/vpn-lib-common",
-                "reference": "8a6b72f402343e5c06b61b1532e37264295a3bda"
+                "reference": "f4ca927898e78ea5ba663041e898053c9f260cc4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/8a6b72f402343e5c06b61b1532e37264295a3bda",
-                "reference": "8a6b72f402343e5c06b61b1532e37264295a3bda",
+                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/f4ca927898e78ea5ba663041e898053c9f260cc4",
+                "reference": "f4ca927898e78ea5ba663041e898053c9f260cc4",
                 "shasum": ""
             },
             "require": {
@@ -60,7 +60,7 @@
                 }
             ],
             "description": "Common VPN library",
-            "time": "2017-11-20T13:10:36+00:00"
+            "time": "2017-11-20T13:59:21+00:00"
         },
         {
             "name": "fkooman/secookie",
@@ -1989,9 +1989,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "eduvpn/common": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

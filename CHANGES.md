@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.0.5 (...)
+## 1.0.5 (2017-11-20)
 - support PHPUnit 6
 - add `certificate-info` script to show when the OpenVPN server certificates
   will expire
