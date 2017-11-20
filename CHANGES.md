@@ -6,8 +6,7 @@
   will expire
 - restructure server configuration file generation
 - Psalm fixes
-- switch to `--compress` as `--comp-lzo` is deprecated, maintain client
-  configuration compatibility
+- no longer push `comp-lzo no`, not needed as we don't actually use compression
 - use same IPv6 default gateway routes on 2.3 clients as are used for 2.4 
   clients
 - add tests for testing server configuration generation

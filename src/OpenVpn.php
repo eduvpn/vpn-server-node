@@ -190,9 +190,10 @@ class OpenVpn
             'persist-key',
             'persist-tun',
             'keepalive 10 60',
-            // use 'framing' for compression, but do not compress to regain
-            // backwards compatibility with old(er) configurations
-            'compress',
+            // we cannot switch to "--compress", it breaks clients for some
+            // reason even if not using compression, it seems the framing is
+            // different
+            'comp-lzo no',
             'remote-cert-tls client',
             'tls-version-min 1.2',
             'tls-cipher TLS-ECDHE-RSA-WITH-AES-256-GCM-SHA384',
