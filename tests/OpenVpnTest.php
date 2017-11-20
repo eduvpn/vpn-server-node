@@ -27,7 +27,6 @@ class OpenVpnTest extends TestCase
         // create temporary directory
         $tmpDir = sprintf('%s/%s', sys_get_temp_dir(), bin2hex(random_bytes(16)));
         mkdir($tmpDir, 0700, true);
-//        var_dump($tmpDir);
         $this->tmpDir = $tmpDir;
         $this->openVpn = new OpenVpn($tmpDir);
         $this->serverClient = new ServerClient(
@@ -40,8 +39,8 @@ class OpenVpnTest extends TestCase
     {
         $this->openVpn->writeProfiles($this->serverClient, 'default', 'openvpn', 'openvpn', true);
         $this->assertSame(
-            file_get_contents(sprintf('%s/default-internet-0.conf', $this->tmpDir)),
-            file_get_contents(sprintf('%s/data/default-internet-0.conf', __DIR__))
+            trim(file_get_contents(sprintf('%s/default-internet-0.conf', $this->tmpDir))),
+            trim(file_get_contents(sprintf('%s/data/default-internet-0.conf', __DIR__)))
         );
     }
 }
