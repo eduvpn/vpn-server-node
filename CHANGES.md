@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.6 (...)
+- push `comp-lzo no` to client when compression is enabled to disable 
+  "adaptive compression" in the client
+- update `eduvpn/common`
+
 ## 1.0.5 (2017-11-20)
 - support PHPUnit 6
 - add `certificate-info` script to show when the OpenVPN server certificates

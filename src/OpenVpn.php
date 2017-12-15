@@ -221,8 +221,9 @@ class OpenVpn
         if ($profileConfig->getItem('enableCompression')) {
             // we cannot switch to "--compress", it breaks clients for some
             // reason even if not using compression, it seems the framing is
-            // different
+            // different?
             $serverConfig[] = 'comp-lzo no';
+            $serverConfig[] = 'push "comp-lzo no"';
         }
 
         if (!$profileConfig->getItem('enableLog')) {
