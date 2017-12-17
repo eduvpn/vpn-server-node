@@ -8,14 +8,9 @@
  * SPDX-License-Identifier: AGPL-3.0+
  */
 $baseDir = dirname(__DIR__);
+/** @psalm-suppress UnresolvableInclude */
+require_once sprintf('%s/vendor/autoload.php', $baseDir);
 
-// find the autoloader (package installs, composer)
-foreach (['src', 'vendor'] as $autoloadDir) {
-    if (@file_exists(sprintf('%s/%s/autoload.php', $baseDir, $autoloadDir))) {
-        require_once sprintf('%s/%s/autoload.php', $baseDir, $autoloadDir);
-        break;
-    }
-}
 use SURFnet\VPN\Common\CliParser;
 use SURFnet\VPN\Common\Config;
 use SURFnet\VPN\Common\HttpClient\CurlHttpClient;
