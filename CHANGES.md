@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.7 (2017-12-17)
+- cleanup autoloading
+
 ## 1.0.6 (2017-12-15)
 - push `comp-lzo no` to client when compression is enabled to disable 
   "adaptive compression" in the client
