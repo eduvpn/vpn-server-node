@@ -70,7 +70,7 @@ try {
             // RHEL/CentOS/Fedora
             $iptablesFile = '/etc/sysconfig/iptables';
             $ip6tablesFile = '/etc/sysconfig/ip6tables';
-        } elseif (@file_exists('/etc/redhat-release')) {
+        } elseif (@file_exists('/etc/debian_version')) {
             // Debian/Ubuntu
             $iptablesFile = '/etc/iptables/rules.v4';
             $ip6tablesFile = '/etc/iptables/rules.v6';
