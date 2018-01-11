@@ -25,7 +25,6 @@ try {
         'Generate firewall rules for all instances',
         [
             'install' => ['install the firewall', false, false],
-            'debian' => ['install the firewall for Debian iptables-persistent', false, false],
         ]
     );
 
@@ -65,15 +64,20 @@ try {
     $firewall = Firewall::getFirewall4($configList, $firewallConfig);
     $firewall6 = Firewall::getFirewall6($configList, $firewallConfig);
 
-    // determine file location for writing firewall data
-    $iptablesFile = '/etc/sysconfig/iptables';
-    $ip6tablesFile = '/etc/sysconfig/ip6tables';
-    if ($opt->hasItem('debian')) {
-        $iptablesFile = '/etc/iptables/rules.v4';
-        $ip6tablesFile = '/etc/iptables/rules.v6';
-    }
-
     if ($opt->hasItem('install')) {
+        // determine file location for writing firewall data
+        if (@file_exists('/etc/redhat-release')) {
+            // RHEL/CentOS/Fedora
+            $iptablesFile = '/etc/sysconfig/iptables';
+            $ip6tablesFile = '/etc/sysconfig/ip6tables';
+        } elseif (@file_exists('/etc/redhat-release')) {
+            // Debian/Ubuntu
+            $iptablesFile = '/etc/iptables/rules.v4';
+            $ip6tablesFile = '/etc/iptables/rules.v6';
+        } else {
+            throw new Exception('only RHEL/CentOS/Fedora or Debian/Ubuntu supported');
+        }
+
         FileIO::writeFile($iptablesFile, $firewall, 0600);
         FileIO::writeFile($ip6tablesFile, $firewall6, 0600);
     } else {

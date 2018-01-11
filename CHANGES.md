@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.8 (...)
+- autodetect RHEL/CentOS/Fedora or Debian/Ubuntu, no longer need to `--debian` 
+  flag for `vpn-server-node-generate-firewall`
+
 ## 1.0.7 (2017-12-17)
 - cleanup autoloading
 
