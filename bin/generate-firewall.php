@@ -68,12 +68,12 @@ try {
         // determine file location for writing firewall data
         if (@file_exists('/etc/redhat-release')) {
             // RHEL/CentOS/Fedora
-            echo 'OS Detection: RHEL/CentOS/Fedora...'.PHP_EOL;
+            echo 'OS Detected: RHEL/CentOS/Fedora...'.PHP_EOL;
             $iptablesFile = '/etc/sysconfig/iptables';
             $ip6tablesFile = '/etc/sysconfig/ip6tables';
         } elseif (@file_exists('/etc/debian_version')) {
             // Debian/Ubuntu
-            echo 'OS Detection: Debian/Ubuntu...'.PHP_EOL;
+            echo 'OS Detected: Debian/Ubuntu...'.PHP_EOL;
             $iptablesFile = '/etc/iptables/rules.v4';
             $ip6tablesFile = '/etc/iptables/rules.v6';
         } else {
