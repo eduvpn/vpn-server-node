@@ -195,11 +195,7 @@ class OpenVpn
             'tls-cipher TLS-ECDHE-RSA-WITH-AES-256-GCM-SHA384',
             'auth SHA256',
             'dh none', // Only ECDHE
-            'ncp-ciphers AES-256-GCM', // force AES-256-GCM for 2.4 clients
-            // 2.3 & 2.4
-            'cipher AES-256-CBC',
-            // 2.4 only
-            //'cipher AES-256-GCM',
+            'ncp-ciphers AES-256-GCM', // force AES-256-GCM for >= 2.4 clients
             sprintf('client-connect %s/client-connect', self::LIBEXEC_DIR),
             sprintf('client-disconnect %s/client-disconnect', self::LIBEXEC_DIR),
             sprintf('ca %s/ca.crt', $tlsDir),
@@ -217,6 +213,16 @@ class OpenVpn
             sprintf('proto %s', $processConfig['proto']),
             sprintf('local %s', $processConfig['local']),
         ];
+
+        // force AES-256-GCM when we only support 2.4 clients
+        // tlsCrypt is only supported on 2.4 clients
+        if ($profileConfig->getItem('tlsCrypt')) {
+            // 2.4 only
+            $serverConfig[] = 'cipher AES-256-GCM';
+        } else {
+            // 2.3 & 2.4
+            $serverConfig[] = 'cipher AES-256-CBC';
+        }
 
         if ($profileConfig->getItem('enableCompression')) {
             // we cannot switch to "--compress", it breaks clients for some
@@ -299,9 +305,12 @@ class OpenVpn
         if ($profileConfig->getItem('defaultGateway')) {
             $routeConfig[] = 'push "redirect-gateway def1 bypass-dhcp ipv6"';
 
-            // 2.3 client compat
-            $routeConfig[] = 'push "route-ipv6 2000::/4"';
-            $routeConfig[] = 'push "route-ipv6 3000::/4"';
+            if (!$profileConfig->getItem('tlsCrypt')) {
+                // tlsCrypt is only supported on 2.4 clients, so if we don't
+                // support tlsCrypt we assume 2.3 client compat
+                $routeConfig[] = 'push "route-ipv6 2000::/4"';
+                $routeConfig[] = 'push "route-ipv6 3000::/4"';
+            }
 
             return $routeConfig;
         }

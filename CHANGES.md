@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.9 (...)
+- remove hacks for supporting 2.3 clients when `tlsCrypt` is enabled
+
 ## 1.0.8 (2018-01-17)
 - autodetect RHEL/CentOS/Fedora or Debian/Ubuntu, no longer need the `--debian` 
   flag for `vpn-server-node-generate-firewall`
