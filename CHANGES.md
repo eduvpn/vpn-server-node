@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.0.9 (...)
+## 1.0.9 (2018-02-25)
 - remove hacks for supporting 2.3 clients when `tlsCrypt` is enabled
 
 ## 1.0.8 (2018-01-17)
