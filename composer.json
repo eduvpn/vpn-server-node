@@ -27,7 +27,7 @@
         }
     ],
     "require": {
-        "eduvpn/common": "^1",
+        "eduvpn/common": "dev-master",
         "ext-filter": "*",
         "ext-json": "*",
         "ext-mbstring": "*",
