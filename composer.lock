@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "eduvpn/common",
-            "version": "1.1.8",
+            "version": "1.1.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/eduvpn/vpn-lib-common",
-                "reference": "63924a8432ba83bb12168f91b3c3fd06da064dee"
+                "reference": "4711eb8eb9debf68eb43ce29c9e14c535d6df4aa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/63924a8432ba83bb12168f91b3c3fd06da064dee",
-                "reference": "63924a8432ba83bb12168f91b3c3fd06da064dee",
+                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/4711eb8eb9debf68eb43ce29c9e14c535d6df4aa",
+                "reference": "4711eb8eb9debf68eb43ce29c9e14c535d6df4aa",
                 "shasum": ""
             },
             "require": {
@@ -62,7 +62,7 @@
                 }
             ],
             "description": "Common VPN library",
-            "time": "2018-02-27T15:29:29+00:00"
+            "time": "2018-03-15T21:51:44+00:00"
         },
         {
             "name": "fkooman/secookie",
@@ -150,24 +150,24 @@
         },
         {
             "name": "paragonie/constant_time_encoding",
-            "version": "v2.2.1",
+            "version": "v2.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paragonie/constant_time_encoding.git",
-                "reference": "7c74c5d08761ead7b5e89d07c854bc28eb0b2186"
+                "reference": "eccf915f45f911bfb189d1d1638d940ec6ee6e33"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paragonie/constant_time_encoding/zipball/7c74c5d08761ead7b5e89d07c854bc28eb0b2186",
-                "reference": "7c74c5d08761ead7b5e89d07c854bc28eb0b2186",
+                "url": "https://api.github.com/repos/paragonie/constant_time_encoding/zipball/eccf915f45f911bfb189d1d1638d940ec6ee6e33",
+                "reference": "eccf915f45f911bfb189d1d1638d940ec6ee6e33",
                 "shasum": ""
             },
             "require": {
                 "php": "^7"
             },
             "require-dev": {
-                "phpunit/phpunit": "^6",
-                "vimeo/psalm": "^0.3|^1"
+                "phpunit/phpunit": "^6|^7",
+                "vimeo/psalm": "^1"
             },
             "type": "library",
             "autoload": {
@@ -208,7 +208,7 @@
                 "hex2bin",
                 "rfc4648"
             ],
-            "time": "2018-01-23T00:54:57+00:00"
+            "time": "2018-03-10T19:47:49+00:00"
         },
         {
             "name": "paragonie/random_compat",
@@ -471,16 +471,16 @@
         },
         {
             "name": "twig/twig",
-            "version": "v1.35.0",
+            "version": "v1.35.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "daa657073e55b0a78cce8fdd22682fddecc6385f"
+                "reference": "9c24f2cd39dc1906b76879e099970b7e53724601"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/daa657073e55b0a78cce8fdd22682fddecc6385f",
-                "reference": "daa657073e55b0a78cce8fdd22682fddecc6385f",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/9c24f2cd39dc1906b76879e099970b7e53724601",
+                "reference": "9c24f2cd39dc1906b76879e099970b7e53724601",
                 "shasum": ""
             },
             "require": {
@@ -532,7 +532,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2017-09-27T18:06:46+00:00"
+            "time": "2018-03-03T16:21:29+00:00"
         }
     ],
     "packages-dev": [
