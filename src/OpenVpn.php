@@ -215,8 +215,11 @@ class OpenVpn
 
         // force AES-256-GCM when we only support 2.4 clients
         // tlsCrypt is only supported on 2.4 clients
-        if (!$profileConfig->getItem('tlsCrypt')) {
-            // support 2.3 & 2.4
+        if ($profileConfig->getItem('tlsCrypt')) {
+            // 2.4 only
+            $serverConfig[] = 'cipher AES-256-GCM';
+        } else {
+            // 2.3 & 2.4
             $serverConfig[] = 'cipher AES-256-CBC';
             $serverConfig[] = 'auth SHA256';
         }
