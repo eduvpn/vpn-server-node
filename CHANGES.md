@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.10 (2018-03-15)
+- firewall config template change, a port is an integer, not a string
+
 ## 1.0.9 (2018-02-25)
 - remove hacks for supporting 2.3 clients when `tlsCrypt` is enabled
 
