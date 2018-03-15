@@ -1,9 +1,5 @@
 # Changelog
 
-## 1.0.10 (...)
-- only set `--auth` when in OpenVPN 2.3 compat mode, i.e. `tlsCrypt` is not 
-  enabled
-
 ## 1.0.9 (2018-02-25)
 - remove hacks for supporting 2.3 clients when `tlsCrypt` is enabled
 

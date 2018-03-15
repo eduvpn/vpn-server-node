@@ -193,6 +193,7 @@ class OpenVpn
             'remote-cert-tls client',
             'tls-version-min 1.2',
             'tls-cipher TLS-ECDHE-RSA-WITH-AES-256-GCM-SHA384',
+            'auth SHA256',
             'dh none', // Only ECDHE
             'ncp-ciphers AES-256-GCM', // force AES-256-GCM for >= 2.4 clients
             sprintf('client-connect %s/client-connect', self::LIBEXEC_DIR),
@@ -221,7 +222,6 @@ class OpenVpn
         } else {
             // 2.3 & 2.4
             $serverConfig[] = 'cipher AES-256-CBC';
-            $serverConfig[] = 'auth SHA256';
         }
 
         if ($profileConfig->getItem('enableCompression')) {
