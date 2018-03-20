@@ -189,7 +189,6 @@ class OpenVpn
             'topology subnet',
             'persist-key',
             'persist-tun',
-            'keepalive 10 60',
             'remote-cert-tls client',
             'tls-version-min 1.2',
             'tls-cipher TLS-ECDHE-RSA-WITH-AES-256-GCM-SHA384',
@@ -238,11 +237,13 @@ class OpenVpn
 
         if ('tcp-server' === $processConfig['proto'] || 'tcp6-server' === $processConfig['proto']) {
             $serverConfig[] = 'tcp-nodelay';
+            $serverConfig[] = 'keepalive 30 60';
         }
 
         if ('udp' === $processConfig['proto'] || 'udp6' === $processConfig['proto']) {
             // notify the clients to reconnect when restarting OpenVPN on the server
             // OpenVPN server >= 2.4
+            $serverConfig[] = 'keepalive 20 60';
             $serverConfig[] = 'explicit-exit-notify 1';
             // also ask the clients on UDP to tell us when they leave...
             // https://github.com/OpenVPN/openvpn/commit/422ecdac4a2738cd269361e048468d8b58793c4e
