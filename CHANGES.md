@@ -1,7 +1,7 @@
 # Changelog
 
 ## 1.0.11 (...)
-- increase `keepalive` for both UDP and TCP
+- increase `keepalive` for UDP, remove it for TCP
 
 ## 1.0.10 (2018-03-15)
 - firewall config template change, a port is an integer, not a string

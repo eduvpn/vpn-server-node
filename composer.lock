@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "eduvpn/common",
-            "version": "1.1.9",
+            "version": "1.1.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/eduvpn/vpn-lib-common",
-                "reference": "4711eb8eb9debf68eb43ce29c9e14c535d6df4aa"
+                "reference": "edd87b746cb546e7f5091c50616a36f9be27eca5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/4711eb8eb9debf68eb43ce29c9e14c535d6df4aa",
-                "reference": "4711eb8eb9debf68eb43ce29c9e14c535d6df4aa",
+                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/edd87b746cb546e7f5091c50616a36f9be27eca5",
+                "reference": "edd87b746cb546e7f5091c50616a36f9be27eca5",
                 "shasum": ""
             },
             "require": {
@@ -31,6 +31,7 @@
                 "ext-mbstring": "*",
                 "ext-pcre": "*",
                 "ext-pdo": "*",
+                "ext-radius": "*",
                 "ext-spl": "*",
                 "fkooman/secookie": "^2",
                 "ircmaxell/password-compat": "^1",
@@ -62,7 +63,7 @@
                 }
             ],
             "description": "Common VPN library",
-            "time": "2018-03-15T21:51:44+00:00"
+            "time": "2018-03-16T13:34:53+00:00"
         },
         {
             "name": "fkooman/secookie",
@@ -471,16 +472,16 @@
         },
         {
             "name": "twig/twig",
-            "version": "v1.35.2",
+            "version": "v1.35.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "9c24f2cd39dc1906b76879e099970b7e53724601"
+                "reference": "b48680b6eb7d16b5025b9bfc4108d86f6b8af86f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/9c24f2cd39dc1906b76879e099970b7e53724601",
-                "reference": "9c24f2cd39dc1906b76879e099970b7e53724601",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/b48680b6eb7d16b5025b9bfc4108d86f6b8af86f",
+                "reference": "b48680b6eb7d16b5025b9bfc4108d86f6b8af86f",
                 "shasum": ""
             },
             "require": {
@@ -488,8 +489,8 @@
             },
             "require-dev": {
                 "psr/container": "^1.0",
-                "symfony/debug": "~2.7",
-                "symfony/phpunit-bridge": "~3.3@dev"
+                "symfony/debug": "^2.7",
+                "symfony/phpunit-bridge": "^3.3"
             },
             "type": "library",
             "extra": {
@@ -532,7 +533,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2018-03-03T16:21:29+00:00"
+            "time": "2018-03-20T04:25:58+00:00"
         }
     ],
     "packages-dev": [
