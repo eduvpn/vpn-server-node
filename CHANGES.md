@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.0.11 (...)
+## 1.0.11 (2018-03-29)
 - increase `keepalive` for UDP, remove it for TCP
 
 ## 1.0.10 (2018-03-15)
