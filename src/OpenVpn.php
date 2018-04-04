@@ -22,7 +22,7 @@ class OpenVpn
     const LIBEXEC_DIR = '/usr/libexec/vpn-server-node';
 
     // https://github.com/fac/auth-script-openvpn
-    const AUTH_SCRIPT_OPENVPN = '/usr/lib64/openvpn/plugins/auth_script.so';
+    const AUTH_SCRIPT_OPENVPN = '/usr/lib64/openvpn/plugins/openvpn-plugin-auth-script.so';
 
     /** @var string */
     private $vpnConfigDir;
