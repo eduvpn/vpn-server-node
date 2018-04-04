@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.12 (...)
+- autodetect authPlugin instead of requiring configuration option. If plugin is
+  installed, use it
+
 ## 1.0.11 (2018-03-29)
 - increase `keepalive` for UDP, remove it for TCP
 
