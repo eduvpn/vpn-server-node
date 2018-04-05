@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "50c424dbd7b5b0ab8ba4addf466c39bb",
+    "content-hash": "a151919f58afb18c0a3616cb32f390aa",
     "packages": [
         {
             "name": "eduvpn/common",
-            "version": "dev-master",
+            "version": "1.1.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/eduvpn/vpn-lib-common",
-                "reference": "08be1bb05223386e6f5e25b084298df914495592"
+                "reference": "ccf7dcf5f0b8511858e291a57497ed46a3eb4399"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/08be1bb05223386e6f5e25b084298df914495592",
-                "reference": "08be1bb05223386e6f5e25b084298df914495592",
+                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/ccf7dcf5f0b8511858e291a57497ed46a3eb4399",
+                "reference": "ccf7dcf5f0b8511858e291a57497ed46a3eb4399",
                 "shasum": ""
             },
             "require": {
@@ -63,7 +63,7 @@
                 }
             ],
             "description": "Common VPN library",
-            "time": "2018-04-04T17:19:17+00:00"
+            "time": "2018-04-05T08:12:56+00:00"
         },
         {
             "name": "fkooman/secookie",
@@ -213,16 +213,16 @@
         },
         {
             "name": "paragonie/random_compat",
-            "version": "v2.0.11",
+            "version": "v2.0.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paragonie/random_compat.git",
-                "reference": "5da4d3c796c275c55f057af5a643ae297d96b4d8"
+                "reference": "258c89a6b97de7dfaf5b8c7607d0478e236b04fb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/5da4d3c796c275c55f057af5a643ae297d96b4d8",
-                "reference": "5da4d3c796c275c55f057af5a643ae297d96b4d8",
+                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/258c89a6b97de7dfaf5b8c7607d0478e236b04fb",
+                "reference": "258c89a6b97de7dfaf5b8c7607d0478e236b04fb",
                 "shasum": ""
             },
             "require": {
@@ -257,7 +257,7 @@
                 "pseudorandom",
                 "random"
             ],
-            "time": "2017-09-27T21:40:39+00:00"
+            "time": "2018-04-04T21:24:14+00:00"
         },
         {
             "name": "psr/log",
@@ -1997,9 +1997,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "eduvpn/common": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
