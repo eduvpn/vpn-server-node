@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.0.12 (...)
+## 1.0.12 (2018-04-05)
 - autodetect authPlugin instead of requiring configuration option. If plugin is
   installed, use it
 
