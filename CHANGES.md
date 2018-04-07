@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.13 (...)
+- no longer push `bypass-dhcp` to clients
+
 ## 1.0.12 (2018-04-05)
 - autodetect authPlugin instead of requiring configuration option. If plugin is
   installed, use it

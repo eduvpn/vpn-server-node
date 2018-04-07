@@ -305,7 +305,7 @@ class OpenVpn
     {
         $routeConfig = [];
         if ($profileConfig->getItem('defaultGateway')) {
-            $routeConfig[] = 'push "redirect-gateway def1 bypass-dhcp ipv6"';
+            $routeConfig[] = 'push "redirect-gateway def1 ipv6"';
 
             if (!$profileConfig->getItem('tlsCrypt')) {
                 // tlsCrypt is only supported on 2.4 clients, so if we don't
