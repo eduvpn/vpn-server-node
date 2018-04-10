@@ -2,6 +2,7 @@
 
 ## 1.0.13 (...)
 - no longer push `bypass-dhcp` to clients
+- set `keepalive` to 25 seconds, matching WireGuard
 
 ## 1.0.12 (2018-04-05)
 - autodetect authPlugin instead of requiring configuration option. If plugin is
