@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.0.14 (...)
+## 1.0.14 (2018-04-17)
 - update default config to use `enableNat4` and `enableNat6` instead of 
   `useNat` to allow separate configuration of NAT for IPv4 and IPv6
 
