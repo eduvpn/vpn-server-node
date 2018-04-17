@@ -122,7 +122,7 @@ class Firewall
         foreach ($instanceConfig['profileList'] as $profileId => $profileData) {
             $profileConfig = new ProfileConfig($profileData);
 
-            if($profileConfig->hasItem('useNat')) {
+            if ($profileConfig->hasItem('useNat')) {
                 // XXX DEPRECATED, remove for 2.0
                 $enableNat4 = $profileConfig->getItem('useNat');
                 $enableNat6 = $profileConfig->getItem('useNat');
@@ -131,12 +131,12 @@ class Firewall
                 $enableNat6 = $profileConfig->getItem('enableNat6');
             }
 
-            if($enableNat4 && 4 === $inetFamily) {
+            if ($enableNat4 && 4 === $inetFamily) {
                 $srcNet = $profileConfig->getItem('range');
                 $nat[] = sprintf('-A POSTROUTING -s %s -o %s -j MASQUERADE', $srcNet, $profileConfig->getItem('extIf'));
             }
 
-            if($enableNat6 && 6 === $inetFamily) {
+            if ($enableNat6 && 6 === $inetFamily) {
                 $srcNet = $profileConfig->getItem('range6');
                 $nat[] = sprintf('-A POSTROUTING -s %s -o %s -j MASQUERADE', $srcNet, $profileConfig->getItem('extIf'));
             }
