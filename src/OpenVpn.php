@@ -253,7 +253,7 @@ class OpenVpn
         }
 
         if ($profileConfig->getItem('twoFactor')) {
-            $serverConfig[] = sprintf('auth-gen-token %d', 60 * 60 * 8);  // Added in OpenVPN 2.4
+            $serverConfig[] = sprintf('auth-gen-token %d', 60 * 60 * 12);  // Added in OpenVPN 2.4
 
             // detector for https://github.com/fac/auth-script-openvpn, use it if it is there
             if (@file_exists(self::AUTH_SCRIPT_OPENVPN)) {

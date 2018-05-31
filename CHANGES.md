@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.15 (...)
+- change the default `--auth-gen-token` lifetime to 12 hours when 2FA is used
+
 ## 1.0.14 (2018-04-17)
 - update default config to use `enableNat4` and `enableNat6` instead of 
   `useNat` to allow separate configuration of NAT for IPv4 and IPv6
