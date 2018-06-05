@@ -218,7 +218,7 @@ class OpenVpn
 
         // force AES-256-GCM when we only support 2.4 clients
         // tlsCrypt is only supported on 2.4 clients
-        if ($profileConfig->getItem('tlsCrypt')) {
+        if ('tls-crypt' === self::getTlsProtection($profileConfig)) {
             // 2.4 only
             $serverConfig[] = 'cipher AES-256-GCM';
         } else {
@@ -263,9 +263,10 @@ class OpenVpn
             }
         }
 
-        if ($profileConfig->getItem('tlsCrypt')) {
+        if ('tls-crypt' === self::getTlsProtection($profileConfig)) {
             $serverConfig[] = sprintf('tls-crypt %s/ta.key', $tlsDir);
-        } else {
+        }
+        if ('tls-auth' === self::getTlsProtection($profileConfig)) {
             $serverConfig[] = sprintf('tls-auth %s/ta.key 0', $tlsDir);
         }
 
@@ -307,7 +308,7 @@ class OpenVpn
         if ($profileConfig->getItem('defaultGateway')) {
             $routeConfig[] = 'push "redirect-gateway def1 ipv6"';
 
-            if (!$profileConfig->getItem('tlsCrypt')) {
+            if ('tls-crypt' !== self::getTlsProtection($profileConfig)) {
                 // tlsCrypt is only supported on 2.4 clients, so if we don't
                 // support tlsCrypt we assume 2.3 client compat
                 $routeConfig[] = 'push "route-ipv6 2000::/4"';
@@ -392,5 +393,23 @@ class OpenVpn
         // profileNumber = 4 bits (max 16)
         // processNumber = 4 bits  (max 16)
         return ($instanceNumber - 1 << 8) | ($profileNumber - 1 << 4) | ($processNumber);
+    }
+
+    /**
+     * @param \SURFnet\VPN\Common\ProfileConfig $profileConfig
+     *
+     * @return false|string
+     */
+    private static function getTlsProtection(ProfileConfig $profileConfig)
+    {
+        if ($profileConfig->hasItem('tlsCrypt')) {
+            if ($profileConfig->getItem('tlsCrypt')) {
+                return 'tls-crypt';
+            }
+
+            return 'tls-auth';
+        }
+
+        return $profileConfig->getItem('tlsProtection');
     }
 }

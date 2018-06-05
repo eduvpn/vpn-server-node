@@ -2,6 +2,7 @@
 
 ## 1.0.15 (...)
 - change the default `--auth-gen-token` lifetime to 12 hours when 2FA is used
+- support `tlsProtection`, allows disabling `tls-auth` and `tls-crypt`
 
 ## 1.0.14 (2018-04-17)
 - update default config to use `enableNat4` and `enableNat6` instead of 
