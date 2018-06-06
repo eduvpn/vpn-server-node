@@ -411,15 +411,15 @@ class OpenVpn
             return 'tls-auth';
         }
 
-        // if we reach this point, tlsCrypt is not specified in configuration 
-        // file. This either means we have a new configuration where only 
-        // "tlsProtection" is set, GOOD! Or we have a configuration where 
-        // neither is set, which is strange as "tlsCrypt" WAS there >= 1.0.0. 
-        // So offically we do not support this anyway, but I found some 
-        // machines in the wild that didn't have tlsCrypt yet. The old default 
-        // when tlsCrypt was missing was "false" which meant "use tls-auth". 
-        // That is why the new default value for "tlsProtection" MUST be 
-        // "tls-auth". The configuration file will set it to "tls-crypt" 
+        // if we reach this point, tlsCrypt is not specified in configuration
+        // file. This either means we have a new configuration where only
+        // "tlsProtection" is set, GOOD! Or we have a configuration where
+        // neither is set, which is strange as "tlsCrypt" WAS there >= 1.0.0.
+        // So offically we do not support this anyway, but I found some
+        // machines in the wild that didn't have tlsCrypt yet. The old default
+        // when tlsCrypt was missing was "false" which meant "use tls-auth".
+        // That is why the new default value for "tlsProtection" MUST be
+        // "tls-auth". The configuration file will set it to "tls-crypt"
         // anyway, so that should be fine.
 
         return $profileConfig->getItem('tlsProtection');
