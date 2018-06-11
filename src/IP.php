@@ -146,7 +146,7 @@ class IP
     /**
      * @param int $networkCount
      *
-     * @return array
+     * @return array<IP>
      */
     public function split($networkCount)
     {
@@ -168,7 +168,7 @@ class IP
     /**
      * @param int $networkCount
      *
-     * @return array
+     * @return array<IP>
      */
     private function split4($networkCount)
     {
@@ -190,7 +190,7 @@ class IP
     /**
      * @param int $networkCount
      *
-     * @return array
+     * @return array<IP>
      */
     private function split6($networkCount)
     {
@@ -216,7 +216,7 @@ class IP
                             str_pad($tmpHexAddress, 32, '0')
                         )
                     ),
-                    $this->getPrefix() + 4
+                    1 !== $networkCount ? $this->getPrefix() + 4 : $this->getPrefix()
                 )
             );
         }
