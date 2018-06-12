@@ -1,7 +1,7 @@
 # Changelog
 
 ## 1.0.16 (...)
-- fix IPv6 prefix when there is only one VPN process
+- fix IPv6 prefix when there is only one VPN process (issue #22)
 
 ## 1.0.15 (2018-06-06)
 - change the default `--auth-gen-token` lifetime to 12 hours when 2FA is used
