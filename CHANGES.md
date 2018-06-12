@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.0.16 (...)
+## 1.0.16 (2018-06-12)
 - fix IPv6 prefix when there is only one VPN process (issue #22)
 
 ## 1.0.15 (2018-06-06)
