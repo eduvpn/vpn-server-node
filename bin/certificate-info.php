@@ -12,7 +12,6 @@ $baseDir = dirname(__DIR__);
 /** @psalm-suppress UnresolvableInclude */
 require_once sprintf('%s/vendor/autoload.php', $baseDir);
 
-use SURFnet\VPN\Common\Config;
 use SURFnet\VPN\Common\FileIO;
 
 try {
