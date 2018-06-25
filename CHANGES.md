@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.17 (...)
+- now always issue an `/112` to OpenVPN processes no matter who many IP space
+  is available (issue #23)
+
 ## 1.0.16 (2018-06-12)
 - fix IPv6 prefix when there is only one VPN process (issue #22)
 

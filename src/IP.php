@@ -194,8 +194,12 @@ class IP
      */
     private function split6($networkCount)
     {
-        if (124 < $this->getPrefix()) {
-            throw new IPException('network too small to split up, must be >= /124');
+        // we will ALWAYS assign a /112 to every OpenVPN process. So we need
+        // at least /108 or bigger to be able to accomodate 16 OpenVPN
+        // processes. OpenVPN does not support assigning anything smaller than
+        // a /112 to an OpenVPN process
+        if (108 < $this->getPrefix()) {
+            throw new IPException('network too small to split up, must be >= /108');
         }
 
         if (0 !== $this->getPrefix() % 4) {
@@ -203,21 +207,13 @@ class IP
         }
 
         $hexAddress = bin2hex(inet_pton($this->getAddress()));
-        // strip the last digits based on prefix size
-        $hexAddress = substr($hexAddress, 0, 32 - ((128 - $this->getPrefix()) / 4));
+        // clear the last 20 bits (128 - 108)
+        $hexAddress = substr_replace($hexAddress, '00000', -5);
         $splitRanges = [];
         for ($i = 0; $i < $networkCount; ++$i) {
-            $tmpHexAddress = $hexAddress.dechex($i);
+            $hexAddress[27] = dechex($i);
             $splitRanges[] = new self(
-                sprintf(
-                    '%s/%d',
-                    inet_ntop(
-                        hex2bin(
-                            str_pad($tmpHexAddress, 32, '0')
-                        )
-                    ),
-                    1 !== $networkCount ? $this->getPrefix() + 4 : $this->getPrefix()
-                )
+                sprintf('%s/112', inet_ntop(hex2bin($hexAddress)))
             );
         }
 

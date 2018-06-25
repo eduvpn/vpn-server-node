@@ -47,7 +47,7 @@ class IPTest extends TestCase
         $ip = new IP('1111:2222:3333:4444::/64');
         $splitRange = $ip->split(1);
         $this->assertSame(1, count($splitRange));
-        $this->assertSame('1111:2222:3333:4444::/64', (string) $splitRange[0]);
+        $this->assertSame('1111:2222:3333:4444::/112', (string) $splitRange[0]);
     }
 
     public function testIPv6Two()
@@ -55,8 +55,8 @@ class IPTest extends TestCase
         $ip = new IP('1111:2222:3333:4444::/64');
         $splitRange = $ip->split(2);
         $this->assertSame(2, count($splitRange));
-        $this->assertSame('1111:2222:3333:4444::/68', (string) $splitRange[0]);
-        $this->assertSame('1111:2222:3333:4444:1000::/68', (string) $splitRange[1]);
+        $this->assertSame('1111:2222:3333:4444::/112', (string) $splitRange[0]);
+        $this->assertSame('1111:2222:3333:4444::1:0/112', (string) $splitRange[1]);
     }
 
     public function testIPv6Four()
@@ -64,9 +64,9 @@ class IPTest extends TestCase
         $ip = new IP('1111:2222:3333:4444::/64');
         $splitRange = $ip->split(4);
         $this->assertSame(4, count($splitRange));
-        $this->assertSame('1111:2222:3333:4444::/68', (string) $splitRange[0]);
-        $this->assertSame('1111:2222:3333:4444:1000::/68', (string) $splitRange[1]);
-        $this->assertSame('1111:2222:3333:4444:2000::/68', (string) $splitRange[2]);
-        $this->assertSame('1111:2222:3333:4444:3000::/68', (string) $splitRange[3]);
+        $this->assertSame('1111:2222:3333:4444::/112', (string) $splitRange[0]);
+        $this->assertSame('1111:2222:3333:4444::1:0/112', (string) $splitRange[1]);
+        $this->assertSame('1111:2222:3333:4444::2:0/112', (string) $splitRange[2]);
+        $this->assertSame('1111:2222:3333:4444::3:0/112', (string) $splitRange[3]);
     }
 }
