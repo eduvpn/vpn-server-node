@@ -198,8 +198,13 @@ class IP
         // at least /108 or bigger to be able to accomodate 16 OpenVPN
         // processes. OpenVPN does not support assigning anything smaller than
         // a /112 to an OpenVPN process
-        if (108 < $this->getPrefix()) {
-            throw new IPException('network too small to split up, must be >= /108');
+        if (112 < $this->getPrefix()) {
+            throw new IPException('network too small, must be >= /112');
+        }
+        if (1 !== $networkCount) {
+            if (108 < $this->getPrefix()) {
+                throw new IPException('network too small to split up, must be >= /108');
+            }
         }
 
         if (0 !== $this->getPrefix() % 4) {

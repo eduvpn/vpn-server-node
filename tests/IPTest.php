@@ -50,6 +50,14 @@ class IPTest extends TestCase
         $this->assertSame('1111:2222:3333:4444::/112', (string) $splitRange[0]);
     }
 
+    public function testIPv6OneWithMinSpace()
+    {
+        $ip = new IP('1111:2222:3333:4444::/112');
+        $splitRange = $ip->split(1);
+        $this->assertSame(1, count($splitRange));
+        $this->assertSame('1111:2222:3333:4444::/112', (string) $splitRange[0]);
+    }
+
     public function testIPv6Two()
     {
         $ip = new IP('1111:2222:3333:4444::/64');
