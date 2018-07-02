@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.0.17 (...)
+## 1.0.17 (2018-07-02)
 - now always issue an `/112` to OpenVPN processes no matter who many IP space
   is available (issue #23)
 
