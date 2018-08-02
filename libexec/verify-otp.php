@@ -57,7 +57,7 @@ try {
     $twoFactor = new TwoFactor($logger, $serverClient);
     $twoFactor->verify($envData);
 
-    if (null !== $envData['auth_control_file']) {
+    if (false !== $envData['auth_control_file']) {
         // we were started from the plugin, and not --auth-user-pass-verify
         // '1' indicates success
         @file_put_contents($envData['auth_control_file'], '1');

@@ -150,10 +150,6 @@ class IP
      */
     public function split($networkCount)
     {
-        if (!is_int($networkCount)) {
-            throw new InvalidArgumentException('parameter must be integer');
-        }
-
         if (0 !== ($networkCount & ($networkCount - 1))) {
             throw new InvalidArgumentException('parameter must be power of 2');
         }
@@ -180,7 +176,7 @@ class IP
         $splitRanges = [];
         for ($i = 0; $i < $networkCount; ++$i) {
             $noHosts = pow(2, 32 - $prefix);
-            $networkAddress = long2ip($i * $noHosts + ip2long($this->getAddress()));
+            $networkAddress = long2ip((int) ($i * $noHosts + ip2long($this->getAddress())));
             $splitRanges[] = new self($networkAddress.'/'.$prefix);
         }
 
