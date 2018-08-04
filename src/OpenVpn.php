@@ -45,7 +45,7 @@ class OpenVpn
     public function generateKeys(ServerClient $serverClient, $vpnTlsDir, $commonName)
     {
         FileIO::createDir($vpnTlsDir, 0700);
-        $certData = $serverClient->post('add_server_certificate', ['common_name' => $commonName]);
+        $certData = $serverClient->postRequireArray('add_server_certificate', ['common_name' => $commonName]);
 
         $certFileMapping = [
             'ca' => sprintf('%s/ca.crt', $vpnTlsDir),
@@ -69,8 +69,8 @@ class OpenVpn
      */
     public function writeProfiles(ServerClient $serverClient, $instanceId, $vpnUser, $vpnGroup, $generateCerts)
     {
-        $instanceNumber = $serverClient->get('instance_number');
-        $profileList = $serverClient->get('profile_list');
+        $instanceNumber = $serverClient->getRequireInt('instance_number');
+        $profileList = $serverClient->getRequireArray('profile_list');
 
         $profileIdList = array_keys($profileList);
         foreach ($profileIdList as $profileId) {
