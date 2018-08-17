@@ -9,37 +9,33 @@
 
 namespace SURFnet\VPN\Node;
 
+use SURFnet\VPN\Common\Config;
 use SURFnet\VPN\Common\ProfileConfig;
 
 class Firewall
 {
     /**
-     * @param bool $asArray
-     *
-     * @return array|string
+     * @return string
      */
-    public static function getFirewall4(array $configList, FirewallConfig $firewallConfig, $asArray = false)
+    public static function getFirewall4(array $configList, Config $firewallConfig)
     {
-        return self::getFirewall($configList, $firewallConfig, 4, $asArray);
+        return implode(PHP_EOL, self::getArrayFirewall($configList, $firewallConfig, 4)).PHP_EOL;
     }
 
     /**
-     * @param bool $asArray
-     *
-     * @return array|string
+     * @return string
      */
-    public static function getFirewall6(array $configList, FirewallConfig $firewallConfig, $asArray = false)
+    public static function getFirewall6(array $configList, Config $firewallConfig)
     {
-        return self::getFirewall($configList, $firewallConfig, 6, $asArray);
+        return implode(PHP_EOL, self::getArrayFirewall($configList, $firewallConfig, 6)).PHP_EOL;
     }
 
     /**
-     * @param int  $inetFamily
-     * @param bool $asArray
+     * @param int $inetFamily
      *
-     * @return array|string
+     * @return array
      */
-    private static function getFirewall(array $configList, FirewallConfig $firewallConfig, $inetFamily, $asArray)
+    private static function getArrayFirewall(array $configList, Config $firewallConfig, $inetFamily)
     {
         $firewall = [];
 
@@ -90,7 +86,7 @@ class Firewall
         $firewall[] = sprintf('-A FORWARD -j REJECT --reject-with %s', 4 === $inetFamily ? 'icmp-host-prohibited' : 'icmp6-adm-prohibited');
         $firewall[] = 'COMMIT';
 
-        $firewall = array_merge(
+        return array_merge(
             [
                 '#',
                 '# VPN Firewall Configuration',
@@ -102,12 +98,6 @@ class Firewall
             ],
             $firewall
         );
-
-        if ($asArray) {
-            return $firewall;
-        }
-
-        return implode(PHP_EOL, $firewall).PHP_EOL;
     }
 
     /**
@@ -150,7 +140,7 @@ class Firewall
      *
      * @return array
      */
-    private static function getInputChain($inetFamily, FirewallConfig $firewallConfig)
+    private static function getInputChain($inetFamily, Config $firewallConfig)
     {
         $inputChain = [
             '-A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT',

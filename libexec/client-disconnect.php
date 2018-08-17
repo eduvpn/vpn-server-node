@@ -8,11 +8,11 @@
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
+require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
-/** @psalm-suppress UnresolvableInclude */
-require_once sprintf('%s/vendor/autoload.php', $baseDir);
 
 use SURFnet\VPN\Common\Config;
+use SURFnet\VPN\Common\Http\Exception\InputValidationException;
 use SURFnet\VPN\Common\Http\InputValidation;
 use SURFnet\VPN\Common\HttpClient\CurlHttpClient;
 use SURFnet\VPN\Common\HttpClient\ServerClient;
@@ -43,7 +43,10 @@ try {
         $envData[$envKey] = getenv($envKey);
     }
 
-    $instanceId = InputValidation::instanceId($envData['INSTANCE_ID']);
+    if (false === $instanceId = $envData['INSTANCE_ID']) {
+        throw new InputValidationException('invalid "instance_id"');
+    }
+    $instanceId = InputValidation::instanceId($instanceId);
     $configDir = sprintf('%s/config/%s', $baseDir, $instanceId);
     $config = Config::fromFile(
         sprintf('%s/config.php', $configDir)
