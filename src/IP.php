@@ -162,6 +162,25 @@ class IP
     }
 
     /**
+     * @return string
+     */
+    public function getFirstHost()
+    {
+        if (4 === $this->ipFamily && 31 <= $this->ipPrefix) {
+            throw new IPException('network not big enough');
+        }
+        if (6 === $this->ipFamily && 127 <= $this->ipPrefix) {
+            throw new IPException('network not big enough');
+        }
+
+        $hexIp = bin2hex(inet_pton($this->ipAddress));
+        $lastDigit = hexdec(substr($hexIp, -1));
+        $hexIp = substr_replace($hexIp, $lastDigit + 1, -1);
+
+        return inet_ntop(hex2bin($hexIp));
+    }
+
+    /**
      * @param int $networkCount
      *
      * @return array<IP>

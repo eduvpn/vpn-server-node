@@ -274,7 +274,7 @@ class OpenVpn
         $serverConfig = array_merge($serverConfig, self::getRoutes($profileConfig));
 
         // DNS
-        $serverConfig = array_merge($serverConfig, self::getDns($profileConfig));
+        $serverConfig = array_merge($serverConfig, self::getDns($rangeIp, $range6Ip, $profileConfig));
 
         // Client-to-client
         $serverConfig = array_merge($serverConfig, self::getClientToClient($profileConfig));
@@ -336,7 +336,7 @@ class OpenVpn
     /**
      * @return array
      */
-    private static function getDns(ProfileConfig $profileConfig)
+    private static function getDns(IP $rangeIp, IP $range6Ip, ProfileConfig $profileConfig)
     {
         // only push DNS if we are the default route
         if (!$profileConfig->getItem('defaultGateway')) {
@@ -344,6 +344,16 @@ class OpenVpn
         }
 
         $dnsEntries = [];
+        // prevent DNS leakage on Windows
+        $dnsEntries[] = 'push "block-outside-dns"';
+
+        if ($profileConfig->getItem('useLocalDns')) {
+            $dnsEntries[] = sprintf('push "dhcp-option DNS %s"', $rangeIp->getFirstHost());
+            $dnsEntries[] = sprintf('push "dhcp-option DNS6 %s"', $range6Ip->getFirstHost());
+
+            return $dnsEntries;
+        }
+
         foreach ($profileConfig->getSection('dns')->toArray() as $dnsAddress) {
             // also add DNS6 for OpenVPN >= 2.4beta2
             if (false !== strpos($dnsAddress, ':')) {
@@ -352,9 +362,6 @@ class OpenVpn
             }
             $dnsEntries[] = sprintf('push "dhcp-option DNS %s"', $dnsAddress);
         }
-
-        // prevent DNS leakage on Windows
-        $dnsEntries[] = 'push "block-outside-dns"';
 
         return $dnsEntries;
     }

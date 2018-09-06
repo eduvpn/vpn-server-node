@@ -4,6 +4,7 @@
 - cleanup autoloader so Psalm will be able to verify the scripts in and bin and
   libexec folder
 - additional Psalm fixes
+- support `useLocalDns`
 
 ## 1.0.18 (2018-08-05)
 - many `vimeo/psalm` fixes
