@@ -349,17 +349,12 @@ class OpenVpn
 
         if ($profileConfig->getItem('useLocalDns')) {
             $dnsEntries[] = sprintf('push "dhcp-option DNS %s"', $rangeIp->getFirstHost());
-            $dnsEntries[] = sprintf('push "dhcp-option DNS6 %s"', $range6Ip->getFirstHost());
+            $dnsEntries[] = sprintf('push "dhcp-option DNS %s"', $range6Ip->getFirstHost());
 
             return $dnsEntries;
         }
 
         foreach ($profileConfig->getSection('dns')->toArray() as $dnsAddress) {
-            // also add DNS6 for OpenVPN >= 2.4beta2
-            if (false !== strpos($dnsAddress, ':')) {
-                $dnsEntries[] = sprintf('push "dhcp-option DNS6 %s"', $dnsAddress);
-                continue;
-            }
             $dnsEntries[] = sprintf('push "dhcp-option DNS %s"', $dnsAddress);
         }
 

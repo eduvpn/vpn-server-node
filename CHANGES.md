@@ -5,6 +5,7 @@
   libexec folder
 - additional Psalm fixes
 - support `useLocalDns`
+- no longer use `DNS6`, use `DNS` also for IPv6 DNS servers
 
 ## 1.0.18 (2018-08-05)
 - many `vimeo/psalm` fixes
