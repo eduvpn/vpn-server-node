@@ -16,12 +16,17 @@ return [
             22,
             // limit source address for port
             //['src' => ['192.168.1.0/24', 'fda9:c454:8bc1:89a0::/64'], 'port' => '22']
+            // allow VPN clients to query local DNS server
+            //['src' => ['10.0.0.0/8', 'fd00::/8'], 'port' => '53'],
             80,
             443,
             1194,
             //'1194:1201',
+
         ],
         'udp' => [
+            // allow VPN clients to query local DNS server
+            //['src' => ['10.0.0.0/8', 'fd00::/8'], 'port' => '53'],
             1194,
             //'1194:1201',
         ],
