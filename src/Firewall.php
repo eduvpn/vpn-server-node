@@ -159,7 +159,7 @@ class Firewall
         $tcpPorts = $firewallConfig->getSection('inputChain')->getSection('tcp')->toArray();
 
         foreach ($udpPorts as $udpPort) {
-            if (!is_array($udpPort)) {
+            if (!\is_array($udpPort)) {
                 $inputChain[] = sprintf(
                     '-A INPUT -m state --state NEW -m udp -p udp --dport %s -j ACCEPT',
                     $udpPort
@@ -181,7 +181,7 @@ class Firewall
         }
 
         foreach ($tcpPorts as $tcpPort) {
-            if (!is_array($tcpPort)) {
+            if (!\is_array($tcpPort)) {
                 $inputChain[] = sprintf(
                     '-A INPUT -m state --state NEW -m tcp -p tcp --dport %s -j ACCEPT',
                     $tcpPort

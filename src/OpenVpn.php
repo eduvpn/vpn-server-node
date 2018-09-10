@@ -102,7 +102,7 @@ class OpenVpn
     {
         $range = new IP($profileConfig->getItem('range'));
         $range6 = new IP($profileConfig->getItem('range6'));
-        $processCount = count($profileConfig->getItem('vpnProtoPorts'));
+        $processCount = \count($profileConfig->getItem('vpnProtoPorts'));
 
         $splitRange = $range->split($processCount);
         $splitRange6 = $range6->split($processCount);
@@ -348,7 +348,7 @@ class OpenVpn
         $dnsEntries[] = 'push "block-outside-dns"';
 
         $dnsList = $profileConfig->getSection('dns')->toArray();
-        if (0 === count($dnsList)) {
+        if (0 === \count($dnsList)) {
             $dnsEntries[] = sprintf('push "dhcp-option DNS %s"', $rangeIp->getFirstHost());
             $dnsEntries[] = sprintf('push "dhcp-option DNS %s"', $range6Ip->getFirstHost());
 
