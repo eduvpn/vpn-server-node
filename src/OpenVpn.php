@@ -347,14 +347,15 @@ class OpenVpn
         // prevent DNS leakage on Windows
         $dnsEntries[] = 'push "block-outside-dns"';
 
-        if ($profileConfig->getItem('useLocalDns')) {
+        $dnsList = $profileConfig->getSection('dns')->toArray();
+        if (0 === count($dnsList)) {
             $dnsEntries[] = sprintf('push "dhcp-option DNS %s"', $rangeIp->getFirstHost());
             $dnsEntries[] = sprintf('push "dhcp-option DNS %s"', $range6Ip->getFirstHost());
 
             return $dnsEntries;
         }
 
-        foreach ($profileConfig->getSection('dns')->toArray() as $dnsAddress) {
+        foreach ($dnsList as $dnsAddress) {
             $dnsEntries[] = sprintf('push "dhcp-option DNS %s"', $dnsAddress);
         }
 
