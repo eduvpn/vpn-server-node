@@ -63,11 +63,10 @@ class OpenVpn
      * @param string $instanceId
      * @param string $vpnUser
      * @param string $vpnGroup
-     * @param bool   $generateCerts
      *
      * @return void
      */
-    public function writeProfiles(ServerClient $serverClient, $instanceId, $vpnUser, $vpnGroup, $generateCerts)
+    public function writeProfiles(ServerClient $serverClient, $instanceId, $vpnUser, $vpnGroup)
     {
         $instanceNumber = $serverClient->getRequireInt('instance_number');
         $profileList = $serverClient->getRequireArray('profile_list');
@@ -79,15 +78,14 @@ class OpenVpn
             $profileConfigData['_group'] = $vpnGroup;
             $profileConfig = new ProfileConfig($profileConfigData);
             $this->writeProfile($instanceNumber, $instanceId, $profileId, $profileConfig);
-            if ($generateCerts) {
-                // generate a CN based on date and profile, instance
-                $dateTime = new DateTime('now', new DateTimeZone('UTC'));
-                $dateString = $dateTime->format('YmdHis');
-                $cn = sprintf('%s.%s.%s', $dateString, $profileId, $instanceId);
-                $vpnTlsDir = sprintf('%s/tls/%s/%s', $this->vpnConfigDir, $instanceId, $profileId);
 
-                $this->generateKeys($serverClient, $vpnTlsDir, $cn);
-            }
+            // generate a CN based on date and profile, instance
+            $dateTime = new DateTime('now', new DateTimeZone('UTC'));
+            $dateString = $dateTime->format('YmdHis');
+            $cn = sprintf('%s.%s.%s', $dateString, $profileId, $instanceId);
+            $vpnTlsDir = sprintf('%s/tls/%s/%s', $this->vpnConfigDir, $instanceId, $profileId);
+
+            $this->generateKeys($serverClient, $vpnTlsDir, $cn);
         }
     }
 

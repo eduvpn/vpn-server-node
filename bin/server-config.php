@@ -19,10 +19,9 @@ use SURFnet\VPN\Node\OpenVpn;
 
 try {
     $p = new CliParser(
-        'Generate VPN server configuration for an instance',
+        'Generate VPN server configuration and certificates for an instance',
         [
             'instance' => ['the VPN instance', true, false],
-            'generate' => ['generate a new certificate for the server', false, false],
         ]
     );
 
@@ -33,7 +32,6 @@ try {
     }
 
     $instanceId = $opt->hasItem('instance') ? $opt->getItem('instance') : 'default';
-    $generateCerts = $opt->hasItem('generate');
 
     $configFile = sprintf('%s/config/%s/config.php', $baseDir, $instanceId);
     $config = Config::fromFile($configFile);
@@ -48,7 +46,7 @@ try {
     );
 
     $o = new OpenVpn($vpnConfigDir);
-    $o->writeProfiles($serverClient, $instanceId, $vpnUser, $vpnGroup, $generateCerts);
+    $o->writeProfiles($serverClient, $instanceId, $vpnUser, $vpnGroup);
 } catch (Exception $e) {
     echo sprintf('ERROR: %s', $e->getMessage()).PHP_EOL;
     exit(1);

@@ -7,6 +7,7 @@
 - automatically provide IPv4 / IPv6 gateway address as DNS servers when none
   specified, i.e. `dns` is `[]` and `defaultGateway` is `true`
 - no longer use `DNS6`, use `DNS` also for IPv6 DNS servers
+- always generate new server certificates when running `server-config` script
 
 ## 1.0.18 (2018-08-05)
 - many `vimeo/psalm` fixes
