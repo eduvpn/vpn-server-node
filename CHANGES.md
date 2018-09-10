@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.0.19 (...)
+## 1.0.19 (2018-09-10)
 - cleanup autoloader so Psalm will be able to verify the scripts in and bin and
   libexec folder
 - additional Psalm fixes
