@@ -214,14 +214,12 @@ class OpenVpn
             sprintf('local %s', $processConfig['local']),
         ];
 
-        // force AES-256-GCM when we only support 2.4 clients
-        // tlsCrypt is only supported on 2.4 clients
-        if ('tls-crypt' === self::getTlsProtection($profileConfig)) {
-            // 2.4 only
-            $serverConfig[] = 'cipher AES-256-GCM';
-        } else {
-            // 2.3 & 2.4
+        if ('tls-auth' === self::getTlsProtection($profileConfig)) {
+            // if we use tls-auth we are in 2.3 compat mode, so also support
+            // AES-256-CBC
             $serverConfig[] = 'cipher AES-256-CBC';
+        } else {
+            $serverConfig[] = 'cipher AES-256-GCM';
         }
 
         if ($profileConfig->getItem('enableCompression')) {
@@ -306,9 +304,9 @@ class OpenVpn
         if ($profileConfig->getItem('defaultGateway')) {
             $routeConfig[] = 'push "redirect-gateway def1 ipv6"';
 
-            if ('tls-crypt' !== self::getTlsProtection($profileConfig)) {
-                // tlsCrypt is only supported on 2.4 clients, so if we don't
-                // support tlsCrypt we assume 2.3 client compat
+            if ('tls-auth' === self::getTlsProtection($profileConfig)) {
+                // if we use tls-auth we are in 2.3 compat mode, so also push
+                // IPv6 routing fix for 2.3 clients
                 $routeConfig[] = 'push "route-ipv6 2000::/4"';
                 $routeConfig[] = 'push "route-ipv6 3000::/4"';
             }

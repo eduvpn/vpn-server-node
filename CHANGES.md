@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.20 (...)
+- when setting `tlsProtection` to `false`, no longer allow `AES-256-CBC` cipher 
+  and do not push IPv6 route fix
+
 ## 1.0.19 (2018-09-10)
 - cleanup autoloader so Psalm will be able to verify the scripts in and bin and
   libexec folder
