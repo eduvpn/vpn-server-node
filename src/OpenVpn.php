@@ -21,9 +21,6 @@ class OpenVpn
     // CentOS
     const LIBEXEC_DIR = '/usr/libexec/vpn-server-node';
 
-    // https://github.com/fac/auth-script-openvpn
-    const AUTH_SCRIPT_OPENVPN = '/usr/lib64/openvpn/plugins/openvpn-plugin-auth-script.so';
-
     /** @var string */
     private $vpnConfigDir;
 
@@ -251,9 +248,21 @@ class OpenVpn
         if ($profileConfig->getItem('twoFactor')) {
             $serverConfig[] = sprintf('auth-gen-token %d', 60 * 60 * 12);  // Added in OpenVPN 2.4
 
-            // detector for https://github.com/fac/auth-script-openvpn, use it if it is there
-            if (@file_exists(self::AUTH_SCRIPT_OPENVPN)) {
-                $serverConfig[] = sprintf('plugin %s %s/verify-otp', self::AUTH_SCRIPT_OPENVPN, self::LIBEXEC_DIR);
+            // detector for https://github.com/fac/auth-script-openvpn,
+            // use it if it is there
+            $usePlugin = false;
+            $pluginPathList = [
+                '/usr/lib64/openvpn/plugins/openvpn-plugin-auth-script.so', // CentOS / Fedora
+                '/usr/lib/openvpn/openvpn-plugin-auth-script.so',            // Debian / Ubuntu
+            ];
+            foreach ($pluginPathList as $pluginPath) {
+                if (@file_exists($pluginPath)) {
+                    $usePlugin = $pluginPath;
+                    break;
+                }
+            }
+            if (false !== $usePlugin) {
+                $serverConfig[] = sprintf('plugin %s %s/verify-otp', $usePlugin, self::LIBEXEC_DIR);
             } else {
                 $serverConfig[] = sprintf('auth-user-pass-verify %s/verify-otp via-env', self::LIBEXEC_DIR);
             }

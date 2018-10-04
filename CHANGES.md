@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.21 (...)
+- implement detector for `auth-script-openvpn` plugin
+
 ## 1.0.20 (2018-09-19)
 - when setting `tlsProtection` to `false`, no longer allow `AES-256-CBC` cipher 
   and do not push IPv6 route fix
