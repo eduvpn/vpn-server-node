@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.0.21 (...)
+## 1.0.21 (2018-10-05)
 - implement detector for `auth-script-openvpn` plugin
 
 ## 1.0.20 (2018-09-19)
