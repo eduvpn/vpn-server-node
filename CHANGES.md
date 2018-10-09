@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.22 (...)
+- when DNS servers are set, but VPN is not used as default gateway _do_ send 
+  the DNS addresses
+- empty `dns` field, i.e. `[]` does no longer send any DNS servers, before it 
+  would send the IPv4 and IPv6 gateway addresses to the VPN clients
+- introduce `@GW4@` and `@GW6@` macros that can be used in `dns` that will be
+  replaced by the IPv4 and IPv6 gateway addresses
+
 ## 1.0.21 (2018-10-05)
 - implement detector for `auth-script-openvpn` plugin
 
