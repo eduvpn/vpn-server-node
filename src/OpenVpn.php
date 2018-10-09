@@ -279,7 +279,7 @@ class OpenVpn
         $serverConfig = array_merge($serverConfig, self::getRoutes($profileConfig));
 
         // DNS
-        $serverConfig = array_merge($serverConfig, self::getDns($profileConfig));
+        $serverConfig = array_merge($serverConfig, self::getDns($rangeIp, $range6Ip, $profileConfig));
 
         // Client-to-client
         $serverConfig = array_merge($serverConfig, self::getClientToClient($profileConfig));
@@ -341,7 +341,7 @@ class OpenVpn
     /**
      * @return array
      */
-    private static function getDns(ProfileConfig $profileConfig)
+    private static function getDns(IP $rangeIp, IP $range6Ip, ProfileConfig $profileConfig)
     {
         $dnsEntries = [];
         if ($profileConfig->getItem('defaultGateway')) {
@@ -350,6 +350,13 @@ class OpenVpn
         }
         $dnsList = $profileConfig->getSection('dns')->toArray();
         foreach ($dnsList as $dnsAddress) {
+            // replace the macros by IP addresses (LOCAL_DNS)
+            if ('@GW4@' === $dnsAddress) {
+                $dnsAddress = $rangeIp->getFirstHost();
+            }
+            if ('@GW6@' === $dnsAddress) {
+                $dnsAddress = $range6Ip->getFirstHost();
+            }
             $dnsEntries[] = sprintf('push "dhcp-option DNS %s"', $dnsAddress);
         }
 
