@@ -279,7 +279,7 @@ class OpenVpn
         $serverConfig = array_merge($serverConfig, self::getRoutes($profileConfig));
 
         // DNS
-        $serverConfig = array_merge($serverConfig, self::getDns($rangeIp, $range6Ip, $profileConfig));
+        $serverConfig = array_merge($serverConfig, self::getDns($profileConfig));
 
         // Client-to-client
         $serverConfig = array_merge($serverConfig, self::getClientToClient($profileConfig));
@@ -341,25 +341,14 @@ class OpenVpn
     /**
      * @return array
      */
-    private static function getDns(IP $rangeIp, IP $range6Ip, ProfileConfig $profileConfig)
+    private static function getDns(ProfileConfig $profileConfig)
     {
-        // only push DNS if we are the default route
-        if (!$profileConfig->getItem('defaultGateway')) {
-            return [];
-        }
-
         $dnsEntries = [];
-        // prevent DNS leakage on Windows
-        $dnsEntries[] = 'push "block-outside-dns"';
-
-        $dnsList = $profileConfig->getSection('dns')->toArray();
-        if (0 === \count($dnsList)) {
-            $dnsEntries[] = sprintf('push "dhcp-option DNS %s"', $rangeIp->getFirstHost());
-            $dnsEntries[] = sprintf('push "dhcp-option DNS %s"', $range6Ip->getFirstHost());
-
-            return $dnsEntries;
+        if ($profileConfig->getItem('defaultGateway')) {
+            // prevent DNS leakage on Windows when VPN is default gateway
+            $dnsEntries[] = 'push "block-outside-dns"';
         }
-
+        $dnsList = $profileConfig->getSection('dns')->toArray();
         foreach ($dnsList as $dnsAddress) {
             $dnsEntries[] = sprintf('push "dhcp-option DNS %s"', $dnsAddress);
         }
