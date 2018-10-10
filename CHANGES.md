@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.0.22 (...)
+## 1.0.22 (2018-10-10)
 - when DNS servers are set, but VPN is not used as default gateway _do_ send 
   the DNS addresses
 - empty `dns` field, i.e. `[]` does no longer send any DNS servers, before it 
