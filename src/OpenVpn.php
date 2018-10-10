@@ -190,9 +190,9 @@ class OpenVpn
             'remote-cert-tls client',
             'tls-version-min 1.2',
             'tls-cipher TLS-ECDHE-RSA-WITH-AES-256-GCM-SHA384',
-            'auth SHA256',
             'dh none', // Only ECDHE
-            'ncp-ciphers AES-256-GCM', // force AES-256-GCM for >= 2.4 clients
+            'ncp-ciphers AES-256-GCM',  // only AES-256-GCM
+            'cipher AES-256-GCM',       // only AES-256-GCM
             sprintf('client-connect %s/client-connect', self::LIBEXEC_DIR),
             sprintf('client-disconnect %s/client-disconnect', self::LIBEXEC_DIR),
             sprintf('ca %s/ca.crt', $tlsDir),
@@ -211,18 +211,10 @@ class OpenVpn
             sprintf('local %s', $processConfig['local']),
         ];
 
-        if ('tls-auth' === self::getTlsProtection($profileConfig)) {
-            // if we use tls-auth we are in 2.3 compat mode, so also support
-            // AES-256-CBC
-            $serverConfig[] = 'cipher AES-256-CBC';
-        } else {
-            $serverConfig[] = 'cipher AES-256-GCM';
-        }
-
         if ($profileConfig->getItem('enableCompression')) {
-            // we cannot switch to "--compress", it breaks clients for some
-            // reason even if not using compression, it seems the framing is
-            // different?
+            // this only enables compression framing... it tells the clients
+            // to NOT use compression, as that is insecure, see e.g. "VORACLE"
+            // attack
             $serverConfig[] = 'comp-lzo no';
             $serverConfig[] = 'push "comp-lzo no"';
         }
@@ -236,8 +228,8 @@ class OpenVpn
         }
 
         if ('udp' === $processConfig['proto'] || 'udp6' === $processConfig['proto']) {
-            // notify the clients to reconnect when restarting OpenVPN on the server
-            // OpenVPN server >= 2.4
+            // notify the clients to reconnect to the exact same OpenVPN process
+            // when the OpenVPN process restarts...
             $serverConfig[] = 'keepalive 25 150';
             $serverConfig[] = 'explicit-exit-notify 1';
             // also ask the clients on UDP to tell us when they leave...
@@ -272,6 +264,8 @@ class OpenVpn
             $serverConfig[] = sprintf('tls-crypt %s/ta.key', $tlsDir);
         }
         if ('tls-auth' === self::getTlsProtection($profileConfig)) {
+            // only tls-auth needs "auth", AES-256-GCM no longer requires it
+            $serverConfig[] = 'auth SHA256';
             $serverConfig[] = sprintf('tls-auth %s/ta.key 0', $tlsDir);
         }
 
@@ -309,20 +303,11 @@ class OpenVpn
      */
     private static function getRoutes(ProfileConfig $profileConfig)
     {
-        $routeConfig = [];
         if ($profileConfig->getItem('defaultGateway')) {
-            $routeConfig[] = 'push "redirect-gateway def1 ipv6"';
-
-            if ('tls-auth' === self::getTlsProtection($profileConfig)) {
-                // if we use tls-auth we are in 2.3 compat mode, so also push
-                // IPv6 routing fix for 2.3 clients
-                $routeConfig[] = 'push "route-ipv6 2000::/4"';
-                $routeConfig[] = 'push "route-ipv6 3000::/4"';
-            }
-
-            return $routeConfig;
+            return ['push "redirect-gateway def1 ipv6"'];
         }
 
+        $routeConfig = [];
         // there may be some routes specified, push those, and not the default
         foreach ($profileConfig->getSection('routes')->toArray() as $route) {
             $routeIp = new IP($route);

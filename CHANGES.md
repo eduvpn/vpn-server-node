@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.1.0 (...)
+- drop OpenVPN 2.3 client support, requires >= 2.4 now
+  - IPv6 default gateway routing fixes no longer pushed to clients
+  - `AES-256-GCM` is required cipher now
+- only use `auth SHA256` with `tls-auth`, not needed with `AES-256-GCM` and 
+  `tls-crypt`
+
 ## 1.0.22 (2018-10-10)
 - when DNS servers are set, but VPN is not used as default gateway _do_ send 
   the DNS addresses
