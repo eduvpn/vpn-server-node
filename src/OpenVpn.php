@@ -267,6 +267,9 @@ class OpenVpn
             // only tls-auth needs "auth", AES-256-GCM no longer requires it
             $serverConfig[] = 'auth SHA256';
             $serverConfig[] = sprintf('tls-auth %s/ta.key 0', $tlsDir);
+        } else {
+            // we do not require "auth"
+            $serverConfig[] = 'auth none';
         }
 
         // Routes
