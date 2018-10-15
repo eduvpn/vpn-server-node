@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.1.0 (...)
+## 1.1.0 (2018-10-15)
 - drop OpenVPN 2.3 client support, requires >= 2.4 now
   - IPv6 default gateway routing fixes no longer pushed to clients
   - `AES-256-GCM` is required cipher now

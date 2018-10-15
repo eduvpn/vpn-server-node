@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "eduvpn/common",
-            "version": "1.2.1",
+            "version": "1.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/eduvpn/vpn-lib-common",
-                "reference": "bf4730362762b09d978d977332875d2c12b1d0d9"
+                "reference": "8fc880e121d298969ba6af1899484ccf5cded8a7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/bf4730362762b09d978d977332875d2c12b1d0d9",
-                "reference": "bf4730362762b09d978d977332875d2c12b1d0d9",
+                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/8fc880e121d298969ba6af1899484ccf5cded8a7",
+                "reference": "8fc880e121d298969ba6af1899484ccf5cded8a7",
                 "shasum": ""
             },
             "require": {
@@ -67,7 +67,7 @@
                 "email": "eduvpn@surfnet.nl",
                 "source": "https://github.com/eduvpn/vpn-lib-common"
             },
-            "time": "2018-09-10T18:34:06+00:00"
+            "time": "2018-10-10T09:22:07+00:00"
         },
         {
             "name": "fkooman/secookie",
