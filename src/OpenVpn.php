@@ -244,8 +244,9 @@ class OpenVpn
             // use it if it is there
             $usePlugin = false;
             $pluginPathList = [
-                '/usr/lib64/openvpn/plugins/openvpn-plugin-auth-script.so', // CentOS / Fedora
-                '/usr/lib/openvpn/openvpn-plugin-auth-script.so',            // Debian / Ubuntu
+                '/usr/lib64/openvpn/plugins/openvpn-plugin-auth-script.so', // CentOS / Fedora (64 bit)
+                '/usr/lib/openvpn/plugins/openvpn-plugin-auth-script.so',   // CentOS / Fedora (32 bit)
+                '/usr/lib/openvpn/openvpn-plugin-auth-script.so',           // Debian / Ubuntu
             ];
             foreach ($pluginPathList as $pluginPath) {
                 if (@file_exists($pluginPath)) {

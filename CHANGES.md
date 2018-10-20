@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.1.1 (...)
+- support also 32 bit Fedora/CentOS for determining OpenVPN auth plugin path
+
 ## 1.1.0 (2018-10-15)
 - drop OpenVPN 2.3 client support, requires >= 2.4 now
   - IPv6 default gateway routing fixes no longer pushed to clients
