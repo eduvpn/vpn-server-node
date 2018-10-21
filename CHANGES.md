@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.1.1 (...)
+## 1.1.1 (2018-10-21)
 - support also 32 bit Fedora/CentOS for determining OpenVPN auth plugin path
 
 ## 1.1.0 (2018-10-15)
