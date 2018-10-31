@@ -277,7 +277,7 @@ class Firewall
     private static function getForwardFirewall($instanceNumber, $profileNumber, ProfileConfig $profileConfig, $inetFamily)
     {
         $forwardFirewall = [];
-        if ($profileConfig->getItem('blockSmb')) {
+        if ($profileConfig->hasItem('blockSmb') && $profileConfig->getItem('blockSmb')) {
             // drop SMB outgoing traffic
             // @see https://medium.com/@ValdikSS/deanonymizing-windows-users-and-capturing-microsoft-and-vpn-accounts-f7e53fe73834
             foreach (['tcp', 'udp'] as $proto) {
