@@ -308,7 +308,14 @@ class OpenVpn
     private static function getRoutes(ProfileConfig $profileConfig)
     {
         if ($profileConfig->getItem('defaultGateway')) {
-            return ['push "redirect-gateway def1 ipv6"'];
+            $redirectFlags = ['def1', 'ipv6'];
+            if ($profileConfig->hasItem('blockLocal') && $profileConfig->getItem('blockLocal')) {
+                $redirectFlags[] = 'block-local';
+            }
+
+            return [
+                sprintf('push "redirect-gateway %s"', implode(' ', $redirectFlags)),
+            ];
         }
 
         $routeConfig = [];
