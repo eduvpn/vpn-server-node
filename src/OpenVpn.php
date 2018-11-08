@@ -309,7 +309,7 @@ class OpenVpn
     {
         if ($profileConfig->getItem('defaultGateway')) {
             $redirectFlags = ['def1', 'ipv6'];
-            if ($profileConfig->hasItem('blockLocal') && $profileConfig->getItem('blockLocal')) {
+            if ($profileConfig->hasItem('blockLan') && $profileConfig->getItem('blockLan')) {
                 $redirectFlags[] = 'block-local';
             }
 
