@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.2 (2018-11-09)
+- add support for `blockLan` to block traffic to local LAN network when 
+  connected to the VPN
+- deal with `blockSmb` not necessarily being available as a configuration 
+  option
+
 ## 1.1.1 (2018-10-21)
 - support also 32 bit Fedora/CentOS for determining OpenVPN auth plugin path
 
