@@ -99,6 +99,10 @@ class OpenVpn
         $range6 = new IP($profileConfig->getItem('range6'));
         $processCount = \count($profileConfig->getItem('vpnProtoPorts'));
 
+        $allowedProcessCount = [1, 2, 4, 8, 16];
+        if (!\in_array($processCount, $allowedProcessCount, true)) {
+            throw new RuntimeException('"vpnProtoPorts" must contain 1,2,4,8 or 16 entries');
+        }
         $splitRange = $range->split($processCount);
         $splitRange6 = $range6->split($processCount);
 
