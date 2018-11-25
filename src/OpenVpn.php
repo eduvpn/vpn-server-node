@@ -205,7 +205,7 @@ class OpenVpn
             sprintf('server %s %s', $rangeIp->getNetwork(), $rangeIp->getNetmask()),
             sprintf('server-ipv6 %s', $range6Ip->getAddressPrefix()),
             sprintf('max-clients %d', $rangeIp->getNumberOfHosts() - 1),
-            sprintf('script-security %d', $profileConfig->getItem('twoFactor') ? 3 : 2),
+            'script-security 2',
             sprintf('dev %s', $processConfig['dev']),
             sprintf('port %d', $processConfig['port']),
             sprintf('management %s %d', $processConfig['managementIp'], $processConfig['managementPort']),
@@ -239,30 +239,6 @@ class OpenVpn
             // also ask the clients on UDP to tell us when they leave...
             // https://github.com/OpenVPN/openvpn/commit/422ecdac4a2738cd269361e048468d8b58793c4e
             $serverConfig[] = 'push "explicit-exit-notify 1"';
-        }
-
-        if ($profileConfig->getItem('twoFactor')) {
-            $serverConfig[] = sprintf('auth-gen-token %d', 60 * 60 * 12);  // Added in OpenVPN 2.4
-
-            // detector for https://github.com/fac/auth-script-openvpn,
-            // use it if it is there
-            $usePlugin = false;
-            $pluginPathList = [
-                '/usr/lib64/openvpn/plugins/openvpn-plugin-auth-script.so', // CentOS / Fedora (64 bit)
-                '/usr/lib/openvpn/plugins/openvpn-plugin-auth-script.so',   // CentOS / Fedora (32 bit)
-                '/usr/lib/openvpn/openvpn-plugin-auth-script.so',           // Debian / Ubuntu
-            ];
-            foreach ($pluginPathList as $pluginPath) {
-                if (@file_exists($pluginPath)) {
-                    $usePlugin = $pluginPath;
-                    break;
-                }
-            }
-            if (false !== $usePlugin) {
-                $serverConfig[] = sprintf('plugin %s %s/verify-otp', $usePlugin, self::LIBEXEC_DIR);
-            } else {
-                $serverConfig[] = sprintf('auth-user-pass-verify %s/verify-otp via-env', self::LIBEXEC_DIR);
-            }
         }
 
         if ('tls-crypt' === self::getTlsProtection($profileConfig)) {
