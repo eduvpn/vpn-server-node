@@ -253,7 +253,7 @@ class OpenVpn
                 '/usr/lib/openvpn/openvpn-plugin-auth-script.so',           // Debian / Ubuntu
             ];
             foreach ($pluginPathList as $pluginPath) {
-                if (@file_exists($pluginPath)) {
+                if (file_exists($pluginPath)) {
                     $usePlugin = $pluginPath;
                     break;
                 }

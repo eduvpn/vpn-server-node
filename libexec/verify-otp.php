@@ -63,14 +63,14 @@ try {
     if (false !== $envData['auth_control_file']) {
         // we were started from the plugin, and not --auth-user-pass-verify
         // '1' indicates success
-        @file_put_contents($envData['auth_control_file'], '1');
+        file_put_contents($envData['auth_control_file'], '1');
     }
 } catch (ApiException $e) {
     $logger->warning($e->getMessage());
     if (false !== $envData['auth_control_file']) {
         // we were started from the plugin, and not --auth-user-pass-verify
         // '0' indicates failure
-        @file_put_contents($envData['auth_control_file'], '0');
+        file_put_contents($envData['auth_control_file'], '0');
     }
     exit(1);
 } catch (Exception $e) {
@@ -78,7 +78,7 @@ try {
     if (false !== $envData['auth_control_file']) {
         // we were started from the plugin, and not --auth-user-pass-verify
         // '0' indicates failure
-        @file_put_contents($envData['auth_control_file'], '0');
+        file_put_contents($envData['auth_control_file'], '0');
     }
     exit(1);
 }
