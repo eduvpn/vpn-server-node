@@ -2,6 +2,7 @@
 
 ## 1.1.3 (...)
 - better error when number of vpnProtoPorts is not 1,2,4,8 or 16
+- remove 2FA verification through OpenVPN
 
 ## 1.1.2 (2018-11-09)
 - add support for `blockLan` to block traffic to local LAN network when 
