@@ -298,11 +298,14 @@ class OpenVpn
             ];
         }
 
-        // always set a route to the remote host through the client's default
+        // Always set a route to the remote host through the client's default
         // gateway to avoid problems when the "split routes" pushed also
-        // contain a range with the public IP address of the VPN server
+        // contain a range with the public IP address of the VPN server.
+        // When connecting to a VPN server _over_ IPv6, OpenVPN takes care of
+        // this all by itself by setting a /128 through the client's original
+        // IPv6 gateway
         $routeConfig = [
-            'push "route remote_host net_gateway"',
+            'push "route remote_host 255.255.255.255 net_gateway"',
         ];
 
         // there may be some routes specified, push those, and not the default
