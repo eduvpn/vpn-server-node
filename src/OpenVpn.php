@@ -298,7 +298,13 @@ class OpenVpn
             ];
         }
 
-        $routeConfig = [];
+        // always set a route to the remote host through the client's default
+        // gateway to avoid problems when the "split routes" pushed also
+        // contain a range with the public IP address of the VPN server
+        $routeConfig = [
+            'push "route remote_host net_gateway"',
+        ];
+
         // there may be some routes specified, push those, and not the default
         foreach ($profileConfig->getSection('routes')->toArray() as $route) {
             $routeIp = new IP($route);
