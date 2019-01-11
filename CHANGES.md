@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.1.3 (...)
+## 2.0.0 (...)
 - better error when number of vpnProtoPorts is not 1,2,4,8 or 16
 - remove 2FA verification through OpenVPN
 - when using "split tunnel" configuration, also set a static route to the VPN 
