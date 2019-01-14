@@ -197,6 +197,7 @@ class OpenVpn
             'dh none', // Only ECDHE
             'ncp-ciphers AES-256-GCM',  // only AES-256-GCM
             'cipher AES-256-GCM',       // only AES-256-GCM
+            'auth none',
             sprintf('client-connect %s/client-connect', self::LIBEXEC_DIR),
             sprintf('client-disconnect %s/client-disconnect', self::LIBEXEC_DIR),
             sprintf('ca %s/ca.crt', $tlsDir),
@@ -214,14 +215,6 @@ class OpenVpn
             sprintf('proto %s', $processConfig['proto']),
             sprintf('local %s', $processConfig['local']),
         ];
-
-        if ($profileConfig->getItem('enableCompression')) {
-            // this only enables compression framing... it tells the clients
-            // to NOT use compression, as that is insecure, see e.g. "VORACLE"
-            // attack
-            $serverConfig[] = 'comp-lzo no';
-            $serverConfig[] = 'push "comp-lzo no"';
-        }
 
         if (!$profileConfig->getItem('enableLog')) {
             $serverConfig[] = 'log /dev/null';
@@ -241,16 +234,8 @@ class OpenVpn
             $serverConfig[] = 'push "explicit-exit-notify 1"';
         }
 
-        if ('tls-crypt' === self::getTlsProtection($profileConfig)) {
+        if ('tls-crypt' === $profileConfig->getItem('tlsProtection')) {
             $serverConfig[] = sprintf('tls-crypt %s/ta.key', $tlsDir);
-        }
-        if ('tls-auth' === self::getTlsProtection($profileConfig)) {
-            // only tls-auth needs "auth", AES-256-GCM no longer requires it
-            $serverConfig[] = 'auth SHA256';
-            $serverConfig[] = sprintf('tls-auth %s/ta.key 0', $tlsDir);
-        } else {
-            // we do not require "auth"
-            $serverConfig[] = 'auth none';
         }
 
         // Routes
@@ -382,35 +367,5 @@ class OpenVpn
         // profileNumber = 4 bits (max 16)
         // processNumber = 4 bits  (max 16)
         return ($instanceNumber - 1 << 8) | ($profileNumber - 1 << 4) | ($processNumber);
-    }
-
-    /**
-     * @param \SURFnet\VPN\Common\ProfileConfig $profileConfig
-     *
-     * @return false|string
-     */
-    private static function getTlsProtection(ProfileConfig $profileConfig)
-    {
-        // if tlsCrypt is there, it is leading
-        if ($profileConfig->hasItem('tlsCrypt')) {
-            if ($profileConfig->getItem('tlsCrypt')) {
-                return 'tls-crypt';
-            }
-
-            return 'tls-auth';
-        }
-
-        // if we reach this point, tlsCrypt is not specified in configuration
-        // file. This either means we have a new configuration where only
-        // "tlsProtection" is set, GOOD! Or we have a configuration where
-        // neither is set, which is strange as "tlsCrypt" WAS there >= 1.0.0.
-        // So offically we do not support this anyway, but I found some
-        // machines in the wild that didn't have tlsCrypt yet. The old default
-        // when tlsCrypt was missing was "false" which meant "use tls-auth".
-        // That is why the new default value for "tlsProtection" MUST be
-        // "tls-auth". The configuration file will set it to "tls-crypt"
-        // anyway, so that should be fine.
-
-        return $profileConfig->getItem('tlsProtection');
     }
 }
