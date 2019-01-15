@@ -8,6 +8,7 @@
   routes that contain the VPN server's public IP address
 - remove compression framing support
 - remove tls-auth support
+- remove "multi instance" support
 
 ## 1.1.2 (2018-11-09)
 - add support for `blockLan` to block traffic to local LAN network when 

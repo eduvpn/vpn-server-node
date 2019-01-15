@@ -12,8 +12,6 @@ require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
 use SURFnet\VPN\Common\Config;
-use SURFnet\VPN\Common\Http\Exception\InputValidationException;
-use SURFnet\VPN\Common\Http\InputValidation;
 use SURFnet\VPN\Common\HttpClient\CurlHttpClient;
 use SURFnet\VPN\Common\HttpClient\ServerClient;
 use SURFnet\VPN\Common\Logger;
@@ -27,7 +25,6 @@ $logger = new Logger(
 try {
     $envData = [];
     $envKeys = [
-        'INSTANCE_ID',
         'PROFILE_ID',
         'common_name',
         'time_unix',
@@ -43,11 +40,7 @@ try {
         $envData[$envKey] = getenv($envKey);
     }
 
-    if (false === $instanceId = $envData['INSTANCE_ID']) {
-        throw new InputValidationException('invalid "instance_id"');
-    }
-    $instanceId = InputValidation::instanceId($instanceId);
-    $configDir = sprintf('%s/config/%s', $baseDir, $instanceId);
+    $configDir = sprintf('%s/config', $baseDir);
     $config = Config::fromFile(
         sprintf('%s/config.php', $configDir)
     );

@@ -4,13 +4,6 @@ return [
     //
     // Firewall Configuration
     //
-
-    // Generate a firewall for the instances listed here
-    'instanceList' => [
-        'default',
-        //'vpn.example.org',
-    ],
-
     'inputChain' => [
         'tcp' => [
             22,

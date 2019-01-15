@@ -57,15 +57,13 @@ class OpenVpn
     }
 
     /**
-     * @param string $instanceId
      * @param string $vpnUser
      * @param string $vpnGroup
      *
      * @return void
      */
-    public function writeProfiles(ServerClient $serverClient, $instanceId, $vpnUser, $vpnGroup)
+    public function writeProfiles(ServerClient $serverClient, $vpnUser, $vpnGroup)
     {
-        $instanceNumber = $serverClient->getRequireInt('instance_number');
         $profileList = $serverClient->getRequireArray('profile_list');
 
         $profileIdList = array_keys($profileList);
@@ -74,26 +72,24 @@ class OpenVpn
             $profileConfigData['_user'] = $vpnUser;
             $profileConfigData['_group'] = $vpnGroup;
             $profileConfig = new ProfileConfig($profileConfigData);
-            $this->writeProfile($instanceNumber, $instanceId, $profileId, $profileConfig);
+            $this->writeProfile($profileId, $profileConfig);
 
             // generate a CN based on date and profile, instance
             $dateTime = new DateTime('now', new DateTimeZone('UTC'));
             $dateString = $dateTime->format('YmdHis');
-            $cn = sprintf('%s.%s.%s', $dateString, $profileId, $instanceId);
-            $vpnTlsDir = sprintf('%s/tls/%s/%s', $this->vpnConfigDir, $instanceId, $profileId);
+            $cn = sprintf('%s.%s', $dateString, $profileId);
+            $vpnTlsDir = sprintf('%s/tls/%s', $this->vpnConfigDir, $profileId);
 
             $this->generateKeys($serverClient, $vpnTlsDir, $cn);
         }
     }
 
     /**
-     * @param int    $instanceNumber
-     * @param string $instanceId
      * @param string $profileId
      *
      * @return void
      */
-    public function writeProfile($instanceNumber, $instanceId, $profileId, ProfileConfig $profileConfig)
+    public function writeProfile($profileId, ProfileConfig $profileConfig)
     {
         $range = new IP($profileConfig->getItem('range'));
         $range6 = new IP($profileConfig->getItem('range6'));
@@ -117,19 +113,18 @@ class OpenVpn
             list($proto, $port) = self::getProtoPort($profileConfig->getItem('vpnProtoPorts'), $profileConfig->getItem('listen'))[$i];
             $processConfig['range'] = $splitRange[$i];
             $processConfig['range6'] = $splitRange6[$i];
-            $processConfig['dev'] = sprintf('tun-%d-%d-%d', $instanceNumber, $profileConfig->getItem('profileNumber'), $i);
+            $processConfig['dev'] = sprintf('tun-%d-%d', $profileConfig->getItem('profileNumber'), $i);
             $processConfig['proto'] = $proto;
             $processConfig['port'] = $port;
             $processConfig['local'] = $profileConfig->getItem('listen');
-            $processConfig['managementPort'] = 11940 + $this->toPort($instanceNumber, $profileNumber, $i);
+            $processConfig['managementPort'] = 11940 + $this->toPort($profileNumber, $i);
             $processConfig['configName'] = sprintf(
-                '%s-%s-%d.conf',
-                $instanceId,
+                '%s-%d.conf',
                 $profileId,
                 $i
             );
 
-            $this->writeProcess($instanceId, $profileId, $profileConfig, $processConfig);
+            $this->writeProcess($profileId, $profileConfig, $processConfig);
         }
     }
 
@@ -170,14 +165,13 @@ class OpenVpn
     }
 
     /**
-     * @param string $instanceId
      * @param string $profileId
      *
      * @return void
      */
-    private function writeProcess($instanceId, $profileId, ProfileConfig $profileConfig, array $processConfig)
+    private function writeProcess($profileId, ProfileConfig $profileConfig, array $processConfig)
     {
-        $tlsDir = sprintf('tls/%s/%s', $instanceId, $profileId);
+        $tlsDir = sprintf('tls/%s', $profileId);
 
         $rangeIp = new IP($processConfig['range']);
         $range6Ip = new IP($processConfig['range6']);
@@ -210,7 +204,6 @@ class OpenVpn
             sprintf('dev %s', $processConfig['dev']),
             sprintf('port %d', $processConfig['port']),
             sprintf('management %s %d', $processConfig['managementIp'], $processConfig['managementPort']),
-            sprintf('setenv INSTANCE_ID %s', $instanceId),
             sprintf('setenv PROFILE_ID %s', $profileId),
             sprintf('proto %s', $processConfig['proto']),
             sprintf('local %s', $processConfig['local']),
@@ -353,19 +346,17 @@ class OpenVpn
     }
 
     /**
-     * @param int $instanceNumber
      * @param int $profileNumber
      * @param int $processNumber
      *
      * @return int
      */
-    private function toPort($instanceNumber, $profileNumber, $processNumber)
+    private function toPort($profileNumber, $processNumber)
     {
-        // convert an instanceNumber, $profileNumber and $processNumber to a management port
-
-        // instanceId = 6 bits (max 64)
-        // profileNumber = 4 bits (max 16)
-        // processNumber = 4 bits  (max 16)
-        return ($instanceNumber - 1 << 8) | ($profileNumber - 1 << 4) | ($processNumber);
+        // we have 2^16 - 11940 ports available for management ports, so let's
+        // say we have 2^14 ports available to distribute over profiles and
+        // processes, let's take 12 bits, so we have 64 profiles with each 64
+        // processes...
+        return ($profileNumber - 1 << 6) | $processNumber;
     }
 }

@@ -42,26 +42,15 @@ try {
         $firewallConfig = new FirewallConfig([]);
     }
 
-    // detect all instances
-    $instanceList = $firewallConfig->getSection('instanceList')->toArray();
+    $config = Config::fromFile(sprintf('%s/config.php', $configDir));
 
-    $configList = [];
-    foreach ($instanceList as $instanceId) {
-        $config = Config::fromFile(sprintf('%s/%s/config.php', $configDir, $instanceId));
-
-        $serverClient = new ServerClient(
-            new CurlHttpClient([$config->getItem('apiUser'), $config->getItem('apiPass')]),
-            $config->getItem('apiUri')
-        );
-
-        $instanceNumber = $serverClient->get('instance_number');
-        $profileList = $serverClient->get('profile_list');
-
-        $configList[] = ['instanceNumber' => $instanceNumber, 'profileList' => $profileList];
-    }
-
-    $firewall = Firewall::getFirewall4($configList, $firewallConfig);
-    $firewall6 = Firewall::getFirewall6($configList, $firewallConfig);
+    $serverClient = new ServerClient(
+        new CurlHttpClient([$config->getItem('apiUser'), $config->getItem('apiPass')]),
+        $config->getItem('apiUri')
+    );
+    $profileList = $serverClient->getRequireArray('profile_list');
+    $firewall = Firewall::getFirewall4($profileList, $firewallConfig);
+    $firewall6 = Firewall::getFirewall6($profileList, $firewallConfig);
 
     if ($opt->hasItem('install')) {
         // determine file location for writing firewall data

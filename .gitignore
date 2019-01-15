@@ -2,4 +2,3 @@
 /data
 /openvpn-config
 /config/*.php
-/config/*/*.php
