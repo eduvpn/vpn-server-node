@@ -3,13 +3,13 @@
 /*
  * eduVPN - End-user friendly VPN.
  *
- * Copyright: 2016-2018, The Commons Conservancy eduVPN Programme
+ * Copyright: 2016-2019, The Commons Conservancy eduVPN Programme
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace SURFnet\VPN\Node;
+namespace LetsConnect\Node;
 
-use SURFnet\VPN\Common\Config;
+use LetsConnect\Common\Config;
 
 class FirewallConfig extends Config
 {

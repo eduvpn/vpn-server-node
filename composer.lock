@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/eduvpn/vpn-lib-common",
-                "reference": "b04fb4e20b70f6870cc2d038954a123ec0472721"
+                "reference": "1fdb9447cbfc41eeaad6abb5d7cac4bb1471e238"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/b04fb4e20b70f6870cc2d038954a123ec0472721",
-                "reference": "b04fb4e20b70f6870cc2d038954a123ec0472721",
+                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/1fdb9447cbfc41eeaad6abb5d7cac4bb1471e238",
+                "reference": "1fdb9447cbfc41eeaad6abb5d7cac4bb1471e238",
                 "shasum": ""
             },
             "require": {
@@ -46,8 +46,8 @@
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "SURFnet\\VPN\\Common\\": "src/",
-                    "SURFnet\\VPN\\Common\\Tests\\": "tests/"
+                    "LetsConnect\\Common\\": "src/",
+                    "LetsConnect\\Common\\Tests\\": "tests/"
                 }
             },
             "license": [
@@ -64,7 +64,7 @@
                 "email": "eduvpn@surfnet.nl",
                 "source": "https://github.com/eduvpn/vpn-lib-common"
             },
-            "time": "2019-01-15T16:35:23+00:00"
+            "time": "2019-01-17T12:28:35+00:00"
         },
         {
             "name": "fkooman/secookie",

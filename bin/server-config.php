@@ -11,10 +11,10 @@
 require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
-use SURFnet\VPN\Common\Config;
-use SURFnet\VPN\Common\HttpClient\CurlHttpClient;
-use SURFnet\VPN\Common\HttpClient\ServerClient;
-use SURFnet\VPN\Node\OpenVpn;
+use LetsConnect\Common\Config;
+use LetsConnect\Common\HttpClient\CurlHttpClient;
+use LetsConnect\Common\HttpClient\ServerClient;
+use LetsConnect\Node\OpenVpn;
 
 try {
     $configFile = sprintf('%s/config/config.php', $baseDir);

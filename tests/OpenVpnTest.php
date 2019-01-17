@@ -3,15 +3,15 @@
 /*
  * eduVPN - End-user friendly VPN.
  *
- * Copyright: 2016-2018, The Commons Conservancy eduVPN Programme
+ * Copyright: 2016-2019, The Commons Conservancy eduVPN Programme
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace SURFnet\VPN\Node\Tests;
+namespace LetsConnect\Node\Tests;
 
+use LetsConnect\Common\HttpClient\ServerClient;
+use LetsConnect\Node\OpenVpn;
 use PHPUnit\Framework\TestCase;
-use SURFnet\VPN\Common\HttpClient\ServerClient;
-use SURFnet\VPN\Node\OpenVpn;
 
 class OpenVpnTest extends TestCase
 {

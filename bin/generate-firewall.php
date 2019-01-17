@@ -11,13 +11,13 @@
 require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
-use SURFnet\VPN\Common\CliParser;
-use SURFnet\VPN\Common\Config;
-use SURFnet\VPN\Common\FileIO;
-use SURFnet\VPN\Common\HttpClient\CurlHttpClient;
-use SURFnet\VPN\Common\HttpClient\ServerClient;
-use SURFnet\VPN\Node\Firewall;
-use SURFnet\VPN\Node\FirewallConfig;
+use LetsConnect\Common\CliParser;
+use LetsConnect\Common\Config;
+use LetsConnect\Common\FileIO;
+use LetsConnect\Common\HttpClient\CurlHttpClient;
+use LetsConnect\Common\HttpClient\ServerClient;
+use LetsConnect\Node\Firewall;
+use LetsConnect\Node\FirewallConfig;
 
 try {
     $p = new CliParser(

@@ -8,12 +8,12 @@
     ],
     "autoload": {
         "psr-4": {
-            "SURFnet\\VPN\\Node\\": "src/"
+            "LetsConnect\\Node\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "SURFnet\\VPN\\Node\\Tests\\": "tests/"
+            "LetsConnect\\Node\\Tests\\": "tests/"
         }
     },
     "description": "OpenVPN node controller",

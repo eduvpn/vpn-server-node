@@ -3,18 +3,18 @@
 /*
  * eduVPN - End-user friendly VPN.
  *
- * Copyright: 2016-2018, The Commons Conservancy eduVPN Programme
+ * Copyright: 2016-2019, The Commons Conservancy eduVPN Programme
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace SURFnet\VPN\Node;
+namespace LetsConnect\Node;
 
 use DateTime;
 use DateTimeZone;
+use LetsConnect\Common\FileIO;
+use LetsConnect\Common\HttpClient\ServerClient;
+use LetsConnect\Common\ProfileConfig;
 use RuntimeException;
-use SURFnet\VPN\Common\FileIO;
-use SURFnet\VPN\Common\HttpClient\ServerClient;
-use SURFnet\VPN\Common\ProfileConfig;
 
 class OpenVpn
 {
