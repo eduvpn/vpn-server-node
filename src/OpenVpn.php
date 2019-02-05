@@ -220,7 +220,7 @@ class OpenVpn
         if ('udp' === $processConfig['proto'] || 'udp6' === $processConfig['proto']) {
             // notify the clients to reconnect to the exact same OpenVPN process
             // when the OpenVPN process restarts...
-            $serverConfig[] = 'keepalive 25 150';
+            $serverConfig[] = 'keepalive 10 60';
             $serverConfig[] = 'explicit-exit-notify 1';
             // also ask the clients on UDP to tell us when they leave...
             // https://github.com/OpenVPN/openvpn/commit/422ecdac4a2738cd269361e048468d8b58793c4e
