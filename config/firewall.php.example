@@ -23,9 +23,8 @@ return [
             1194,
             //'1194:1201',
         ],
+    ],
 
-        'trustedInterfaces' => [
-            //'eth1',
-        ],
+    'forwardChain' => [
     ],
 ];

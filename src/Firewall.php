@@ -106,14 +106,8 @@ class Firewall
         foreach ($profileList as $profileId => $profileData) {
             $profileConfig = new ProfileConfig($profileData);
 
-            if ($profileConfig->hasItem('useNat')) {
-                // XXX DEPRECATED, remove for 2.0
-                $enableNat4 = $profileConfig->getItem('useNat');
-                $enableNat6 = $profileConfig->getItem('useNat');
-            } else {
-                $enableNat4 = $profileConfig->getItem('enableNat4');
-                $enableNat6 = $profileConfig->getItem('enableNat6');
-            }
+            $enableNat4 = $profileConfig->getItem('enableNat4');
+            $enableNat6 = $profileConfig->getItem('enableNat6');
 
             if ($enableNat4 && 4 === $inetFamily) {
                 $srcNet = $profileConfig->getItem('range');
@@ -141,13 +135,6 @@ class Firewall
             sprintf('-A INPUT -p %s -j ACCEPT', 4 === $inetFamily ? 'icmp' : 'ipv6-icmp'),
             '-A INPUT -i lo -j ACCEPT',
         ];
-
-        // add trusted interfaces
-        if ($firewallConfig->getSection('inputChain')->hasSection('trustedInterfaces')) {
-            foreach ($firewallConfig->getSection('inputChain')->getSection('trustedInterfaces')->toArray() as $trustedIf) {
-                $inputChain[] = sprintf('-A INPUT -i %s -j ACCEPT', $trustedIf);
-            }
-        }
 
         $udpPorts = $firewallConfig->getSection('inputChain')->getSection('udp')->toArray();
         $tcpPorts = $firewallConfig->getSection('inputChain')->getSection('tcp')->toArray();
@@ -234,10 +221,6 @@ class Firewall
 
             $forwardChain[] = sprintf('-A FORWARD -i tun-%s+ -s %s -j vpn-%s', $profileNumber, $srcNet, $profileNumber);
 
-            // merge outgoing forwarding firewall rules to prevent certain
-            // traffic
-            $forwardChain = array_merge($forwardChain, self::getForwardFirewall($profileNumber, $profileConfig, $inetFamily));
-
             if ($profileConfig->getItem('clientToClient')) {
                 // allow client-to-client
                 $forwardChain[] = sprintf('-A vpn-%s -o tun-%s+ -d %s -j ACCEPT', $profileNumber, $profileNumber, $srcNet);
@@ -257,30 +240,5 @@ class Firewall
         }
 
         return $forwardChain;
-    }
-
-    /**
-     * @param int $profileNumber
-     * @param int $inetFamily
-     *
-     * @return array
-     */
-    private static function getForwardFirewall($profileNumber, ProfileConfig $profileConfig, $inetFamily)
-    {
-        $forwardFirewall = [];
-        if ($profileConfig->hasItem('blockSmb') && $profileConfig->getItem('blockSmb')) {
-            // drop SMB outgoing traffic
-            // @see https://medium.com/@ValdikSS/deanonymizing-windows-users-and-capturing-microsoft-and-vpn-accounts-f7e53fe73834
-            foreach (['tcp', 'udp'] as $proto) {
-                $forwardFirewall[] = sprintf(
-                    '-A vpn-%s -o %s -m multiport -p %s --dports 137:139,445 -j REJECT --reject-with %s',
-                    $profileNumber,
-                    $profileConfig->getItem('extIf'),
-                    $proto,
-                    4 === $inetFamily ? 'icmp-host-prohibited' : 'icmp6-adm-prohibited');
-            }
-        }
-
-        return $forwardFirewall;
     }
 }

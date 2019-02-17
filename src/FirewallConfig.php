@@ -21,13 +21,11 @@ class FirewallConfig extends Config
     public static function defaultConfig()
     {
         return [
-            'instanceList' => [
-                'default',
-            ],
             'inputChain' => [
-                'tcp' => ['22', '80', '443', '1194:1195'],
-                'udp' => ['1194:1201'],
-                'trustedInterfaces' => [],
+                'tcp' => [22, 80, 443, 1194],
+                'udp' => [1194],
+            ],
+            'forwardChain' => [
             ],
         ];
     }
