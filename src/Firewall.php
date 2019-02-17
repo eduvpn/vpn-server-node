@@ -50,7 +50,7 @@ class Firewall
             ':POSTROUTING ACCEPT [0:0]',
             ]
         );
-        $firewall = array_merge($firewall, self::getNat($profileList, $inetFamily));
+        $firewall = array_merge($firewall, self::getNat($firewallConfig, $profileList, $inetFamily));
         $firewall[] = 'COMMIT';
 
         // FILTER
@@ -76,7 +76,7 @@ class Firewall
             ]
         );
 
-        $firewall = array_merge($firewall, self::getForwardChain($profileList, $inetFamily));
+        $firewall = array_merge($firewall, self::getForwardChain($firewallConfig, $profileList, $inetFamily));
         $firewall[] = sprintf('-A FORWARD -j REJECT --reject-with %s', 4 === $inetFamily ? 'icmp-host-prohibited' : 'icmp6-adm-prohibited');
         $firewall[] = 'COMMIT';
 
@@ -99,24 +99,32 @@ class Firewall
      *
      * @return array
      */
-    private static function getNat(array $profileList, $inetFamily)
+    private static function getNat(Config $firewallConfig, array $profileList, $inetFamily)
     {
+        if (!$firewallConfig->hasSection('forwardChain')) {
+            return [];
+        }
+
         $nat = [];
-
         foreach ($profileList as $profileId => $profileData) {
+            if (!$firewallConfig->getSection('forwardChain')->hasSection($profileId)) {
+                // this profile has no configuration in "forwardChain"
+                continue;
+            }
             $profileConfig = new ProfileConfig($profileData);
+            $profileFirewallConfig = $firewallConfig->getSection('forwardChain')->getSection($profileId);
 
-            $enableNat4 = $profileConfig->getItem('enableNat4');
-            $enableNat6 = $profileConfig->getItem('enableNat6');
+            $enableNat4 = $profileFirewallConfig->optionalItem('enableNat4', false);
+            $enableNat6 = $profileFirewallConfig->optionalItem('enableNat6', false);
 
             if ($enableNat4 && 4 === $inetFamily) {
                 $srcNet = $profileConfig->getItem('range');
-                $nat[] = sprintf('-A POSTROUTING -s %s -o %s -j MASQUERADE', $srcNet, $profileConfig->getItem('extIf'));
+                $nat[] = sprintf('-A POSTROUTING -s %s -o %s -j MASQUERADE', $srcNet, $profileFirewallConfig->getItem('extIf'));
             }
 
             if ($enableNat6 && 6 === $inetFamily) {
                 $srcNet = $profileConfig->getItem('range6');
-                $nat[] = sprintf('-A POSTROUTING -s %s -o %s -j MASQUERADE', $srcNet, $profileConfig->getItem('extIf'));
+                $nat[] = sprintf('-A POSTROUTING -s %s -o %s -j MASQUERADE', $srcNet, $profileFirewallConfig->getItem('extIf'));
             }
         }
 
@@ -193,19 +201,29 @@ class Firewall
      *
      * @return array
      */
-    private static function getForwardChain(array $profileList, $inetFamily)
+    private static function getForwardChain(Config $firewallConfig, array $profileList, $inetFamily)
     {
+        if (!$firewallConfig->hasSection('forwardChain')) {
+            return [];
+        }
+
         $forwardChain = [];
         foreach ($profileList as $profileId => $profileData) {
+            if (!$firewallConfig->getSection('forwardChain')->hasSection($profileId)) {
+                // this profile has no configuration in "forwardChain"
+                continue;
+            }
+
+            $profileFirewallConfig = $firewallConfig->getSection('forwardChain')->getSection($profileId);
             $profileConfig = new ProfileConfig($profileData);
             $profileNumber = $profileConfig->getItem('profileNumber');
 
-            if (4 === $inetFamily && $profileConfig->getItem('reject4')) {
+            if (4 === $inetFamily && $profileFirewallConfig->optionalItem('reject4', false)) {
                 // IPv4 forwarding is disabled
                 continue;
             }
 
-            if (6 === $inetFamily && $profileConfig->getItem('reject6')) {
+            if (6 === $inetFamily && $profileFirewallConfig->optionalItem('reject6', false)) {
                 // IPv6 forwarding is disabled
                 continue;
             }
@@ -227,13 +245,13 @@ class Firewall
             }
             if ($profileConfig->getItem('defaultGateway')) {
                 // allow traffic to all outgoing destinations
-                $forwardChain[] = sprintf('-A vpn-%s -o %s -j ACCEPT', $profileNumber, $profileConfig->getItem('extIf'));
+                $forwardChain[] = sprintf('-A vpn-%s -o %s -j ACCEPT', $profileNumber, $profileFirewallConfig->getItem('extIf'));
             } else {
                 // only allow certain traffic to the external interface
                 foreach ($profileConfig->getSection('routes')->toArray() as $route) {
                     $routeIp = new IP($route);
                     if ($inetFamily === $routeIp->getFamily()) {
-                        $forwardChain[] = sprintf('-A vpn-%s -o %s -d %s -j ACCEPT', $profileNumber, $profileConfig->getItem('extIf'), $route);
+                        $forwardChain[] = sprintf('-A vpn-%s -o %s -d %s -j ACCEPT', $profileNumber, $profileFirewallConfig->getItem('extIf'), $route);
                     }
                 }
             }
