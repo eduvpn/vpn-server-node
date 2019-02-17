@@ -16,7 +16,6 @@ use LetsConnect\Common\FileIO;
 use LetsConnect\Common\HttpClient\CurlHttpClient;
 use LetsConnect\Common\HttpClient\ServerClient;
 use LetsConnect\Node\Firewall;
-use LetsConnect\Node\FirewallConfig;
 
 try {
     $p = new CliParser(
@@ -35,12 +34,7 @@ try {
     $configDir = sprintf('%s/config', $baseDir);
 
     // load generic firewall configuration
-    try {
-        $firewallConfig = FirewallConfig::fromFile(sprintf('%s/firewall.php', $configDir));
-    } catch (RuntimeException $e) {
-        $firewallConfig = new FirewallConfig([]);
-    }
-
+    $firewallConfig = Config::fromFile(sprintf('%s/firewall.php', $configDir));
     $config = Config::fromFile(sprintf('%s/config.php', $configDir));
 
     $serverClient = new ServerClient(

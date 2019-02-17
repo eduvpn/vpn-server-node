@@ -26,5 +26,12 @@ return [
     ],
 
     'forwardChain' => [
+        'internet' => [
+            'enableNat4' => true,
+            'enableNat6' => true,
+            'reject4' => false,
+            'reject6' => false,
+            'extIf' => 'eth0',
+        ],
     ],
 ];
