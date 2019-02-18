@@ -9,21 +9,30 @@ return [
 
     // INPUT
     'inputRules' => [
-        // HTTP, HTTPS
-        [
-            'proto' => 'tcp',
-            'dst_port' => [80, 443],
-        ],
-        // SSH
         [
             'proto' => ['tcp'],
-            'src_net' => ['10.0.0.0/8'],
-            'dst_port' => [22],
+            'dst_port' => [
+                22,     // SSH
+                80,     // HTTP
+                443,     // HTTPS
+            ],
         ],
-        // OPENVPN
         [
             'proto' => ['udp', 'tcp'],
-            'dst_port' => [1194],
+            'dst_port' => [
+                1194,    // OPENVPN
+            ],
         ],
+
+//        // Only allow SSH access from 10.0.0.0/8
+//        [
+//            'proto' => ['tcp'],
+//            'src_net' => [
+//                '10.0.0.0/8'
+//            ],
+//            'dst_port' => [
+//                22,     // SSH
+//            ],
+//        ],
     ],
 ];
