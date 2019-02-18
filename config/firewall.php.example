@@ -24,11 +24,22 @@ return [
             ],
         ],
 
-//        // Only allow SSH access from 10.0.0.0/8
+//        // Allow access to local DNS server from VPN clients
+//        [
+//            'proto' => ['tcp', 'udp'],
+//            'src_net' => ['10.0.0.0/8', 'fd00::/8'],
+//            'dst_port' => [
+//                53,     // DNS
+//            ],
+//        ],
+
+//        // Only allow SSH access from 10.0.0.0/8 & fd00::/8
+//        // Make sure you remove 22 from "dst_port" in above rule
 //        [
 //            'proto' => ['tcp'],
 //            'src_net' => [
-//                '10.0.0.0/8'
+//                '10.0.0.0/8',
+//                'fd00::/8',
 //            ],
 //            'dst_port' => [
 //                22,     // SSH
