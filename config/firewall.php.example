@@ -1,37 +1,29 @@
 <?php
 
 return [
-    //
-    // Firewall Configuration
-    //
-    'inputChain' => [
-        'tcp' => [
-            22,
-            // limit source address for port
-            //['src' => ['192.168.1.0/24', 'fda9:c454:8bc1:89a0::/64'], 'port' => '22']
-            // allow VPN clients to query local DNS server
-            //['src' => ['10.0.0.0/8', 'fd00::/8'], 'port' => '53'],
-            80,
-            443,
-            1194,
-            //'1194:1201',
-        ],
-
-        'udp' => [
-            // allow VPN clients to query local DNS server
-            //['src' => ['10.0.0.0/8', 'fd00::/8'], 'port' => '53'],
-            1194,
-            //'1194:1201',
-        ],
+    // NAT
+    'natConfig' => [
+        'profileList' => ['internet'],
+        'extIf' => 'eth0',
     ],
 
-    'forwardChain' => [
-        'internet' => [
-            'enableNat4' => true,
-            'enableNat6' => true,
-            'reject4' => false,
-            'reject6' => false,
-            'extIf' => 'eth0',
+    // INPUT
+    'inputRules' => [
+        // HTTP, HTTPS
+        [
+            'proto' => 'tcp',
+            'dst_port' => [80, 443],
+        ],
+        // SSH
+        [
+            'proto' => ['tcp'],
+            'src_net' => ['10.0.0.0/8'],
+            'dst_port' => [22],
+        ],
+        // OPENVPN
+        [
+            'proto' => ['udp', 'tcp'],
+            'dst_port' => [1194],
         ],
     ],
 ];
