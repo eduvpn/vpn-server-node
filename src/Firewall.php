@@ -38,36 +38,38 @@ class Firewall
     private static function getArrayFirewall(array $profileList, Config $firewallConfig, $inetFamily)
     {
         $firewall = [];
-
         // NAT
-        $firewall = array_merge(
-            $firewall,
-             [
-            '*nat',
-            ':PREROUTING ACCEPT [0:0]',
-            ':INPUT ACCEPT [0:0]',
-            ':OUTPUT ACCEPT [0:0]',
-            ':POSTROUTING ACCEPT [0:0]',
-            ]
-        );
-        $firewall = array_merge($firewall, self::getNat($firewallConfig, $profileList, $inetFamily));
-        $firewall[] = 'COMMIT';
+        if ($firewallConfig->hasSection('natConfig')) {
+            $firewall = array_merge(
+                $firewall,
+                 [
+                '*nat',
+                ':PREROUTING ACCEPT [0:0]',
+                ':INPUT ACCEPT [0:0]',
+                ':OUTPUT ACCEPT [0:0]',
+                ':POSTROUTING ACCEPT [0:0]',
+                ]
+            );
+            $firewall = array_merge($firewall, self::getNat($firewallConfig->getSection('natConfig'), $profileList, $inetFamily));
+            $firewall[] = 'COMMIT';
+        }
 
         // FILTER
-        $firewall = array_merge(
-            $firewall,
-            [
-                '*filter',
-                ':INPUT ACCEPT [0:0]',
-                ':FORWARD ACCEPT [0:0]',
-                ':OUTPUT ACCEPT [0:0]',
-            ]
-        );
+        if ($firewallConfig->hasSection('inputRules')) {
+            $firewall = array_merge(
+                $firewall,
+                [
+                    '*filter',
+                    ':INPUT ACCEPT [0:0]',
+                    ':FORWARD ACCEPT [0:0]',
+                    ':OUTPUT ACCEPT [0:0]',
+                ]
+            );
 
-        // INPUT
-        $firewall = array_merge($firewall, self::getInputChain($inetFamily, $firewallConfig));
-
-        $firewall[] = 'COMMIT';
+            // INPUT
+            $firewall = array_merge($firewall, self::getInputChain($inetFamily, $firewallConfig->getSection('inputRules')));
+            $firewall[] = 'COMMIT';
+        }
 
         return array_merge(
             [
@@ -88,16 +90,11 @@ class Firewall
      *
      * @return array
      */
-    private static function getNat(Config $firewallConfig, array $profileList, $inetFamily)
+    private static function getNat(Config $natConfig, array $profileList, $inetFamily)
     {
         $natRules = [];
-
-        if (!$firewallConfig->hasSection('natConfig')) {
-            return $natRules;
-        }
-
         // loop over all profiles
-        $natProfileList = $firewallConfig->getSection('natConfig')->optionalItem('profileList', []);
+        $natProfileList = $natConfig->optionalItem('profileList', []);
         foreach ($natProfileList as $profileId) {
             if (!array_key_exists($profileId, $profileList)) {
                 continue;
@@ -107,7 +104,7 @@ class Firewall
             $natRules[] = sprintf(
                 '-A POSTROUTING -s %s -o %s -j MASQUERADE',
                 $srcNet,
-                $firewallConfig->getSection('natConfig')->getItem('extIf')
+                $natConfig->getItem('extIf')
             );
         }
 
@@ -119,7 +116,7 @@ class Firewall
      *
      * @return array
      */
-    private static function getInputChain($inetFamily, Config $firewallConfig)
+    private static function getInputChain($inetFamily, Config $inputConfig)
     {
         $inputChain = [
             '-A INPUT -i lo -j ACCEPT',
@@ -127,7 +124,7 @@ class Firewall
             '-A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT',
         ];
 
-        $inputRules = $firewallConfig->getSection('inputRules')->toArray();
+        $inputRules = $inputConfig->toArray();
         foreach ($inputRules as $inputRule) {
             $protoList = $inputRule['proto'];
             $srcNetList = array_key_exists('src_net', $inputRule) ? $inputRule['src_net'] : [];
