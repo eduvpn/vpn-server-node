@@ -67,6 +67,8 @@ class Firewall
         // INPUT
         $firewall = array_merge($firewall, self::getInputChain($inetFamily, $firewallConfig));
 
+        $firewall[] = 'COMMIT';
+
         return array_merge(
             [
                 '#',
