@@ -1,12 +1,6 @@
 <?php
 
 return [
-    // NAT
-    'natConfig' => [
-        'profileList' => ['internet'],
-        'extIf' => 'eth0',
-    ],
-
     // INPUT
     'inputRules' => [
         [
@@ -14,7 +8,7 @@ return [
             'dst_port' => [
                 22,     // SSH
                 80,     // HTTP
-                443,     // HTTPS
+                443,    // HTTPS
             ],
         ],
         [

@@ -10,42 +10,44 @@
 require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
-use LetsConnect\Common\CliParser;
 use LetsConnect\Common\Config;
 use LetsConnect\Common\FileIO;
 use LetsConnect\Common\HttpClient\CurlHttpClient;
 use LetsConnect\Common\HttpClient\ServerClient;
+use LetsConnect\Common\ProfileConfig;
 use LetsConnect\Node\Firewall;
 
 try {
-    $p = new CliParser(
-        'Generate firewall rules for all instances',
-        [
-            'install' => ['install the firewall', false, false],
-        ]
-    );
-
-    $opt = $p->parse($argv);
-    if ($opt->hasItem('help')) {
-        echo $p->help();
-        exit(0);
+    $installFirewall = false;
+    foreach ($argv as $arg) {
+        if ('--install' === $arg) {
+            $installFirewall = true;
+        }
     }
-
     $configDir = sprintf('%s/config', $baseDir);
-
-    // load generic firewall configuration
+    $mainConfig = Config::fromFile(sprintf('%s/config.php', $configDir));
     $firewallConfig = Config::fromFile(sprintf('%s/firewall.php', $configDir));
-    $config = Config::fromFile(sprintf('%s/config.php', $configDir));
 
     $serverClient = new ServerClient(
-        new CurlHttpClient([$config->getItem('apiUser'), $config->getItem('apiPass')]),
-        $config->getItem('apiUri')
+        new CurlHttpClient(
+            [
+                $mainConfig->getItem('apiUser'),
+                $mainConfig->getItem('apiPass'),
+            ]
+        ),
+        $mainConfig->getItem('apiUri')
     );
-    $profileList = $serverClient->getRequireArray('profile_list');
-    $firewall = Firewall::getFirewall4($profileList, $firewallConfig);
-    $firewall6 = Firewall::getFirewall6($profileList, $firewallConfig);
 
-    if ($opt->hasItem('install')) {
+    $profileList = $serverClient->getRequireArray('profile_list');
+    /** @var array<string,LetsConnect\Common\ProfileConfig> */
+    $profileConfigList = [];
+    foreach ($profileList as $profileId => $profileData) {
+        $profileConfigList[$profileId] = new ProfileConfig($profileData);
+    }
+
+    $firewallIp4 = new Firewall(4);
+    $firewallIp6 = new Firewall(6);
+    if ($installFirewall) {
         // determine file location for writing firewall data
         if (FileIO::exists('/etc/redhat-release')) {
             // RHEL/CentOS/Fedora
@@ -58,21 +60,21 @@ try {
             $iptablesFile = '/etc/iptables/rules.v4';
             $ip6tablesFile = '/etc/iptables/rules.v6';
         } else {
-            throw new Exception('only RHEL/CentOS/Fedora or Debian/Ubuntu supported');
+            throw new RuntimeException('only RHEL/CentOS/Fedora or Debian/Ubuntu supported');
         }
 
-        FileIO::writeFile($iptablesFile, $firewall, 0600);
-        FileIO::writeFile($ip6tablesFile, $firewall6, 0600);
+        FileIO::writeFile($iptablesFile, $firewallIp4->get($firewallConfig, $profileConfigList), 0600);
+        FileIO::writeFile($ip6tablesFile, $firewallIp6->get($firewallConfig, $profileConfigList), 0600);
     } else {
         echo '##########################################'.PHP_EOL;
         echo '# IPv4'.PHP_EOL;
         echo '##########################################'.PHP_EOL;
-        echo $firewall;
+        echo $firewallIp4->get($firewallConfig, $profileConfigList);
 
         echo '##########################################'.PHP_EOL;
         echo '# IPv6'.PHP_EOL;
         echo '##########################################'.PHP_EOL;
-        echo $firewall6;
+        echo $firewallIp6->get($firewallConfig, $profileConfigList);
     }
 } catch (Exception $e) {
     echo sprintf('ERROR: %s', $e->getMessage()).PHP_EOL;
