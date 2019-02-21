@@ -54,7 +54,10 @@ class Firewall
             }
         }
 
-        return include __DIR__.'/tpl/iptables.php';
+        ob_start();
+        include __DIR__.'/tpl/iptables.php';
+
+        return ob_get_clean();
     }
 
     /**
