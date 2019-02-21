@@ -1,8 +1,4 @@
-# ******************************************
-# * Let's Connect! / eduVPN Firewall       *
-# *                                        *
-# * THIS FILE IS GENERATED, DO NOT MODIFY! *
-# ******************************************
+# Let's Connect! / eduVPN Firewall
 <?php if (0 !== count($natSrcNetList)): ?>
 *nat
 :PREROUTING ACCEPT [0:0]
