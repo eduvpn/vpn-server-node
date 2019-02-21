@@ -36,6 +36,24 @@ class Firewall
         $ipFamily = $this->ipFamily;
         $inputFilterList = self::expandRules($firewallConfig->getItem('inputRules'));
 
+        $natSrcNetList = [];
+        if ($firewallConfig->hasSection('natConfig')) {
+            $natConfig = $firewallConfig->getSection('natConfig');
+            foreach ($profileConfigList as $profileId => $profileConfig) {
+                if (!$natConfig->hasSection($profileId)) {
+                    continue;
+                }
+                $natProfileConfig = $natConfig->getSection($profileId);
+                $natFamily = $natProfileConfig->optionalItem('natFamily', ['IPv4', 'IPv6']);
+                if (\in_array('IPv4', $natFamily, true)) {
+                    $natSrcNetList[] = new IP($profileConfig->getItem('range'));
+                }
+                if (\in_array('IPv6', $natFamily, true)) {
+                    $natSrcNetList[] = new IP($profileConfig->getItem('range6'));
+                }
+            }
+        }
+
         return include __DIR__.'/tpl/iptables.php';
     }
 

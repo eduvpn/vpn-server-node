@@ -40,4 +40,10 @@ return [
 //            ],
 //        ],
     ],
+
+    'natConfig' => [
+        'internet' => [
+            'natFamily' => ['IPv4', 'IPv6'],
+        ],
+    ],
 ];
