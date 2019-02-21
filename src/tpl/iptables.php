@@ -5,10 +5,10 @@
 # **********************************&*******
 <?php if (0 !== count($natSrcNetList)): ?>
 *nat
--P PREROUTING ACCEPT [0:0]
--P INPUT ACCEPT [0:0]
--P OUTPUT ACCEPT [0:0]
--P POSTROUTING ACCEPT [0:0]
+:PREROUTING ACCEPT [0:0]
+:INPUT ACCEPT [0:0]
+:OUTPUT ACCEPT [0:0]
+:POSTROUTING ACCEPT [0:0]
 <?php foreach ($natSrcNetList as $natSrcNet): ?>
 <?php if ($ipFamily === $natSrcNet->getFamily()): ?>
 -A POSTROUTING --source <?=$natSrcNet; ?> -j MASQUERADE
