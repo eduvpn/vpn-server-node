@@ -43,7 +43,8 @@ return [
 
     'natConfig' => [
         'internet' => [
-            'natFamily' => ['IPv4', 'IPv6'],
+            //'natFamily' => ['IPv4', 'IPv6'],
+            //'natIf' => 'eth0',
         ],
     ],
 ];

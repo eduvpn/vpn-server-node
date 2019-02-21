@@ -11,7 +11,11 @@
 :POSTROUTING ACCEPT [0:0]
 <?php foreach ($natSrcNetList as $natSrcNet): ?>
 <?php if ($ipFamily === $natSrcNet->getFamily()): ?>
--A POSTROUTING --source <?=$natSrcNet; ?> -j MASQUERADE
+<?php if (null === $natIf): ?>
+-A POSTROUTING --source <?=$natSrcNet; ?> --jump MASQUERADE
+<?php else: ?>
+-A POSTROUTING --source <?=$natSrcNet; ?> --out-interface <?=$natIf; ?> --jump MASQUERADE
+<?php endif; ?>
 <?php endif; ?>
 <?php endforeach; ?>
 COMMIT
@@ -20,26 +24,26 @@ COMMIT
 :INPUT ACCEPT [0:0]
 :FORWARD ACCEPT [0:0]
 :OUTPUT ACCEPT [0:0]
--A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
--A INPUT -i lo -j ACCEPT
+-A INPUT --match conntrack --ctstate RELATED,ESTABLISHED --jump ACCEPT
+-A INPUT --in-interface lo --jump ACCEPT
 <?php if (4 === $ipFamily): ?>
--A INPUT -p icmp -j ACCEPT
+-A INPUT --protocol icmp --jump ACCEPT
 <?php else: ?>
--A INPUT -p ipv6-icmp -j ACCEPT
+-A INPUT --protocol ipv6-icmp --jump ACCEPT
 <?php endif; ?>
 <?php foreach ($inputFilterList as $inputFilter): ?>
 <?php if (null === $inputFilter->getSrcNet()): ?>
--A INPUT -p <?=$inputFilter->getProto(); ?> -m <?=$inputFilter->getProto(); ?> --dport <?=$inputFilter->getDstPort(); ?> -m conntrack --ctstate NEW,UNTRACKED -j ACCEPT
+-A INPUT --protocol <?=$inputFilter->getProto(); ?> --match <?=$inputFilter->getProto(); ?> --dport <?=$inputFilter->getDstPort(); ?> --match conntrack --ctstate NEW,UNTRACKED --jump ACCEPT
 <?php else: ?>
 <?php if ($ipFamily === $inputFilter->getSrcNet()->getFamily()): ?>
--A INPUT -p <?=$inputFilter->getProto(); ?> -m <?=$inputFilter->getProto(); ?> --source <?=$inputFilter->getSrcNet(); ?> --dport <?=$inputFilter->getDstPort(); ?> -m conntrack --ctstate NEW,UNTRACKED -j ACCEPT
+-A INPUT --protocol <?=$inputFilter->getProto(); ?> --match <?=$inputFilter->getProto(); ?> --source <?=$inputFilter->getSrcNet(); ?> --dport <?=$inputFilter->getDstPort(); ?> --match conntrack --ctstate NEW,UNTRACKED --jump ACCEPT
 <?php endif; ?>
 <?php endif; ?>
 <?php endforeach; ?>
--A INPUT -m conntrack --ctstate INVALID -j DROP
+-A INPUT --match conntrack --ctstate INVALID --jump DROP
 <?php if (4 === $ipFamily): ?>
--A INPUT -j REJECT --reject-with icmp-host-prohibited
+-A INPUT --jump REJECT --reject-with icmp-host-prohibited
 <?php else: ?>
--A INPUT -j REJECT --reject-with icmp6-adm-prohibited
+-A INPUT --jump REJECT --reject-with icmp6-adm-prohibited
 <?php endif; ?>
 COMMIT

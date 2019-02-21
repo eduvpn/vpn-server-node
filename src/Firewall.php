@@ -37,6 +37,7 @@ class Firewall
         $inputFilterList = self::expandRules($firewallConfig->getItem('inputRules'));
 
         $natSrcNetList = [];
+        $natIf = null;
         if ($firewallConfig->hasSection('natConfig')) {
             $natConfig = $firewallConfig->getSection('natConfig');
             foreach ($profileConfigList as $profileId => $profileConfig) {
@@ -51,6 +52,7 @@ class Firewall
                 if (\in_array('IPv6', $natFamily, true)) {
                     $natSrcNetList[] = new IP($profileConfig->getItem('range6'));
                 }
+                $natIf = $natProfileConfig->optionalItem('natIf');
             }
         }
 
