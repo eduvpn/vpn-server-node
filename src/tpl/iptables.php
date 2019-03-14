@@ -1,21 +1,19 @@
 # Let's Connect! / eduVPN Firewall
-<?php if (0 !== count($natSrcNetList)): ?>
 *nat
 :PREROUTING ACCEPT [0:0]
 :INPUT ACCEPT [0:0]
 :OUTPUT ACCEPT [0:0]
 :POSTROUTING ACCEPT [0:0]
-<?php foreach ($natSrcNetList as $natSrcNet): ?>
-<?php if ($ipFamily === $natSrcNet->getFamily()): ?>
-<?php if (null === $natIf): ?>
--A POSTROUTING --source <?=$natSrcNet; ?> --jump MASQUERADE
+<?php foreach ($srcList as $srcItem): ?>
+<?php if ($srcItem['enableNat'] && $ipFamily === $srcItem['ipRange']->getFamily()): ?>
+<?php if (null === $srcItem['outInterface']): ?>
+-A POSTROUTING --source <?=$srcItem['ipRange']; ?> --jump MASQUERADE
 <?php else: ?>
--A POSTROUTING --source <?=$natSrcNet; ?> --out-interface <?=$natIf; ?> --jump MASQUERADE
+-A POSTROUTING --source <?=$srcItem['ipRange']; ?> --out-interface <?=$srcItem['outInterface']; ?> --jump MASQUERADE
 <?php endif; ?>
 <?php endif; ?>
 <?php endforeach; ?>
 COMMIT
-<?php endif; ?>
 *filter
 :INPUT ACCEPT [0:0]
 :FORWARD ACCEPT [0:0]
@@ -41,5 +39,21 @@ COMMIT
 -A INPUT --jump REJECT --reject-with icmp-host-prohibited
 <?php else: ?>
 -A INPUT --jump REJECT --reject-with icmp6-adm-prohibited
+<?php endif; ?>
+-A FORWARD --match conntrack --ctstate RELATED,ESTABLISHED --jump ACCEPT
+<?php foreach ($srcList as $srcItem): ?>
+<?php if ($ipFamily === $srcItem['ipRange']->getFamily()): ?>
+<?php if (null === $srcItem['outInterface']): ?>
+-A FORWARD --in-interface tun+ --source <?=$srcItem['ipRange']; ?> --jump ACCEPT
+<?php else: ?>
+-A FORWARD --in-interface tun+ --source <?=$srcItem['ipRange']; ?> --out-interface <?=$srcItem['outInterface']; ?> --jump ACCEPT
+<?php endif; ?>
+<?php endif; ?>
+<?php endforeach; ?>
+-A FORWARD --match conntrack --ctstate INVALID --jump DROP
+<?php if (4 === $ipFamily): ?>
+-A FORWARD --jump REJECT --reject-with icmp-host-prohibited
+<?php else: ?>
+-A FORWARD --jump REJECT --reject-with icmp6-adm-prohibited
 <?php endif; ?>
 COMMIT

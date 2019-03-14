@@ -28,7 +28,7 @@ return [
 //        ],
 
 //        // Only allow SSH access from 10.0.0.0/8 & fd00::/8
-//        // Make sure you remove 22 from "dst_port" in above rule
+//        // Make sure to remove 22 from "dst_port" in above rule
 //        [
 //            'proto' => ['tcp'],
 //            'src_net' => [
@@ -41,10 +41,10 @@ return [
 //        ],
     ],
 
-    'natConfig' => [
+    'profileRules' => [
         'internet' => [
-            //'natFamily' => ['IPv4', 'IPv6'],
-            //'natIf' => 'eth0',
+            'enableNat' => ['IPv4', 'IPv6'],
+            //'outInterface' => 'eth0',
         ],
     ],
 ];

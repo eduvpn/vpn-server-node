@@ -10,7 +10,6 @@
 namespace LetsConnect\Node;
 
 use LetsConnect\Common\Config;
-use LetsConnect\Common\ProfileConfig;
 
 class Firewall
 {
@@ -27,7 +26,7 @@ class Firewall
 
     /**
      * @param \LetsConnect\Common\Config               $firewallConfig
-     * @param array<string,\LetsConnect\Common\Config> $profileConfig
+     * @param array<string,\LetsConnect\Common\Config> $profileConfigList
      *
      * @return string
      */
@@ -36,24 +35,29 @@ class Firewall
         $ipFamily = $this->ipFamily;
         $inputFilterList = self::expandRules($firewallConfig->getItem('inputRules'));
 
-        $natSrcNetList = [];
-        $natIf = null;
-        if ($firewallConfig->hasSection('natConfig')) {
-            $natConfig = $firewallConfig->getSection('natConfig');
-            foreach ($profileConfigList as $profileId => $profileConfig) {
-                if (!$natConfig->hasSection($profileId)) {
-                    continue;
-                }
-                $natProfileConfig = $natConfig->getSection($profileId);
-                $natFamily = $natProfileConfig->optionalItem('natFamily', ['IPv4', 'IPv6']);
-                if (\in_array('IPv4', $natFamily, true)) {
-                    $natSrcNetList[] = new IP($profileConfig->getItem('range'));
-                }
-                if (\in_array('IPv6', $natFamily, true)) {
-                    $natSrcNetList[] = new IP($profileConfig->getItem('range6'));
-                }
-                $natIf = $natProfileConfig->optionalItem('natIf');
+        // XXX add ports from vpnProtoPorts / exposedVpnProtoPorts as well
+
+        $srcList = [];
+        foreach ($profileConfigList as $profileId => $profileConfig) {
+            $outInterface = null;
+            $enableNat = [];
+            $profileRulesList = $firewallConfig->getSection('profileRules');
+            if ($profileRulesList->hasSection($profileId)) {
+                $profileRules = $profileRulesList->getSection($profileId);
+                $outInterface = $profileRules->optionalItem('outInterface');
+                $enableNat = $profileRules->optionalItem('enableNat', []);
             }
+            $srcList[] = [
+                'ipRange' => new IP($profileConfig->getItem('range')),
+                'outInterface' => $outInterface,
+                'enableNat' => \in_array('IPv4', $enableNat, true),
+            ];
+
+            $srcList[] = [
+                'ipRange' => new IP($profileConfig->getItem('range6')),
+                'outInterface' => $outInterface,
+                'enableNat' => \in_array('IPv6', $enableNat, true),
+            ];
         }
 
         ob_start();
