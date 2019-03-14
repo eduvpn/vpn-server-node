@@ -1,6 +1,12 @@
 <?php
 
 return [
+    // Set to `false` to disable INPUT firewall
+    'enableInputRules' => true,
+
+    // Set to `false` to disable FORWARD firewall
+    'enableForwardRules' => true,
+
     // INPUT
     'inputRules' => [
         [
@@ -41,7 +47,9 @@ return [
 //        ],
     ],
 
-    'profileRules' => [
+    // FORWARD
+    'forwardRules' => [
+        // profile "internet"
         'internet' => [
             'enableNat' => ['IPv4', 'IPv6'],
             //'outInterface' => 'eth0',

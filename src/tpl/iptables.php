@@ -4,12 +4,12 @@
 :INPUT ACCEPT [0:0]
 :OUTPUT ACCEPT [0:0]
 :POSTROUTING ACCEPT [0:0]
-<?php foreach ($srcList as $srcItem): ?>
-<?php if ($srcItem['enableNat'] && $ipFamily === $srcItem['ipRange']->getFamily()): ?>
-<?php if (null === $srcItem['outInterface']): ?>
--A POSTROUTING --source <?=$srcItem['ipRange']; ?> --jump MASQUERADE
+<?php foreach ($forwardFilterList as $forwardFilter): ?>
+<?php if ($forwardFilter['enableNat'] && $ipFamily === $forwardFilter['ipRange']->getFamily()): ?>
+<?php if (null === $forwardFilter['outInterface']): ?>
+-A POSTROUTING --source <?=$forwardFilter['ipRange']; ?> --jump MASQUERADE
 <?php else: ?>
--A POSTROUTING --source <?=$srcItem['ipRange']; ?> --out-interface <?=$srcItem['outInterface']; ?> --jump MASQUERADE
+-A POSTROUTING --source <?=$forwardFilter['ipRange']; ?> --out-interface <?=$forwardFilter['outInterface']; ?> --jump MASQUERADE
 <?php endif; ?>
 <?php endif; ?>
 <?php endforeach; ?>
@@ -18,6 +18,7 @@ COMMIT
 :INPUT ACCEPT [0:0]
 :FORWARD ACCEPT [0:0]
 :OUTPUT ACCEPT [0:0]
+<?php if ($enableInputRules): ?>
 -A INPUT --match conntrack --ctstate RELATED,ESTABLISHED --jump ACCEPT
 -A INPUT --in-interface lo --jump ACCEPT
 <?php if (4 === $ipFamily): ?>
@@ -40,13 +41,15 @@ COMMIT
 <?php else: ?>
 -A INPUT --jump REJECT --reject-with icmp6-adm-prohibited
 <?php endif; ?>
+<?php endif; ?>
+<?php if ($enableForwardRules): ?>
 -A FORWARD --match conntrack --ctstate RELATED,ESTABLISHED --jump ACCEPT
-<?php foreach ($srcList as $srcItem): ?>
-<?php if ($ipFamily === $srcItem['ipRange']->getFamily()): ?>
-<?php if (null === $srcItem['outInterface']): ?>
--A FORWARD --in-interface tun+ --source <?=$srcItem['ipRange']; ?> --jump ACCEPT
+<?php foreach ($forwardFilterList as $forwardFilter): ?>
+<?php if ($ipFamily === $forwardFilter['ipRange']->getFamily()): ?>
+<?php if (null === $forwardFilter['outInterface']): ?>
+-A FORWARD --in-interface tun+ --source <?=$forwardFilter['ipRange']; ?> --jump ACCEPT
 <?php else: ?>
--A FORWARD --in-interface tun+ --source <?=$srcItem['ipRange']; ?> --out-interface <?=$srcItem['outInterface']; ?> --jump ACCEPT
+-A FORWARD --in-interface tun+ --source <?=$forwardFilter['ipRange']; ?> --out-interface <?=$forwardFilter['outInterface']; ?> --jump ACCEPT
 <?php endif; ?>
 <?php endif; ?>
 <?php endforeach; ?>
@@ -55,5 +58,6 @@ COMMIT
 -A FORWARD --jump REJECT --reject-with icmp-host-prohibited
 <?php else: ?>
 -A FORWARD --jump REJECT --reject-with icmp6-adm-prohibited
+<?php endif; ?>
 <?php endif; ?>
 COMMIT
