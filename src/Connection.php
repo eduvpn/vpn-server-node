@@ -7,13 +7,13 @@
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LetsConnect\Node;
+namespace LC\Node;
 
-use LetsConnect\Common\HttpClient\ServerClient;
+use LC\Common\HttpClient\ServerClient;
 
 class Connection
 {
-    /** @var \LetsConnect\Common\HttpClient\ServerClient */
+    /** @var \LC\Common\HttpClient\ServerClient */
     private $serverClient;
 
     public function __construct(ServerClient $serverClient)

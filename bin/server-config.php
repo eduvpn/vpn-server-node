@@ -10,10 +10,10 @@
 require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
-use LetsConnect\Common\Config;
-use LetsConnect\Common\HttpClient\CurlHttpClient;
-use LetsConnect\Common\HttpClient\ServerClient;
-use LetsConnect\Node\OpenVpn;
+use LC\Common\Config;
+use LC\Common\HttpClient\CurlHttpClient;
+use LC\Common\HttpClient\ServerClient;
+use LC\Node\OpenVpn;
 
 try {
     $configFile = sprintf('%s/config/config.php', $baseDir);

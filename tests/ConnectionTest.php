@@ -7,10 +7,10 @@
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LetsConnect\Node\Tests;
+namespace LC\Node\Tests;
 
-use LetsConnect\Common\HttpClient\ServerClient;
-use LetsConnect\Node\Connection;
+use LC\Common\HttpClient\ServerClient;
+use LC\Node\Connection;
 use PHPUnit\Framework\TestCase;
 
 class ConnectionTest extends TestCase
@@ -42,7 +42,7 @@ class ConnectionTest extends TestCase
     }
 
     /**
-     * @expectedException \LetsConnect\Common\HttpClient\Exception\ApiException
+     * @expectedException \LC\Common\HttpClient\Exception\ApiException
      * @expectedExceptionMessage error message
      */
     public function testInvalidConnection()

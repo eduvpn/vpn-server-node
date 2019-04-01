@@ -7,9 +7,9 @@
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LetsConnect\Node;
+namespace LC\Node;
 
-use LetsConnect\Common\Config;
+use LC\Common\Config;
 
 class Firewall
 {
@@ -25,8 +25,8 @@ class Firewall
     }
 
     /**
-     * @param \LetsConnect\Common\Config               $firewallConfig
-     * @param array<string,\LetsConnect\Common\Config> $profileConfigList
+     * @param \LC\Common\Config               $firewallConfig
+     * @param array<string,\LC\Common\Config> $profileConfigList
      *
      * @return string
      */

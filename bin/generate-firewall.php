@@ -10,12 +10,12 @@
 require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
-use LetsConnect\Common\Config;
-use LetsConnect\Common\FileIO;
-use LetsConnect\Common\HttpClient\CurlHttpClient;
-use LetsConnect\Common\HttpClient\ServerClient;
-use LetsConnect\Common\ProfileConfig;
-use LetsConnect\Node\Firewall;
+use LC\Common\Config;
+use LC\Common\FileIO;
+use LC\Common\HttpClient\CurlHttpClient;
+use LC\Common\HttpClient\ServerClient;
+use LC\Common\ProfileConfig;
+use LC\Node\Firewall;
 
 try {
     $installFirewall = false;
@@ -39,7 +39,7 @@ try {
     );
 
     $profileList = $serverClient->getRequireArray('profile_list');
-    /** @var array<string,LetsConnect\Common\ProfileConfig> */
+    /** @var array<string,LC\Common\ProfileConfig> */
     $profileConfigList = [];
     foreach ($profileList as $profileId => $profileData) {
         $profileConfigList[$profileId] = new ProfileConfig($profileData);

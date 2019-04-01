@@ -8,17 +8,17 @@
     ],
     "autoload": {
         "psr-4": {
-            "LetsConnect\\Node\\": "src/"
+            "LC\\Node\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "LetsConnect\\Node\\Tests\\": "tests/"
+            "LC\\Node\\Tests\\": "tests/"
         }
     },
     "description": "OpenVPN node controller",
     "license": "AGPL-3.0-or-later",
-    "name": "eduvpn/vpn-server-node",
+    "name": "lc/vpn-server-node",
     "repositories": [
         {
             "no-api": true,
@@ -27,7 +27,7 @@
         }
     ],
     "require": {
-        "eduvpn/common": "dev-master",
+        "lc/common": "dev-master",
         "ext-date": "*",
         "ext-filter": "*",
         "ext-mbstring": "*",

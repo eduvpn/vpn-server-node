@@ -7,13 +7,13 @@
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LetsConnect\Node;
+namespace LC\Node;
 
 use DateTime;
 use DateTimeZone;
-use LetsConnect\Common\FileIO;
-use LetsConnect\Common\HttpClient\ServerClient;
-use LetsConnect\Common\ProfileConfig;
+use LC\Common\FileIO;
+use LC\Common\HttpClient\ServerClient;
+use LC\Common\ProfileConfig;
 use RuntimeException;
 
 class OpenVpn

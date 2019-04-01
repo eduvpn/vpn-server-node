@@ -7,10 +7,10 @@
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LetsConnect\Node\Tests;
+namespace LC\Node\Tests;
 
-use LetsConnect\Common\HttpClient\ServerClient;
-use LetsConnect\Node\OpenVpn;
+use LC\Common\HttpClient\ServerClient;
+use LC\Node\OpenVpn;
 use PHPUnit\Framework\TestCase;
 
 class OpenVpnTest extends TestCase

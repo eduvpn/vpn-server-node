@@ -10,7 +10,7 @@
 require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
-use LetsConnect\Common\FileIO;
+use LC\Common\FileIO;
 
 try {
     $configDir = sprintf('%s/openvpn-config', $baseDir);

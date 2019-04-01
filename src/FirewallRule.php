@@ -7,9 +7,9 @@
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LetsConnect\Node;
+namespace LC\Node;
 
-use LetsConnect\Node\Exception\FirewallRuleException;
+use LC\Node\Exception\FirewallRuleException;
 
 class FirewallRule
 {

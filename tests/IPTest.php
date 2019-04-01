@@ -7,9 +7,9 @@
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LetsConnect\Node\Tests;
+namespace LC\Node\Tests;
 
-use LetsConnect\Node\IP;
+use LC\Node\IP;
 use PHPUnit\Framework\TestCase;
 
 class IPTest extends TestCase

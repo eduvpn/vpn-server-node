@@ -10,12 +10,12 @@
 require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
-use LetsConnect\Common\Config;
-use LetsConnect\Common\HttpClient\CurlHttpClient;
-use LetsConnect\Common\HttpClient\ServerClient;
-use LetsConnect\Common\Logger;
-use LetsConnect\Node\Connection;
-use LetsConnect\Node\Exception\ConnectionException;
+use LC\Common\Config;
+use LC\Common\HttpClient\CurlHttpClient;
+use LC\Common\HttpClient\ServerClient;
+use LC\Common\Logger;
+use LC\Node\Connection;
+use LC\Node\Exception\ConnectionException;
 
 $logger = new Logger(
     basename($argv[0])

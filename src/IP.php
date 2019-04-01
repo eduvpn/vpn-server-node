@@ -7,10 +7,10 @@
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LetsConnect\Node;
+namespace LC\Node;
 
 use InvalidArgumentException;
-use LetsConnect\Node\Exception\IPException;
+use LC\Node\Exception\IPException;
 
 class IP
 {

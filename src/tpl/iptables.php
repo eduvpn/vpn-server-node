@@ -42,22 +42,11 @@ COMMIT
 -A INPUT --jump REJECT --reject-with icmp6-adm-prohibited
 <?php endif; ?>
 <?php endif; ?>
-<?php if ($enableForwardRules): ?>
--A FORWARD --match conntrack --ctstate RELATED,ESTABLISHED --jump ACCEPT
-<?php foreach ($forwardFilterList as $forwardFilter): ?>
-<?php if ($ipFamily === $forwardFilter['ipRange']->getFamily()): ?>
-<?php if (null === $forwardFilter['outInterface']): ?>
--A FORWARD --in-interface tun+ --source <?=$forwardFilter['ipRange']; ?> --jump ACCEPT
-<?php else: ?>
--A FORWARD --in-interface tun+ --source <?=$forwardFilter['ipRange']; ?> --out-interface <?=$forwardFilter['outInterface']; ?> --jump ACCEPT
-<?php endif; ?>
-<?php endif; ?>
-<?php endforeach; ?>
--A FORWARD --match conntrack --ctstate INVALID --jump DROP
+-A FORWARD --in-interface tun+ ! --out-interface tun+ --jump ACCEPT
+-A FORWARD ! --in-interface tun+ --out-interface tun+ --jump ACCEPT
 <?php if (4 === $ipFamily): ?>
 -A FORWARD --jump REJECT --reject-with icmp-host-prohibited
 <?php else: ?>
 -A FORWARD --jump REJECT --reject-with icmp6-adm-prohibited
-<?php endif; ?>
 <?php endif; ?>
 COMMIT
