@@ -27,8 +27,8 @@ COMMIT
 <?php endif; ?>
 <?php endforeach; ?>
 -A INPUT --match conntrack --ctstate INVALID --jump DROP
--A INPUT --jump REJECT --reject-with <?php if (4 === $ipFamily): ?>icmp-host-prohibited<?php else: ?>icmp6-adm-prohibited<?php endif; ?>
+-A INPUT --reject-with <?php if (4 === $ipFamily): ?>icmp-host-prohibited<?php else: ?>icmp6-adm-prohibited<?php endif; ?> --jump REJECT
 -A FORWARD --match conntrack --ctstate RELATED,ESTABLISHED --jump ACCEPT
 -A FORWARD --in-interface tun+ ! --out-interface tun+ --jump ACCEPT
--A FORWARD --jump REJECT --reject-with <?php if (4 === $ipFamily): ?>icmp-host-prohibited<?php else: ?>icmp6-adm-prohibited<?php endif; ?>
+-A FORWARD --reject-with <?php if (4 === $ipFamily): ?>icmp-host-prohibited<?php else: ?>icmp6-adm-prohibited<?php endif; ?> --jump REJECT
 COMMIT
