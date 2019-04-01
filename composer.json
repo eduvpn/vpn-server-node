@@ -27,13 +27,13 @@
         }
     ],
     "require": {
-        "lc/common": "dev-master",
         "ext-date": "*",
         "ext-filter": "*",
         "ext-mbstring": "*",
         "ext-openssl": "*",
         "ext-pcre": "*",
         "ext-spl": "*",
+        "lc/common": "dev-master",
         "php": ">=5.4",
         "psr/log": "^1"
     },

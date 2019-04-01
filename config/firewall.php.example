@@ -45,14 +45,7 @@ return [
     'natRules' => [
         // profile "internet"
         'internet' => [
-            'enableNat' => ['IPv4', 'IPv6'],
-            //'outInterface' => 'eth0',
-        ],
-    ],
-
-    'forwardRules' => [
-        'internet' => [
-            'allowTunToTun' => false,
+            'enableNat' => ['IPv4', 'IPv6']
         ],
     ],
 ];

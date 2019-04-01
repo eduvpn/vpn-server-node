@@ -33,42 +33,34 @@ class Firewall
     public function get(Config $firewallConfig, array $profileConfigList)
     {
         $ipFamily = $this->ipFamily;
-        $inputFilterList = [];
-        $forwardFilterList = [];
-        if ($enableInputRules = $firewallConfig->getItem('enableInputRules')) {
-            $inputFilterList = self::expandRules($firewallConfig->getItem('inputRules'));
-        }
+        $natRulesList = [];
 
-        // XXX add ports from vpnProtoPorts / exposedVpnProtoPorts as well
+        // INPUT
+        $inputRulesList = self::expandRules($firewallConfig->getItem('inputRules'));
 
-        if ($enableForwardRules = $firewallConfig->getItem('enableForwardRules')) {
-            if ($firewallConfig->hasSection('forwardRules')) {
-                // only enable "FORWARD" firewall when "forwardRules" is set,
-                // disable any FORWARD firewalling otherwise...
-                foreach ($profileConfigList as $profileId => $profileConfig) {
-                    $profileRulesList = $firewallConfig->getSection('forwardRules');
-                    if (!$profileRulesList->hasSection($profileId)) {
-                        continue;
-                    }
-
-                    $profileRules = $profileRulesList->getSection($profileId);
-                    $outInterface = $profileRules->optionalItem('outInterface');
-                    $enableNat = $profileRules->optionalItem('enableNat', []);
-
-                    // IPv4
-                    $forwardFilterList[] = [
-                        'ipRange' => new IP($profileConfig->getItem('range')),
-                        'outInterface' => $outInterface,
-                        'enableNat' => \in_array('IPv4', $enableNat, true),
-                    ];
-
-                    // IPv6
-                    $forwardFilterList[] = [
-                        'ipRange' => new IP($profileConfig->getItem('range6')),
-                        'outInterface' => $outInterface,
-                        'enableNat' => \in_array('IPv6', $enableNat, true),
-                    ];
+        // NAT
+        if ($firewallConfig->hasSection('natRules')) {
+            foreach ($profileConfigList as $profileId => $profileConfig) {
+                $natRulesConfig = $firewallConfig->getSection('natRules');
+                if (!$natRulesConfig->hasSection($profileId)) {
+                    // no entry in natRules for this profile ID
+                    continue;
                 }
+
+                $natRuleConfig = $natRulesConfig->getSection($profileId);
+                $enableNat = $natRuleConfig->optionalItem('enableNat', []);
+
+                // IPv4
+                $natRulesList[] = [
+                    'ipRange' => new IP($profileConfig->getItem('range')),
+                    'enableNat' => \in_array('IPv4', $enableNat, true),
+                ];
+
+                // IPv6
+                $natRulesList[] = [
+                    'ipRange' => new IP($profileConfig->getItem('range6')),
+                    'enableNat' => \in_array('IPv6', $enableNat, true),
+                ];
             }
         }
 
