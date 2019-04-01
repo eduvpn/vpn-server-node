@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.0.0 (...)
+## 2.0.0 (2019-04-01)
 - better error when number of vpnProtoPorts is not 1,2,4,8 or 16
 - remove 2FA verification through OpenVPN
 - when using "split tunnel" configuration, also set a static route to the VPN 
@@ -9,6 +9,7 @@
 - remove compression framing support
 - remove tls-auth support
 - remove "multi instance" support
+- update firewalling
 
 ## 1.1.2 (2018-11-09)
 - add support for `blockLan` to block traffic to local LAN network when 
