@@ -57,11 +57,13 @@ class TestHttpClient implements HttpClientInterface
     {
         return [
             $statusCode,
-            [
-                $key => [
-                    'ok' => true,
-                ],
-            ],
+            json_encode(
+                [
+                    $key => [
+                        'ok' => true,
+                    ],
+                ]
+            ),
         ];
     }
 
@@ -69,12 +71,14 @@ class TestHttpClient implements HttpClientInterface
     {
         return [
             $statusCode,
-            [
-                $key => [
-                    'ok' => false,
-                    'error' => $errorMessage,
-                ],
-            ],
+            json_encode(
+                [
+                    $key => [
+                        'ok' => false,
+                        'error' => $errorMessage,
+                    ],
+                ]
+            ),
         ];
     }
 
@@ -82,12 +86,14 @@ class TestHttpClient implements HttpClientInterface
     {
         return [
             $statusCode,
-            [
-                $key => [
-                    'ok' => true,
-                    'data' => json_decode($jsonData, true),
-                ],
-            ],
+            json_encode(
+                [
+                    $key => [
+                        'ok' => true,
+                        'data' => json_decode($jsonData, true),
+                    ],
+                ]
+            ),
         ];
     }
 }
