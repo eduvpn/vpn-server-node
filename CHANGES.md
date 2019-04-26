@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.0.1 (2019-04-26)
+- update tests to deal with updates internal API error messages 
+  (vpn-lib-common)
+
 ## 2.0.0 (2019-04-01)
 - better error when number of vpnProtoPorts is not 1,2,4,8 or 16
 - remove 2FA verification through OpenVPN
