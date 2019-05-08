@@ -21,9 +21,8 @@
     "name": "lc/vpn-server-node",
     "repositories": [
         {
-            "no-api": true,
-            "type": "vcs",
-            "url": "https://github.com/eduvpn/vpn-lib-common"
+            "type": "path",
+            "url": "../vpn-lib-common"
         }
     ],
     "require": {
@@ -33,7 +32,7 @@
         "ext-openssl": "*",
         "ext-pcre": "*",
         "ext-spl": "*",
-        "lc/common": "^2",
+        "lc/common": "dev-master",
         "php": ">=5.4",
         "psr/log": "^1"
     },
