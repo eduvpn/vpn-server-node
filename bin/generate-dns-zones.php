@@ -42,6 +42,8 @@ try {
     /** @var array<string,LC\Common\ProfileConfig> */
     $profileConfigList = [];
     $forwardDns = [];
+    $reverseFour = [];
+    $reverseSix = [];
     foreach ($profileList as $profileId => $profileData) {
         $profileConfig = new ProfileConfig($profileData);
         $rangeFour = $profileConfig->getItem('range');
@@ -54,8 +56,6 @@ try {
         $gatewayNo = 1;
         $serverHostName = $profileConfig->getItem('hostName');
         $forwardDns[$serverHostName] = [];
-        $reverseFour = [];
-        $reverseSix = [];
         for ($j = 0; $j < $splitCount; ++$j) {
             $noOfHosts = $ipFourSplit[$j]->getNumberOfHosts();
             $firstFourHost = $ipFourSplit[$j]->getFirstHost();
@@ -93,6 +93,7 @@ try {
         }
     }
 
+//    var_dump(array_keys($reverseFour));
     echo '####################'.PHP_EOL;
     echo '# REVERSE IPv4 DNS #'.PHP_EOL;
     echo '####################'.PHP_EOL;
