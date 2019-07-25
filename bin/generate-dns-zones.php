@@ -93,7 +93,6 @@ try {
         }
     }
 
-//    var_dump(array_keys($reverseFour));
     echo '####################'.PHP_EOL;
     echo '# REVERSE IPv4 DNS #'.PHP_EOL;
     echo '####################'.PHP_EOL;
