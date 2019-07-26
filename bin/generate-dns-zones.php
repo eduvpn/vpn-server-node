@@ -52,7 +52,7 @@ try {
     $forwardDns = [];
     $reverseFour = [];
     $reverseSix = [];
-    foreach ($profileList as $profileId => $profileData) {
+    foreach ($profileList as $profileData) {
         $profileConfig = new ProfileConfig($profileData);
         $rangeFour = $profileConfig->getItem('range');
         $rangeSix = $profileConfig->getItem('range6');
@@ -62,13 +62,12 @@ try {
         $ipFourSplit = $ipFour->split($splitCount);
         $ipSixSplit = $ipSix->split($splitCount);
         $gatewayNo = 1;
-        $forwardDns[$domainName] = [];
         $profileNumber = (int) $profileConfig->getItem('profileNumber');
         for ($j = 0; $j < $splitCount; ++$j) {
             $noOfHosts = $ipFourSplit[$j]->getNumberOfHosts();
             $firstFourHost = $ipFourSplit[$j]->getFirstHost();
             $firstSixHost = $ipSixSplit[$j]->getFirstHost();
-            $forwardDns[$domainName][sprintf('gw-%03d-%03d', $profileNumber, $gatewayNo)] = ['ipFour' => $firstFourHost, 'ipSix' => $firstSixHost];
+            $forwardDns[sprintf('gw-%03d-%03d', $profileNumber, $gatewayNo)] = ['ipFour' => $firstFourHost, 'ipSix' => $firstSixHost];
             $gwIpFourOrigin = implode('.', array_slice(array_reverse(explode('.', $firstFourHost)), 1, 3)).'.in-addr.arpa.';
             $gwIpSixOrigin = implode('.', str_split(strrev(substr(bin2hex(inet_pton($firstSixHost)), 0, 16)), 1)).'.ip6.arpa.';
             $reverseFour[$gwIpFourOrigin][$firstFourHost] = sprintf('gw-%03d-%03d.%s.', $profileNumber, $gatewayNo, $domainName);
@@ -83,7 +82,7 @@ try {
                 $ipSixOrigin = implode('.', str_split(strrev(substr(bin2hex($longSixIp), 0, 16)), 1)).'.ip6.arpa.';
                 $reverseFour[$ipFourOrigin][$clientFourIp] = sprintf('c-%03d-%03d-%03d.%s.', $profileNumber, $gatewayNo, $i + 1, $domainName);
                 $reverseSix[$ipSixOrigin][$clientSixIp] = sprintf('c-%03d-%03d-%03d.%s.', $profileNumber, $gatewayNo, $i + 1, $domainName);
-                $forwardDns[$domainName][sprintf('c-%03d-%03d-%03d', $profileNumber, $gatewayNo, $i + 1)] = ['ipFour' => $clientFourIp, 'ipSix' => $clientSixIp];
+                $forwardDns[sprintf('c-%03d-%03d-%03d', $profileNumber, $gatewayNo, $i + 1)] = ['ipFour' => $clientFourIp, 'ipSix' => $clientSixIp];
             }
             ++$gatewayNo;
         }
@@ -92,13 +91,11 @@ try {
     echo '###############'.PHP_EOL;
     echo '# FORWARD DNS #'.PHP_EOL;
     echo '###############'.PHP_EOL;
-    foreach ($forwardDns as $origin => $hostList) {
-        echo sprintf('$ORIGIN %s.', $origin).PHP_EOL;
-        foreach ($hostList as $hostName => $ipList) {
-            echo sprintf('%-20s', $hostName);
-            echo sprintf('IN A    %s', $ipList['ipFour']).PHP_EOL;
-            echo sprintf('%20sIN AAAA %s', '', $ipList['ipSix']).PHP_EOL;
-        }
+    echo sprintf('$ORIGIN %s.', $domainName).PHP_EOL;
+    foreach ($forwardDns as $hostName => $ipList) {
+        echo sprintf('%-20s', $hostName);
+        echo sprintf('IN A    %s', $ipList['ipFour']).PHP_EOL;
+        echo sprintf('%20sIN AAAA %s', '', $ipList['ipSix']).PHP_EOL;
     }
 
     echo '####################'.PHP_EOL;
