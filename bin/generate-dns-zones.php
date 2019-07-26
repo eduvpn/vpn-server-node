@@ -25,6 +25,14 @@ use LC\Node\IP;
  */
 
 try {
+    // ask for the domain name for the (reverse) DNS entries
+    $systemHostName = gethostname();
+    echo sprintf('(Reverse) Domain [%s]: ', $systemHostName);
+    $domainName = trim(fgets(STDIN));
+    if (empty($domainName)) {
+        $domainName = $systemHostName;
+    }
+
     $configDir = sprintf('%s/config', $baseDir);
     $config = Config::fromFile(sprintf('%s/config.php', $configDir));
 
@@ -54,17 +62,17 @@ try {
         $ipFourSplit = $ipFour->split($splitCount);
         $ipSixSplit = $ipSix->split($splitCount);
         $gatewayNo = 1;
-        $serverHostName = $profileConfig->getItem('hostName');
-        $forwardDns[$serverHostName] = [];
+        $forwardDns[$domainName] = [];
+        $profileNumber = (int) $profileConfig->getItem('profileNumber');
         for ($j = 0; $j < $splitCount; ++$j) {
             $noOfHosts = $ipFourSplit[$j]->getNumberOfHosts();
             $firstFourHost = $ipFourSplit[$j]->getFirstHost();
             $firstSixHost = $ipSixSplit[$j]->getFirstHost();
-            $forwardDns[$serverHostName][sprintf('gateway-%03d', $gatewayNo)] = ['ipFour' => $firstFourHost, 'ipSix' => $firstSixHost];
+            $forwardDns[$domainName][sprintf('gw-%03d-%03d', $profileNumber, $gatewayNo)] = ['ipFour' => $firstFourHost, 'ipSix' => $firstSixHost];
             $gwIpFourOrigin = implode('.', array_slice(array_reverse(explode('.', $firstFourHost)), 1, 3)).'.in-addr.arpa.';
             $gwIpSixOrigin = implode('.', str_split(strrev(substr(bin2hex(inet_pton($firstSixHost)), 0, 16)), 1)).'.ip6.arpa.';
-            $reverseFour[$gwIpFourOrigin][$firstFourHost] = sprintf('gateway-%03d.%s.', $gatewayNo, $serverHostName);
-            $reverseSix[$gwIpSixOrigin][$firstSixHost] = sprintf('gateway-%03d.%s.', $gatewayNo, $serverHostName);
+            $reverseFour[$gwIpFourOrigin][$firstFourHost] = sprintf('gw-%03d-%03d.%s.', $profileNumber, $gatewayNo, $domainName);
+            $reverseSix[$gwIpSixOrigin][$firstSixHost] = sprintf('gw-%03d-%03d.%s.', $profileNumber, $gatewayNo, $domainName);
             $longFourIp = ip2long($firstFourHost);
             $longSixIp = inet_pton($firstSixHost);
             for ($i = 0; $i < $noOfHosts - 1; ++$i) {
@@ -73,9 +81,9 @@ try {
                 $clientSixIp = inet_ntop(substr($longSixIp, 0, 14).$sixStart);
                 $ipFourOrigin = implode('.', array_slice(array_reverse(explode('.', $clientFourIp)), 1, 3)).'.in-addr.arpa.';
                 $ipSixOrigin = implode('.', str_split(strrev(substr(bin2hex($longSixIp), 0, 16)), 1)).'.ip6.arpa.';
-                $reverseFour[$ipFourOrigin][$clientFourIp] = sprintf('client-%03d-%03d.%s.', $gatewayNo, $i + 1, $serverHostName);
-                $reverseSix[$ipSixOrigin][$clientSixIp] = sprintf('client-%03d-%03d.%s.', $gatewayNo, $i + 1, $serverHostName);
-                $forwardDns[$serverHostName][sprintf('client-%03d-%03d', $gatewayNo, $i + 1)] = ['ipFour' => $clientFourIp, 'ipSix' => $clientSixIp];
+                $reverseFour[$ipFourOrigin][$clientFourIp] = sprintf('c-%03d-%03d-%03d.%s.', $profileNumber, $gatewayNo, $i + 1, $domainName);
+                $reverseSix[$ipSixOrigin][$clientSixIp] = sprintf('c-%03d-%03d-%03d.%s.', $profileNumber, $gatewayNo, $i + 1, $domainName);
+                $forwardDns[$domainName][sprintf('c-%03d-%03d-%03d', $profileNumber, $gatewayNo, $i + 1)] = ['ipFour' => $clientFourIp, 'ipSix' => $clientSixIp];
             }
             ++$gatewayNo;
         }
