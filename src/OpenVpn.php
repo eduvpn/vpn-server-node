@@ -323,6 +323,12 @@ class OpenVpn
             $dnsEntries[] = sprintf('push "dhcp-option DNS %s"', $dnsAddress);
         }
 
+        // push (multiple) DOMAIN options to set DNS (search) suffix
+        $dnsSuffixList = $profileConfig->getSection('dnsSuffix')->toArray();
+        foreach ($dnsSuffixList as $dnsSuffix) {
+            $dnsEntries[] = sprintf('push "dhcp-option DOMAIN %s"', $dnsSuffix);
+        }
+
         return $dnsEntries;
     }
 
