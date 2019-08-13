@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.0.2 (...)
+- support `dnsSuffix` option
+- include script to generate (reverse) DNS zones for VPN client IPs
+
 ## 2.0.1 (2019-04-26)
 - update tests to deal with updates internal API error messages 
   (vpn-lib-common)
