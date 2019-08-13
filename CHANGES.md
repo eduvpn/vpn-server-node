@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.0.2 (...)
+## 2.0.2 (2019-08-13)
 - support `dnsSuffix` option
 - include script to generate (reverse) DNS zones for VPN client IPs
 
