@@ -107,4 +107,22 @@ class IPTest extends TestCase
         $this->assertSame('1111:2222:3333:4444::3:0/112', (string) $splitRange[3]);
         $this->assertSame('1111:2222:3333:4444::3:1', $splitRange[3]->getFirstHost());
     }
+
+    public function testIPv4NonFirstTwo()
+    {
+        $ip = new IP('192.168.1.128/24');
+        $splitRange = $ip->split(2);
+        $this->assertSame(2, \count($splitRange));
+        $this->assertSame('192.168.1.0/25', (string) $splitRange[0]);
+        $this->assertSame('192.168.1.128/25', (string) $splitRange[1]);
+    }
+
+    public function testIPv6NonFirstTwo()
+    {
+        $ip = new IP('1111:2222:3333:4444::ffff/64');
+        $splitRange = $ip->split(2);
+        $this->assertSame(2, \count($splitRange));
+        $this->assertSame('1111:2222:3333:4444::/112', (string) $splitRange[0]);
+        $this->assertSame('1111:2222:3333:4444::1:0/112', (string) $splitRange[1]);
+    }
 }
