@@ -195,7 +195,7 @@ class IP
         $splitRanges = [];
         for ($i = 0; $i < $networkCount; ++$i) {
             $noHosts = pow(2, 32 - $prefix);
-            $networkAddress = long2ip((int) ($i * $noHosts + ip2long($this->getAddress())));
+            $networkAddress = long2ip((int) ($i * $noHosts + ip2long($this->getNetwork())));
             $splitRanges[] = new self($networkAddress.'/'.$prefix);
         }
 
