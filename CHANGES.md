@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.0.3 (...)
+## 2.0.3 (2019-08-29)
 - fix IP network/subnet calculation (issue #38)
 
 ## 2.0.2 (2019-08-13)
