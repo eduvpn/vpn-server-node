@@ -113,7 +113,7 @@ class OpenVpn
             list($proto, $port) = self::getProtoPort($profileConfig->getItem('vpnProtoPorts'), $profileConfig->getItem('listen'))[$i];
             $processConfig['range'] = $splitRange[$i];
             $processConfig['range6'] = $splitRange6[$i];
-            $processConfig['dev'] = sprintf('tun-%d-%d', $profileConfig->getItem('profileNumber'), $i);
+            $processConfig['dev'] = sprintf('tun%d', self::toPort($profileConfig->getItem('profileNumber'), $i));
             $processConfig['proto'] = $proto;
             $processConfig['port'] = $port;
             $processConfig['local'] = $profileConfig->getItem('listen');
