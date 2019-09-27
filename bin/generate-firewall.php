@@ -37,11 +37,18 @@ try {
         ),
         $mainConfig->getItem('apiUri')
     );
-
+    $profileIdDeployList = $mainConfig->optionalItem('profileList', []);
     $profileList = $serverClient->getRequireArray('profile_list');
     /** @var array<string,LC\Common\ProfileConfig> */
     $profileConfigList = [];
     foreach ($profileList as $profileId => $profileData) {
+        if (0 !== count($profileIdDeployList)) {
+            // we only want to have some profiles on this node...
+            if (!in_array($profileId, $profileIdDeployList, true)) {
+                // we don't want this profile on this node...
+                continue;
+            }
+        }
         $profileConfigList[$profileId] = new ProfileConfig($profileData);
     }
 
