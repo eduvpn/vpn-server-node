@@ -37,7 +37,7 @@ class OpenVpnTest extends TestCase
 
     public function testWriteProfiles()
     {
-        $this->openVpn->writeProfiles($this->serverClient, 'openvpn', 'openvpn', true);
+        $this->openVpn->writeProfiles($this->serverClient, 'openvpn', 'openvpn', []);
         $this->assertSame(
             trim(file_get_contents(sprintf('%s/internet-0.conf', $this->tmpDir))),
             trim(file_get_contents(sprintf('%s/data/internet-0.conf', __DIR__)))

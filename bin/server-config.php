@@ -28,8 +28,10 @@ try {
         $config->getItem('apiUri')
     );
 
+    $profileIdDeployList = $config->optionalItem('profileList', []);
+
     $o = new OpenVpn($vpnConfigDir);
-    $o->writeProfiles($serverClient, $vpnUser, $vpnGroup);
+    $o->writeProfiles($serverClient, $vpnUser, $vpnGroup, $profileIdDeployList);
 } catch (Exception $e) {
     echo sprintf('ERROR: %s', $e->getMessage()).PHP_EOL;
     exit(1);

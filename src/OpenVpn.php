@@ -57,17 +57,25 @@ class OpenVpn
     }
 
     /**
-     * @param string $vpnUser
-     * @param string $vpnGroup
+     * @param string        $vpnUser
+     * @param string        $vpnGroup
+     * @param array<string> $profileIdDeployList the list of profile IDs to deploy on this node
      *
      * @return void
      */
-    public function writeProfiles(ServerClient $serverClient, $vpnUser, $vpnGroup)
+    public function writeProfiles(ServerClient $serverClient, $vpnUser, $vpnGroup, array $profileIdDeployList)
     {
         $profileList = $serverClient->getRequireArray('profile_list');
 
         $profileIdList = array_keys($profileList);
         foreach ($profileIdList as $profileId) {
+            if (0 !== \count($profileIdDeployList)) {
+                // we only want to have some profiles on this node...
+                if (!\in_array($profileId, $profileIdDeployList, true)) {
+                    // we don't want this profile on this node...
+                    continue;
+                }
+            }
             $profileConfigData = $profileList[$profileId];
             $profileConfigData['_user'] = $vpnUser;
             $profileConfigData['_group'] = $vpnGroup;
