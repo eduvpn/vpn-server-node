@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.0.4 (...)
+- use tun_n_ for OpenVPN tunnel interfaces (BSD compat)
+- allow up to 64 processes per VPN profile now
+- allow deploying only certain profiles on the node for "multi node" 
+  deployments
+
 ## 2.0.3 (2019-08-29)
 - fix IP network/subnet calculation (issue #38)
 
