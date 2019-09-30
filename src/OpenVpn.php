@@ -125,7 +125,7 @@ class OpenVpn
             $processConfig['proto'] = $proto;
             $processConfig['port'] = $port;
             $processConfig['local'] = $profileConfig->getItem('listen');
-            $processConfig['managementPort'] = 11940 + $this->toPort($profileNumber, $i);
+            $processConfig['managementPort'] = 11940 + self::toPort($profileNumber, $i);
             $processConfig['configName'] = sprintf(
                 '%s-%d.conf',
                 $profileId,
@@ -365,7 +365,7 @@ class OpenVpn
      *
      * @return int
      */
-    private function toPort($profileNumber, $processNumber)
+    private static function toPort($profileNumber, $processNumber)
     {
         // we have 2^16 - 11940 ports available for management ports, so let's
         // say we have 2^14 ports available to distribute over profiles and
