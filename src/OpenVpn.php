@@ -14,6 +14,7 @@ use DateTimeZone;
 use LC\Common\FileIO;
 use LC\Common\HttpClient\ServerClient;
 use LC\Common\ProfileConfig;
+use RangeException;
 use RuntimeException;
 
 class OpenVpn
@@ -367,6 +368,14 @@ class OpenVpn
      */
     private static function toPort($profileNumber, $processNumber)
     {
+        if (64 < $profileNumber) {
+            throw new RangeException('profileNumber MUST be <= 64');
+        }
+
+        if (64 <= $processNumber) {
+            throw new RangeException('processNumber MUST be < 64');
+        }
+
         // we have 2^16 - 11940 ports available for management ports, so let's
         // say we have 2^14 ports available to distribute over profiles and
         // processes, let's take 12 bits, so we have 64 profiles with each 64
