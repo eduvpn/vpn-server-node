@@ -368,12 +368,12 @@ class OpenVpn
      */
     private static function toPort($profileNumber, $processNumber)
     {
-        if (64 < $profileNumber) {
-            throw new RangeException('profileNumber MUST be <= 64');
+        if (1 > $profileNumber || 64 < $profileNumber) {
+            throw new RangeException('1 <= profileNumber <= 64');
         }
 
-        if (64 <= $processNumber) {
-            throw new RangeException('processNumber MUST be < 64');
+        if (0 > $processNumber || 64 <= $processNumber) {
+            throw new RangeException('0 <= processNumber < 64');
         }
 
         // we have 2^16 - 11940 ports available for management ports, so let's
