@@ -195,8 +195,6 @@ class OpenVpn
             'persist-key',
             'persist-tun',
             'remote-cert-tls client',
-            'tls-version-min 1.2',
-            'tls-cipher TLS-ECDHE-RSA-WITH-AES-256-GCM-SHA384',
             'dh none', // Only ECDHE
             'ncp-ciphers AES-256-GCM',  // only AES-256-GCM
             'cipher AES-256-GCM',       // only AES-256-GCM
@@ -217,6 +215,15 @@ class OpenVpn
             sprintf('proto %s', $processConfig['proto']),
             sprintf('local %s', $processConfig['local']),
         ];
+
+        if ($profileConfig->hasItem('tlsOneThree') && $profileConfig->getItem('tlsOneThree')) {
+            // for TLSv1.3 we don't care about the tls-ciphers, they are all
+            // fine, let the client choose
+            $serverConfig[] = 'tls-version-min 1.3';
+        } else {
+            $serverConfig[] = 'tls-version-min 1.2';
+            $serverConfig[] = 'tls-cipher TLS-ECDHE-RSA-WITH-AES-256-GCM-SHA384';
+        }
 
         if (!$profileConfig->getItem('enableLog')) {
             $serverConfig[] = 'log /dev/null';
