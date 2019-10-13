@@ -5,6 +5,8 @@
 - allow up to 64 processes per VPN profile now
 - allow deploying only certain profiles on the node for "multi node" 
   deployments
+- implement `tlsOneThree` option for profiles to only allow TLSv1.3 
+  connections
 
 ## 2.0.3 (2019-08-29)
 - fix IP network/subnet calculation (issue #38)
