@@ -198,7 +198,6 @@ class OpenVpn
             'dh none', // Only ECDHE
             'ncp-ciphers AES-256-GCM',  // only AES-256-GCM
             'cipher AES-256-GCM',       // only AES-256-GCM
-            'auth none',
             sprintf('client-connect %s/client-connect', self::LIBEXEC_DIR),
             sprintf('client-disconnect %s/client-disconnect', self::LIBEXEC_DIR),
             sprintf('ca %s/ca.crt', $tlsDir),
