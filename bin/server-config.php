@@ -30,7 +30,8 @@ try {
 
     $profileIdDeployList = $config->optionalItem('profileList', []);
 
-    $o = new OpenVpn($vpnConfigDir);
+    $useVpnDaemon = $config->hasItem('useVpnDaemon') ? $config->getItem('useVpnDaemon') : false;
+    $o = new OpenVpn($vpnConfigDir, $useVpnDaemon);
     $o->writeProfiles($serverClient, $vpnUser, $vpnGroup, $profileIdDeployList);
 } catch (Exception $e) {
     echo sprintf('ERROR: %s', $e->getMessage()).PHP_EOL;

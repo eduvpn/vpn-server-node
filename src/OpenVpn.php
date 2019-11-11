@@ -25,13 +25,18 @@ class OpenVpn
     /** @var string */
     private $vpnConfigDir;
 
+    /** @var bool */
+    private $useVpnDaemon;
+
     /**
      * @param string $vpnConfigDir
+     * @param bool   $useVpnDaemon
      */
-    public function __construct($vpnConfigDir)
+    public function __construct($vpnConfigDir, $useVpnDaemon)
     {
         FileIO::createDir($vpnConfigDir, 0700);
         $this->vpnConfigDir = $vpnConfigDir;
+        $this->useVpnDaemon = $useVpnDaemon;
     }
 
     /**
@@ -112,6 +117,10 @@ class OpenVpn
         $splitRange6 = $range6->split($processCount);
 
         $managementIp = $profileConfig->getItem('managementIp');
+        if ($this->useVpnDaemon) {
+            $managementIp = '127.0.0.1';
+        }
+
         $profileNumber = $profileConfig->getItem('profileNumber');
 
         $processConfig = [

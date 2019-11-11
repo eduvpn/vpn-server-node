@@ -8,6 +8,13 @@ This will help upgrades to a future 3.x release. Configuration changes during
 the 2.x life cycle are NOT required. Any existing configuration file will keep
 working!
 
+## 2.0.5
+
+- A new configuration option `useVpnDaemon` that takes a boolean was added to 
+  `config.php`. It will make sure the "managementIp" is *always* `127.0.0.1` as 
+  the VPN daemon running on the node will listen on the public address, 
+  protected using TLS. The default is `false`.
+
 ## 2.0.4
 
 - The configuration option `profileList` in `config.php` was added which takes 

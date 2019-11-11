@@ -28,7 +28,7 @@ class OpenVpnTest extends TestCase
         $tmpDir = sprintf('%s/%s', sys_get_temp_dir(), bin2hex(random_bytes(16)));
         mkdir($tmpDir, 0700, true);
         $this->tmpDir = $tmpDir;
-        $this->openVpn = new OpenVpn($tmpDir);
+        $this->openVpn = new OpenVpn($tmpDir, false);
         $this->serverClient = new ServerClient(
             new TestHttpClient(),
             'openVpnServerClient'
