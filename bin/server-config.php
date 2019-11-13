@@ -29,8 +29,7 @@ try {
     );
 
     $profileIdDeployList = $config->optionalItem('profileList', []);
-
-    $useVpnDaemon = $config->hasItem('useVpnDaemon') ? $config->getItem('useVpnDaemon') : false;
+    $useVpnDaemon = $config->optionalItem('useVpnDaemon', false);
     $o = new OpenVpn($vpnConfigDir, $useVpnDaemon);
     $o->writeProfiles($serverClient, $vpnUser, $vpnGroup, $profileIdDeployList);
 } catch (Exception $e) {
