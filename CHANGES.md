@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.1.0 (2019-11-21)
+- support VPN daemon
+- no longer specify `auth none` in server configuration
+
 ## 2.0.4 (2019-10-14)
 - use tun_n_ for OpenVPN tunnel interfaces (BSD compat)
 - allow up to 64 processes per VPN profile now

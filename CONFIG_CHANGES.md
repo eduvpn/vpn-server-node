@@ -8,7 +8,7 @@ This will help upgrades to a future 3.x release. Configuration changes during
 the 2.x life cycle are NOT required. Any existing configuration file will keep
 working!
 
-## 2.0.5
+## 2.1.0
 
 - A new configuration option `useVpnDaemon` that takes a boolean was added to 
   `config.php`. It will make sure the "managementIp" is *always* `127.0.0.1` as 
