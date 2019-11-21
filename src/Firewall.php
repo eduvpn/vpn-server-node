@@ -25,7 +25,6 @@ class Firewall
     }
 
     /**
-     * @param \LC\Common\Config               $firewallConfig
      * @param array<string,\LC\Common\Config> $profileConfigList
      *
      * @return string
@@ -71,8 +70,6 @@ class Firewall
     }
 
     /**
-     * @param array $ruleList
-     *
      * @return array<FirewallRule>
      */
     private static function expandRules(array $ruleList)
