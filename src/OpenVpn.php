@@ -41,20 +41,21 @@ class OpenVpn
 
     /**
      * @param string $vpnTlsDir
+     * @param string $profileId
      * @param string $commonName
      *
      * @return void
      */
-    public function generateKeys(ServerClient $serverClient, $vpnTlsDir, $commonName)
+    public function generateKeys(ServerClient $serverClient, $vpnTlsDir, $profileId, $commonName)
     {
         FileIO::createDir($vpnTlsDir, 0700);
-        $certData = $serverClient->postRequireArray('add_server_certificate', ['common_name' => $commonName]);
+        $certData = $serverClient->postRequireArray('add_server_certificate', ['profile_id' => $profileId, 'common_name' => $commonName]);
 
         $certFileMapping = [
             'ca' => sprintf('%s/ca.crt', $vpnTlsDir),
             'certificate' => sprintf('%s/server.crt', $vpnTlsDir),
             'private_key' => sprintf('%s/server.key', $vpnTlsDir),
-            'ta' => sprintf('%s/ta.key', $vpnTlsDir),
+            'tls_crypt' => sprintf('%s/tls-crypt.key', $vpnTlsDir),
         ];
 
         foreach ($certFileMapping as $k => $v) {
@@ -94,7 +95,7 @@ class OpenVpn
             $cn = sprintf('%s.%s', $dateString, $profileId);
             $vpnTlsDir = sprintf('%s/tls/%s', $this->vpnConfigDir, $profileId);
 
-            $this->generateKeys($serverClient, $vpnTlsDir, $cn);
+            $this->generateKeys($serverClient, $vpnTlsDir, $profileId, $cn);
         }
     }
 
@@ -252,7 +253,7 @@ class OpenVpn
         }
 
         if ('tls-crypt' === $profileConfig->getItem('tlsProtection')) {
-            $serverConfig[] = sprintf('tls-crypt %s/ta.key', $tlsDir);
+            $serverConfig[] = sprintf('tls-crypt %s/tls-crypt.key', $tlsDir);
         }
 
         // Routes

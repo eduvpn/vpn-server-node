@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.1.1 (...)
+- update for server API to handle per profile tls-crypt keys
+
 ## 2.1.0 (2019-11-21)
 - support VPN daemon
 - no longer specify `auth none` in server configuration
