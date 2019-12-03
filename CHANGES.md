@@ -2,6 +2,8 @@
 
 ## 2.1.1 (...)
 - update for server API to handle per profile tls-crypt keys
+- write all OpenVPN certificates / keys in the configuration file instead of 
+  in a separate directory
 
 ## 2.1.0 (2019-11-21)
 - support VPN daemon
