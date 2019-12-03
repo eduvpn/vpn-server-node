@@ -40,30 +40,6 @@ class OpenVpn
     }
 
     /**
-     * @param string $vpnTlsDir
-     * @param string $profileId
-     * @param string $commonName
-     *
-     * @return void
-     */
-    public function generateKeys(ServerClient $serverClient, $vpnTlsDir, $profileId, $commonName)
-    {
-        FileIO::createDir($vpnTlsDir, 0700);
-        $certData = $serverClient->postRequireArray('add_server_certificate', ['profile_id' => $profileId, 'common_name' => $commonName]);
-
-        $certFileMapping = [
-            'ca' => sprintf('%s/ca.crt', $vpnTlsDir),
-            'certificate' => sprintf('%s/server.crt', $vpnTlsDir),
-            'private_key' => sprintf('%s/server.key', $vpnTlsDir),
-            'tls_crypt' => sprintf('%s/tls-crypt.key', $vpnTlsDir),
-        ];
-
-        foreach ($certFileMapping as $k => $v) {
-            FileIO::writeFile($v, $certData[$k], 0600);
-        }
-    }
-
-    /**
      * @param string        $vpnUser
      * @param string        $vpnGroup
      * @param array<string> $profileIdDeployList the list of profile IDs to deploy on this node
@@ -87,15 +63,21 @@ class OpenVpn
             $profileConfigData['_user'] = $vpnUser;
             $profileConfigData['_group'] = $vpnGroup;
             $profileConfig = new ProfileConfig($profileConfigData);
-            $this->writeProfile($profileId, $profileConfig);
 
             // generate a CN based on date and profile, instance
+            // XXX switch to 'hostName' when our CA supports duplicate CNs
             $dateTime = new DateTime('now', new DateTimeZone('UTC'));
             $dateString = $dateTime->format('YmdHis');
-            $cn = sprintf('%s.%s', $dateString, $profileId);
-            $vpnTlsDir = sprintf('%s/tls/%s', $this->vpnConfigDir, $profileId);
+            $commonName = sprintf('%s.%s', $dateString, $profileId);
+            $certData = $serverClient->postRequireArray(
+                'add_server_certificate',
+                [
+                    'profile_id' => $profileId,
+                    'common_name' => $commonName,
+                ]
+            );
 
-            $this->generateKeys($serverClient, $vpnTlsDir, $profileId, $cn);
+            $this->writeProfile($profileId, $profileConfig, $certData);
         }
     }
 
@@ -104,7 +86,7 @@ class OpenVpn
      *
      * @return void
      */
-    public function writeProfile($profileId, ProfileConfig $profileConfig)
+    public function writeProfile($profileId, ProfileConfig $profileConfig, array $certData)
     {
         $range = new IP($profileConfig->getItem('range'));
         $range6 = new IP($profileConfig->getItem('range6'));
@@ -143,7 +125,7 @@ class OpenVpn
                 $i
             );
 
-            $this->writeProcess($profileId, $profileConfig, $processConfig);
+            $this->writeProcess($profileId, $profileConfig, $processConfig, $certData);
         }
     }
 
@@ -188,10 +170,8 @@ class OpenVpn
      *
      * @return void
      */
-    private function writeProcess($profileId, ProfileConfig $profileConfig, array $processConfig)
+    private function writeProcess($profileId, ProfileConfig $profileConfig, array $processConfig, array $certData)
     {
-        $tlsDir = sprintf('tls/%s', $profileId);
-
         $rangeIp = new IP($processConfig['range']);
         $range6Ip = new IP($processConfig['range6']);
 
@@ -210,9 +190,6 @@ class OpenVpn
             'cipher AES-256-GCM',       // only AES-256-GCM
             sprintf('client-connect %s/client-connect', self::LIBEXEC_DIR),
             sprintf('client-disconnect %s/client-disconnect', self::LIBEXEC_DIR),
-            sprintf('ca %s/ca.crt', $tlsDir),
-            sprintf('cert %s/server.crt', $tlsDir),
-            sprintf('key %s/server.key', $tlsDir),
             sprintf('server %s %s', $rangeIp->getNetwork(), $rangeIp->getNetmask()),
             sprintf('server-ipv6 %s', $range6Ip->getAddressPrefix()),
             sprintf('max-clients %d', $rangeIp->getNumberOfHosts() - 1),
@@ -252,10 +229,6 @@ class OpenVpn
             $serverConfig[] = 'push "explicit-exit-notify 1"';
         }
 
-        if ('tls-crypt' === $profileConfig->getItem('tlsProtection')) {
-            $serverConfig[] = sprintf('tls-crypt %s/tls-crypt.key', $tlsDir);
-        }
-
         // Routes
         $serverConfig = array_merge($serverConfig, self::getRoutes($profileConfig));
 
@@ -266,6 +239,14 @@ class OpenVpn
         $serverConfig = array_merge($serverConfig, self::getClientToClient($profileConfig));
 
         sort($serverConfig, SORT_STRING);
+
+        // add Certificates / keys
+        $serverConfig[] = '<ca>'.PHP_EOL.$certData['ca'].PHP_EOL.'</ca>';
+        $serverConfig[] = '<cert>'.PHP_EOL.$certData['certificate'].PHP_EOL.'</cert>';
+        $serverConfig[] = '<key>'.PHP_EOL.$certData['private_key'].PHP_EOL.'</key>';
+        if ('tls-crypt' === $profileConfig->getItem('tlsProtection')) {
+            $serverConfig[] = '<tls-crypt>'.PHP_EOL.$certData['tls_crypt'].PHP_EOL.'</tls-crypt>';
+        }
 
         $serverConfig = array_merge(
             [
