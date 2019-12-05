@@ -9,6 +9,7 @@
 
 namespace LC\Node\Tests;
 
+use LC\Common\HttpClient\Exception\ApiException;
 use LC\Common\HttpClient\ServerClient;
 use LC\Node\Connection;
 use PHPUnit\Framework\TestCase;
@@ -41,21 +42,22 @@ class ConnectionTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException \LC\Common\HttpClient\Exception\ApiException
-     * @expectedExceptionMessage error message
-     */
     public function testInvalidConnection()
     {
-        $this->connection->connect(
-            [
-                'common_name' => 'foo_baz',
-                'PROFILE_ID' => 'internet',
-                'time_unix' => '12345678',
-                'ifconfig_pool_remote_ip' => '10.0.42.0',
-                'ifconfig_pool_remote_ip6' => 'fd00:4242:4242:4242::',
-            ]
-        );
+        try {
+            $this->connection->connect(
+                [
+                    'common_name' => 'foo_baz',
+                    'PROFILE_ID' => 'internet',
+                    'time_unix' => '12345678',
+                    'ifconfig_pool_remote_ip' => '10.0.42.0',
+                    'ifconfig_pool_remote_ip6' => 'fd00:4242:4242:4242::',
+                ]
+            );
+            self::fail();
+        } catch (ApiException $e) {
+            self::assertSame('error message', $e->getMessage());
+        }
     }
 
     public function testDisconnect()
