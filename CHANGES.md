@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.1.1 (...)
+## 2.1.1 (2019-12-10)
 - update for server API to handle per profile tls-crypt keys
 - write all OpenVPN certificates / keys in the configuration file instead of 
   in a separate directory
