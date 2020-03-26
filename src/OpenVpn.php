@@ -271,15 +271,19 @@ class OpenVpn
      */
     private static function getRoutes(ProfileConfig $profileConfig)
     {
+        $routeConfig = [];
         if ($profileConfig->getItem('defaultGateway')) {
             $redirectFlags = ['def1', 'ipv6'];
             if ($profileConfig->hasItem('blockLan') && $profileConfig->getItem('blockLan')) {
                 $redirectFlags[] = 'block-local';
             }
 
-            return [
-                sprintf('push "redirect-gateway %s"', implode(' ', $redirectFlags)),
-            ];
+            $routeConfig[] = sprintf('push "redirect-gateway %s"', implode(' ', $redirectFlags));
+        }
+
+        $routeList = $profileConfig->getSection('routes')->toArray();
+        if (0 === \count($routeList)) {
+            return $routeConfig;
         }
 
         // Always set a route to the remote host through the client's default
@@ -293,7 +297,7 @@ class OpenVpn
         ];
 
         // there may be some routes specified, push those, and not the default
-        foreach ($profileConfig->getSection('routes')->toArray() as $route) {
+        foreach ($routeList as $route) {
             $routeIp = new IP($route);
             if (6 === $routeIp->getFamily()) {
                 // IPv6
