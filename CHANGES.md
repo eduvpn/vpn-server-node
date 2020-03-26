@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.1.2 (...)
+- fix IPv6 address splitting for >16 OpenVPN processes per profile (issue #43)
+
 ## 2.1.1 (2019-12-10)
 - update for server API to handle per profile tls-crypt keys
 - write all OpenVPN certificates / keys in the configuration file instead of 
