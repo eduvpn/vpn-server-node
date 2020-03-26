@@ -209,29 +209,30 @@ class IP
      */
     private function split6($networkCount)
     {
-        // we will ALWAYS assign a /112 to every OpenVPN process. So we need
-        // at least /108 or bigger to be able to accomodate 16 OpenVPN
-        // processes. OpenVPN does not support assigning anything smaller than
-        // a /112 to an OpenVPN process
-        if (112 < $this->getPrefix()) {
-            throw new IPException('network too small, must be >= /112');
-        }
-        if (1 !== $networkCount) {
-            if (108 < $this->getPrefix()) {
-                throw new IPException('network too small to split up, must be >= /108');
-            }
+        // we will ALWAYS assign a /112 to every OpenVPN process. So we need to
+        // figure out how big our network needs to be *AT LEAST* given the
+        // number of networks to split in...
+        $requiredBits = (int) log($networkCount, 2);
+        $minPrefix = 112 - $requiredBits;
+        if ($minPrefix < $this->getPrefix()) {
+            throw new IPException('network too small, must be >= /'.$minPrefix);
         }
 
+        // we make math much easier for us like this!
         if (0 !== $this->getPrefix() % 4) {
             throw new IPException('network prefix length must be divisible by 4');
         }
 
         $hexAddress = bin2hex(inet_pton($this->getAddress()));
-        // clear the last 20 bits (128 - 108)
-        $hexAddress = substr_replace($hexAddress, '00000', -5);
+        // set the prefix bytes to 0, e.g. for a /64 clear the last 64 bits
+        $clearPrefixLength = (int) (32 - ($this->getPrefix() / 4));
+        $hexAddress = substr($hexAddress, 0, -$clearPrefixLength).str_repeat('0', $clearPrefixLength);
+
+        // determine the addresses with the /112 prefix
         $splitRanges = [];
         for ($i = 0; $i < $networkCount; ++$i) {
-            $hexAddress[27] = dechex($i);
+            // the last 4 bytes are always 0 for the /112
+            $hexAddress = substr($hexAddress, 0, -(\strlen(dechex($i)) + 4)).dechex($i).'0000';
             $splitRanges[] = new self(
                 sprintf('%s/112', inet_ntop(hex2bin($hexAddress)))
             );
