@@ -232,6 +232,9 @@ class OpenVpn
         // Routes
         $serverConfig = array_merge($serverConfig, self::getRoutes($profileConfig));
 
+        // excludeRoutes
+        $serverConfig = array_merge($serverConfig, self::getExcludeRoutes($profileConfig));
+
         // DNS
         $serverConfig = array_merge($serverConfig, self::getDns($rangeIp, $range6Ip, $profileConfig));
 
@@ -309,6 +312,27 @@ class OpenVpn
         }
 
         return $routeConfig;
+    }
+
+    /**
+     * @return array
+     */
+    private static function getExcludeRoutes(ProfileConfig $profileConfig)
+    {
+        $excludeRouteList = $profileConfig->getSection('excludeRoutes')->toArray();
+        $excludeRouteConfig = [];
+        foreach ($excludeRouteList as $excludeRoute) {
+            $excludeRouteIp = new IP($excludeRoute);
+            if (6 === $excludeRouteIp->getFamily()) {
+                // IPv6
+                $excludeRouteConfig[] = sprintf('push "route-ipv6 %s net_gateway"', $excludeRouteIp->getAddressPrefix());
+            } else {
+                // IPv4
+                $excludeRouteConfig[] = sprintf('push "route %s %s net_gateway"', $excludeRouteIp->getAddress(), $excludeRouteIp->getNetmask());
+            }
+        }
+
+        return $excludeRouteConfig;
     }
 
     /**

@@ -4,6 +4,7 @@
 - fix IPv6 address splitting for >16 OpenVPN processes per profile (issue #43)
 - even when `defaultGateway` is `true` push the routes as configured in `route`
   (issue #44)
+- implement experimental `excludeRoutes` option (issue #45)
 
 ## 2.1.1 (2019-12-10)
 - update for server API to handle per profile tls-crypt keys
