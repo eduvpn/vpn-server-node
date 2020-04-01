@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.1.3 (2020-04-01)
+- fix removal of "default gateway" push when also having routes configured
+
 ## 2.1.2 (2020-04-01)
 - fix IPv6 address splitting for >16 OpenVPN processes per profile (issue #43)
 - even when `defaultGateway` is `true` push the routes as configured in `route`
