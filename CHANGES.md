@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.1.4 (...)
+- renegotiate data channel key every 10 hours instead of every hour
+
 ## 2.1.3 (2020-04-01)
 - fix removal of "default gateway" push when also having routes configured
 

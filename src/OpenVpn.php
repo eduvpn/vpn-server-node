@@ -188,6 +188,8 @@ class OpenVpn
             'dh none', // Only ECDHE
             'ncp-ciphers AES-256-GCM',  // only AES-256-GCM
             'cipher AES-256-GCM',       // only AES-256-GCM
+            // renegotiate data channel key every 10 hours instead of every hour
+            sprintf('reneg-sec %d', 10 * 60 * 60),
             sprintf('client-connect %s/client-connect', self::LIBEXEC_DIR),
             sprintf('client-disconnect %s/client-disconnect', self::LIBEXEC_DIR),
             sprintf('server %s %s', $rangeIp->getNetwork(), $rangeIp->getNetmask()),
