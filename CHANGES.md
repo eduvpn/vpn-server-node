@@ -2,6 +2,9 @@
 
 ## 2.1.4 (...)
 - renegotiate data channel key every 10 hours instead of every hour
+- allow admin to disable installing/generating firewall rules when running
+  `vpn-server-node-generate-firewall --install` for systems without firewall
+  or custom firewall
 
 ## 2.1.3 (2020-04-01)
 - fix removal of "default gateway" push when also having routes configured

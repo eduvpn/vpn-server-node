@@ -8,6 +8,12 @@ This will help upgrades to a future 3.x release. Configuration changes during
 the 2.x life cycle are NOT required. Any existing configuration file will keep
 working!
 
+## 2.1.4
+
+- A new configuration option `manageFirewall` that takes boolean was added to 
+  `config.php` (default: `true`). Setting it to `false` will disable installing 
+  firewall rules when running `vpn-server-node-generate-firewall --install`.
+
 ## 2.1.0
 
 - A new configuration option `useVpnDaemon` that takes a boolean was added to 

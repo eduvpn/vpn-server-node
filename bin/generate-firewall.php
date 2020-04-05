@@ -26,6 +26,7 @@ try {
     }
     $configDir = sprintf('%s/config', $baseDir);
     $mainConfig = Config::fromFile(sprintf('%s/config.php', $configDir));
+    $manageFirewall = false !== $mainConfig->optionalItem('manageFirewall');
     $firewallConfig = Config::fromFile(sprintf('%s/firewall.php', $configDir));
 
     $serverClient = new ServerClient(
@@ -70,6 +71,10 @@ try {
             throw new RuntimeException('only RHEL/CentOS/Fedora or Debian/Ubuntu supported');
         }
 
+        if (!$manageFirewall) {
+            echo '**FIREWALL NOT MANAGED**: firewall rules NOT written...'.PHP_EOL;
+            exit(0);
+        }
         FileIO::writeFile($iptablesFile, $firewallIp4->get($firewallConfig, $profileConfigList), 0600);
         FileIO::writeFile($ip6tablesFile, $firewallIp6->get($firewallConfig, $profileConfigList), 0600);
     } else {
