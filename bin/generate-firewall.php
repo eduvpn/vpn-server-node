@@ -8,87 +8,13 @@
  */
 
 require_once dirname(__DIR__).'/vendor/autoload.php';
-$baseDir = dirname(__DIR__);
 
-use LC\Common\Config;
-use LC\Common\FileIO;
-use LC\Common\HttpClient\CurlHttpClient;
-use LC\Common\HttpClient\ServerClient;
-use LC\Common\ProfileConfig;
-use LC\Node\Firewall;
-
-try {
-    $installFirewall = false;
-    foreach ($argv as $arg) {
-        if ('--install' === $arg) {
-            $installFirewall = true;
-        }
-    }
-    $configDir = sprintf('%s/config', $baseDir);
-    $mainConfig = Config::fromFile(sprintf('%s/config.php', $configDir));
-    $manageFirewall = false !== $mainConfig->optionalItem('manageFirewall');
-    $firewallConfig = Config::fromFile(sprintf('%s/firewall.php', $configDir));
-
-    $serverClient = new ServerClient(
-        new CurlHttpClient(
-            [
-                $mainConfig->getItem('apiUser'),
-                $mainConfig->getItem('apiPass'),
-            ]
-        ),
-        $mainConfig->getItem('apiUri')
-    );
-    $profileIdDeployList = $mainConfig->optionalItem('profileList', []);
-    $profileList = $serverClient->getRequireArray('profile_list');
-    /** @var array<string,LC\Common\ProfileConfig> */
-    $profileConfigList = [];
-    foreach ($profileList as $profileId => $profileData) {
-        if (0 !== count($profileIdDeployList)) {
-            // we only want to have some profiles on this node...
-            if (!in_array($profileId, $profileIdDeployList, true)) {
-                // we don't want this profile on this node...
-                continue;
-            }
-        }
-        $profileConfigList[$profileId] = new ProfileConfig($profileData);
-    }
-
-    $firewallIp4 = new Firewall(4);
-    $firewallIp6 = new Firewall(6);
-    if ($installFirewall) {
-        // determine file location for writing firewall data
-        if (FileIO::exists('/etc/redhat-release')) {
-            // RHEL/CentOS/Fedora
-            echo 'OS Detected: RHEL/CentOS/Fedora...'.PHP_EOL;
-            $iptablesFile = '/etc/sysconfig/iptables';
-            $ip6tablesFile = '/etc/sysconfig/ip6tables';
-        } elseif (FileIO::exists('/etc/debian_version')) {
-            // Debian/Ubuntu
-            echo 'OS Detected: Debian/Ubuntu...'.PHP_EOL;
-            $iptablesFile = '/etc/iptables/rules.v4';
-            $ip6tablesFile = '/etc/iptables/rules.v6';
-        } else {
-            throw new RuntimeException('only RHEL/CentOS/Fedora or Debian/Ubuntu supported');
-        }
-
-        if (!$manageFirewall) {
-            echo '**FIREWALL NOT MANAGED**: firewall rules NOT written...'.PHP_EOL;
-            exit(0);
-        }
-        FileIO::writeFile($iptablesFile, $firewallIp4->get($firewallConfig, $profileConfigList), 0600);
-        FileIO::writeFile($ip6tablesFile, $firewallIp6->get($firewallConfig, $profileConfigList), 0600);
-    } else {
-        echo '##########################################'.PHP_EOL;
-        echo '# IPv4'.PHP_EOL;
-        echo '##########################################'.PHP_EOL;
-        echo $firewallIp4->get($firewallConfig, $profileConfigList);
-
-        echo '##########################################'.PHP_EOL;
-        echo '# IPv6'.PHP_EOL;
-        echo '##########################################'.PHP_EOL;
-        echo $firewallIp6->get($firewallConfig, $profileConfigList);
-    }
-} catch (Exception $e) {
-    echo sprintf('ERROR: %s', $e->getMessage()).PHP_EOL;
-    exit(1);
-}
+echo '***************************************************************'.PHP_EOL;
+echo '*                                                             *'.PHP_EOL;
+echo '*       FIREWALL MODIFICATIONS ARE NO LONGER INSTALLED!       *'.PHP_EOL;
+echo '*                             SEE:                            *'.PHP_EOL;
+echo '*                                                             *'.PHP_EOL;
+echo '* https://github.com/eduvpn/documentation/blob/v2/FIREWALL.md *'.PHP_EOL;
+echo '*                                                             *'.PHP_EOL;
+echo '***************************************************************'.PHP_EOL;
+exit(1);

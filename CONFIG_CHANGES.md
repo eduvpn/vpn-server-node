@@ -8,6 +8,12 @@ This will help upgrades to a future 3.x release. Configuration changes during
 the 2.x life cycle are NOT required. Any existing configuration file will keep
 working!
 
+## 2.2.0
+
+- As all the firewall generation support, i.e. 
+  `vpn-server-node-generate-firewall`  was removed, there is no longer a 
+  `/etc/vpn-server-node/firewall.php`. This file can now be removed.
+
 ## 2.1.4
 
 - A new configuration option `manageFirewall` that takes boolean was added to 

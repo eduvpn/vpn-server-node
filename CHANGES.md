@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.2.0 (...)
+- the `vpn-server-node-generate-firewall` script is a dummy now. Current 
+  firewall is kept, but in order to modify firewalls you have to do this 
+  manually now or use your own tools. See 
+  [documentation](https://github.com/eduvpn/documentation/blob/v2/FIREWALL.md).
+
 ## 2.1.4 (2020-04-05)
 - renegotiate data channel key every 10 hours instead of every hour
 - allow admin to disable installing/generating firewall rules when running
