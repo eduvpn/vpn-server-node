@@ -17,4 +17,3 @@ echo '*                                                             *'.PHP_EOL;
 echo '* https://github.com/eduvpn/documentation/blob/v2/FIREWALL.md *'.PHP_EOL;
 echo '*                                                             *'.PHP_EOL;
 echo '***************************************************************'.PHP_EOL;
-exit(1);
