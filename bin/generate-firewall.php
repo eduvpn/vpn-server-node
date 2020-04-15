@@ -9,11 +9,12 @@
 
 require_once dirname(__DIR__).'/vendor/autoload.php';
 
-echo '***************************************************************'.PHP_EOL;
-echo '*                                                             *'.PHP_EOL;
-echo '*       FIREWALL MODIFICATIONS ARE NO LONGER INSTALLED!       *'.PHP_EOL;
-echo '*                             SEE:                            *'.PHP_EOL;
-echo '*                                                             *'.PHP_EOL;
-echo '* https://github.com/eduvpn/documentation/blob/v2/FIREWALL.md *'.PHP_EOL;
-echo '*                                                             *'.PHP_EOL;
-echo '***************************************************************'.PHP_EOL;
+echo '************************************************************************'.PHP_EOL;
+echo '*                                                                      *'.PHP_EOL;
+echo '*       FIREWALL MODIFICATIONS ARE NO LONGER INSTALLED!                *'.PHP_EOL;
+echo '*                                                                      *'.PHP_EOL;
+echo '*                              SEE                                     *'.PHP_EOL;
+echo '*                                                                      *'.PHP_EOL;
+echo '* https://github.com/eduvpn/documentation/blob/v2/FIREWALL.md#updating *'.PHP_EOL;
+echo '*                                                                      *'.PHP_EOL;
+echo '************************************************************************'.PHP_EOL;
