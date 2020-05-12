@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.2.1 (...)
+## 2.2.1 (2020-05-12)
 - remove `certificate-info` script as it no longer worked
 
 ## 2.2.0 (2020-04-15)
