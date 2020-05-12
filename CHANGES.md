@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.2.1 (...)
+- remove `certificate-info` script as it no longer worked
+
 ## 2.2.0 (2020-04-15)
 - the `vpn-server-node-generate-firewall` script is a dummy now. Current 
   firewall is kept, but in order to modify firewalls you have to do this 
