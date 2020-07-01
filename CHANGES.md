@@ -2,7 +2,7 @@
 
 ## 2.2.2 (...)
 - support adding `--up` to the server configuration file when 
-  `/etc/openvpn/server/up` exists and is executable
+  `/etc/openvpn/up` exists and is executable
 
 ## 2.2.1 (2020-05-12)
 - remove `certificate-info` script as it no longer worked

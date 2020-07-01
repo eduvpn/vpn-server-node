@@ -22,7 +22,7 @@ class OpenVpn
     // CentOS
     const LIBEXEC_DIR = '/usr/libexec/vpn-server-node';
 
-    const UP_PATH = '/etc/openvpn/server/up';
+    const UP_PATH = '/etc/openvpn/up';
 
     /** @var string */
     private $vpnConfigDir;
