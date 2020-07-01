@@ -22,6 +22,8 @@ class OpenVpn
     // CentOS
     const LIBEXEC_DIR = '/usr/libexec/vpn-server-node';
 
+    const UP_PATH = '/etc/openvpn/server/up';
+
     /** @var string */
     private $vpnConfigDir;
 
@@ -240,6 +242,9 @@ class OpenVpn
         // Client-to-client
         $serverConfig = array_merge($serverConfig, self::getClientToClient($profileConfig));
 
+        // --up
+        $serverConfig = array_merge($serverConfig, self::getUp());
+
         sort($serverConfig, SORT_STRING);
 
         // add Certificates / keys
@@ -382,5 +387,22 @@ class OpenVpn
         // processes, let's take 12 bits, so we have 64 profiles with each 64
         // processes...
         return ($profileNumber - 1 << 6) | $processNumber;
+    }
+
+    /**
+     * @return array
+     */
+    private static function getUp()
+    {
+        if (!file_exists(self::UP_PATH)) {
+            return [];
+        }
+        if (!is_executable(self::UP_PATH)) {
+            return [];
+        }
+
+        return [
+            'up '.self::UP_PATH,
+        ];
     }
 }
