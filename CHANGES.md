@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.2.2 (...)
+## 2.2.2 (2020-07-01)
 - support adding `--up` to the server configuration file when 
   `/etc/openvpn/up` exists and is executable
 
