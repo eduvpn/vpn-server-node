@@ -16,7 +16,7 @@
             "LC\\Node\\Tests\\": "tests/"
         }
     },
-    "description": "OpenVPN node controller",
+    "description": "Server node for Let's Connect! and eduVPN",
     "license": "AGPL-3.0-or-later",
     "name": "lc/vpn-server-node",
     "repositories": [
