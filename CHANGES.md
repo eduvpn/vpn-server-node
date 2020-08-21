@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.2.3 (...)
+- do not sort OpenVPN server configuration file to avoid having `DOMAIN` 
+  ordering also changed in `dhcp-option`.
+  
 ## 2.2.2 (2020-07-01)
 - support adding `--up` to the server configuration file when 
   `/etc/openvpn/up` exists and is executable

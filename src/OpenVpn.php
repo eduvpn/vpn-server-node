@@ -245,8 +245,6 @@ class OpenVpn
         // --up
         $serverConfig = array_merge($serverConfig, self::getUp());
 
-        sort($serverConfig, SORT_STRING);
-
         // add Certificates / keys
         $serverConfig[] = '<ca>'.PHP_EOL.$certData['ca'].PHP_EOL.'</ca>';
         $serverConfig[] = '<cert>'.PHP_EOL.$certData['certificate'].PHP_EOL.'</cert>';
