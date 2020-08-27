@@ -9,8 +9,6 @@
 
 namespace LC\Node;
 
-use DateTime;
-use DateTimeZone;
 use LC\Common\FileIO;
 use LC\Common\HttpClient\ServerClient;
 use LC\Common\ProfileConfig;
@@ -51,7 +49,6 @@ class OpenVpn
     public function writeProfiles(ServerClient $serverClient, $vpnUser, $vpnGroup, array $profileIdDeployList)
     {
         $profileList = $serverClient->getRequireArray('profile_list');
-
         $profileIdList = array_keys($profileList);
         foreach ($profileIdList as $profileId) {
             if (0 !== \count($profileIdDeployList)) {
@@ -65,17 +62,10 @@ class OpenVpn
             $profileConfigData['_user'] = $vpnUser;
             $profileConfigData['_group'] = $vpnGroup;
             $profileConfig = new ProfileConfig($profileConfigData);
-
-            // generate a CN based on date and profile, instance
-            // XXX switch to 'hostName' when our CA supports duplicate CNs
-            $dateTime = new DateTime('now', new DateTimeZone('UTC'));
-            $dateString = $dateTime->format('YmdHis');
-            $commonName = sprintf('%s.%s', $dateString, $profileId);
             $certData = $serverClient->postRequireArray(
                 'add_server_certificate',
                 [
                     'profile_id' => $profileId,
-                    'common_name' => $commonName,
                 ]
             );
 
