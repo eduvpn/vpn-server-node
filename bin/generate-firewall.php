@@ -7,8 +7,6 @@
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-require_once dirname(__DIR__).'/vendor/autoload.php';
-
 echo '************************************************************************'.PHP_EOL;
 echo '*                                                                      *'.PHP_EOL;
 echo '*       FIREWALL MODIFICATIONS ARE NO LONGER INSTALLED!                *'.PHP_EOL;
