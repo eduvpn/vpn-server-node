@@ -1,9 +1,12 @@
 # Changelog
 
-## 2.2.3 (...)
+## 2.2.3 (2020-08-31)
 - do not sort OpenVPN server configuration file to avoid having `DOMAIN` 
   ordering also changed in `dhcp-option`.
-  
+- no longer need to provide the `hostName` in the API call to generate a 
+  certificate, vpn-server-api takes care of that
+- no need to autoload anything in `bin/generate-firewall.php`
+
 ## 2.2.2 (2020-07-01)
 - support adding `--up` to the server configuration file when 
   `/etc/openvpn/up` exists and is executable
