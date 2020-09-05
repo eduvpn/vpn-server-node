@@ -202,7 +202,7 @@ class OpenVpn
             $serverConfig[] = 'tls-version-min 1.3';
         } else {
             $serverConfig[] = 'tls-version-min 1.2';
-            $serverConfig[] = 'tls-cipher TLS-ECDHE-RSA-WITH-AES-256-GCM-SHA384';
+            $serverConfig[] = 'tls-cipher TLS-ECDHE-RSA-WITH-AES-256-GCM-SHA384:TLS-ECDHE-ECDSA-WITH-AES-256-GCM-SHA384';
         }
 
         if (!$profileConfig->getItem('enableLog')) {
