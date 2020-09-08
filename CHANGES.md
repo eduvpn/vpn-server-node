@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.2.4 (2020-09-08)
+- add `ECDSA` certificate support for TLSv1.2, already supported on TLSv1.3
+
 ## 2.2.3 (2020-08-31)
 - do not sort OpenVPN server configuration file to avoid having `DOMAIN` 
   ordering also changed in `dhcp-option`.
