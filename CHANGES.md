@@ -8,6 +8,7 @@
       between profiles
     - make sure there is no overlap in IPv4 ranges (`range` option) assigned to
       VPN profiles (for now shows warning if there is a problem)
+    - make sure `range` is `/29` or lower (OpenVPN limitation)
 
 ## 2.2.4 (2020-09-08)
 - add `ECDSA` certificate support for TLSv1.2, already supported on TLSv1.3

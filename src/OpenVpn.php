@@ -155,7 +155,14 @@ class OpenVpn
                 }
                 $listenProtoPortList[] = $listenProtoPort;
             }
-            $rangeList[] = $profileConfig->getItem('range');
+
+            // make sure "range" is 29 or lower (OpenVPN server limitation)
+            $rangeFour = $profileConfig->getItem('range');
+            list($ipRange, $ipPrefix) = explode('/', $rangeFour);
+            if ((int) $ipPrefix > 29) {
+                throw new RuntimeException(sprintf('"range" in profile "%s" MUST be at least "/29"', $profileId));
+            }
+            $rangeList[] = $rangeFour;
         }
 
         // for now we only warn when overlap occurs... we may refuse to work
