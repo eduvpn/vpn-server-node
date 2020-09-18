@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.2.5 (...)
+- perform some checks on the profile configuration before writing the OpenVPN
+  server configuration:
+    - make sure `profileNumber` is not reused;
+    - make sure the `listen` and `vpnProtoPorts` combinations do not overlap 
+      between profiles
+    - make sure there is no overlap in IPv4 ranges (`range` option) assigned to
+      VPN profiles (for now shows warning if there is a problem)
+
 ## 2.2.4 (2020-09-08)
 - add `ECDSA` certificate support for TLSv1.2, already supported on TLSv1.3
 

@@ -49,19 +49,24 @@ class OpenVpn
     public function writeProfiles(ServerClient $serverClient, $vpnUser, $vpnGroup, array $profileIdDeployList)
     {
         $profileList = $serverClient->getRequireArray('profile_list');
-        $profileIdList = array_keys($profileList);
-        foreach ($profileIdList as $profileId) {
-            if (0 !== \count($profileIdDeployList)) {
-                // we only want to have some profiles on this node...
+        // filter out the profiles we do not want on this node
+        if (0 !== \count($profileIdDeployList)) {
+            foreach (array_keys($profileList) as $profileId) {
                 if (!\in_array($profileId, $profileIdDeployList, true)) {
-                    // we don't want this profile on this node...
-                    continue;
+                    unset($profileList[$profileId]);
                 }
             }
-            $profileConfigData = $profileList[$profileId];
+        }
+
+        // profileList now contains only the profiles we want to deploy on this
+        // node...
+        self::verifyConfig($profileList);
+
+        foreach ($profileList as $profileId => $profileConfigData) {
             $profileConfigData['_user'] = $vpnUser;
             $profileConfigData['_group'] = $vpnGroup;
             $profileConfig = new ProfileConfig($profileConfigData);
+            // get a server certificate for this profile
             $certData = $serverClient->postRequireArray(
                 'add_server_certificate',
                 [
@@ -119,6 +124,43 @@ class OpenVpn
 
             $this->writeProcess($profileId, $profileConfig, $processConfig, $certData);
         }
+    }
+
+    /**
+     * @return void
+     */
+    private static function verifyConfig(array $profileList)
+    {
+        // make sure profileNumber is unique for all profiles
+        $profileNumberList = [];
+        $listenProtoPortList = [];
+        $rangeList = [];
+        foreach ($profileList as $profileId => $profileConfigData) {
+            $profileConfig = new ProfileConfig($profileConfigData);
+
+            // make sure profileNumber is not reused in multiple profiles
+            $profileNumber = $profileConfig->getItem('profileNumber');
+            if (\in_array($profileNumber, $profileNumberList, true)) {
+                throw new RuntimeException(sprintf('"profileNumber" (%d) in profile "%s" already used', $profileNumber, $profileId));
+            }
+            $profileNumberList[] = $profileNumber;
+
+            // make sure the listen/port/proto is unique
+            $listenAddress = $profileConfig->getItem('listen');
+            $vpnProtoPorts = $profileConfig->getItem('vpnProtoPorts');
+            foreach ($vpnProtoPorts as $vpnProtoPort) {
+                $listenProtoPort = $listenAddress.' -> '.$vpnProtoPort;
+                if (\in_array($listenProtoPort, $listenProtoPortList, true)) {
+                    throw new RuntimeException(sprintf('"listen/vpnProtoPorts combination "%s" in profile "%s" already used before', $listenProtoPort, $profileId));
+                }
+                $listenProtoPortList[] = $listenProtoPort;
+            }
+            $rangeList[] = $profileConfig->getItem('range');
+        }
+
+        // for now we only warn when overlap occurs... we may refuse to work
+        // in the future... Only checks IPv4, not (yet) IPv6 overlap
+        self::hasOverlap($rangeList);
     }
 
     /**
@@ -392,5 +434,43 @@ class OpenVpn
         return [
             'up '.self::UP_PATH,
         ];
+    }
+
+    /**
+     * Check whether any of the provided IP ranges in CIDR notation overlaps any
+     * of the others.
+     * NOTE: currently only works for IPv4 as base_convert doesn't work with
+     * long strings which would be required for IPv6. Need different approach
+     * there...
+     *
+     * @param array<string> $ipRangeList
+     *
+     * @return bool
+     */
+    private static function hasOverlap(array $ipRangeList)
+    {
+        $minMaxFourList = [];
+        $minMaxSixList = [];
+        foreach ($ipRangeList as $ipRange) {
+            list($ipAddress, $ipPrefix) = explode('/', $ipRange);
+            $binaryIp = sprintf('%032s', base_convert(bin2hex(inet_pton($ipAddress)), 16, 2));
+            $minIp = sprintf('%08s', base_convert(substr($binaryIp, 0, (int) $ipPrefix).str_repeat('0', 32 - (int) $ipPrefix), 2, 16));
+            $maxIp = sprintf('%08s', base_convert(substr($binaryIp, 0, (int) $ipPrefix).str_repeat('1', 32 - (int) $ipPrefix), 2, 16));
+            foreach ($minMaxFourList as $minMax) {
+                if ($minIp >= $minMax[0] && $minIp <= $minMax[1]) {
+                    echo sprintf('WARNING: %s overlaps with IP range used in other profile (%s)', $ipRange, $minMax[2]).PHP_EOL;
+
+                    return true;
+                }
+                if ($maxIp >= $minMax[0] && $maxIp <= $minMax[1]) {
+                    echo sprintf('WARNING: %s overlaps with IP range used in other profile (%s)', $ipRange, $minMax[2]).PHP_EOL;
+
+                    return true;
+                }
+            }
+            $minMaxFourList[] = [$minIp, $maxIp, $ipRange];
+        }
+
+        return false;
     }
 }
