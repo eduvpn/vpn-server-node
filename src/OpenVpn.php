@@ -163,6 +163,13 @@ class OpenVpn
                 throw new RuntimeException(sprintf('"range" in profile "%s" MUST be at least "/29"', $profileId));
             }
             $rangeList[] = $rangeFour;
+
+            // make sure "range6" is 112 or lower (OpenVPN server limitation)
+            $rangeSix = $profileConfig->getItem('range6');
+            list($ipRange, $ipPrefix) = explode('/', $rangeSix);
+            if ((int) $ipPrefix > 112) {
+                throw new RuntimeException(sprintf('"range"6 in profile "%s" MUST be at least "/112"', $profileId));
+            }
         }
 
         // for now we only warn when overlap occurs... we may refuse to work
