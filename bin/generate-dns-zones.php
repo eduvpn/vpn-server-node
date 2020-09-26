@@ -39,11 +39,11 @@ try {
     $serverClient = new ServerClient(
         new CurlHttpClient(
             [
-                $config->getItem('apiUser'),
-                $config->getItem('apiPass'),
+                $config->requireString('apiUser'),
+                $config->requireString('apiPass'),
             ]
         ),
-        $config->getItem('apiUri')
+        $config->requireString('apiUri')
     );
 
     $profileList = $serverClient->getRequireArray('profile_list');
@@ -54,15 +54,15 @@ try {
     $reverseSix = [];
     foreach ($profileList as $profileData) {
         $profileConfig = new ProfileConfig($profileData);
-        $rangeFour = $profileConfig->getItem('range');
-        $rangeSix = $profileConfig->getItem('range6');
-        $splitCount = count($profileConfig->getItem('vpnProtoPorts'));
+        $rangeFour = $profileConfig->requireString('range');
+        $rangeSix = $profileConfig->requireString('range6');
+        $splitCount = count($profileConfig->requireArray('vpnProtoPorts'));
         $ipFour = new IP($rangeFour);
         $ipSix = new IP($rangeSix);
         $ipFourSplit = $ipFour->split($splitCount);
         $ipSixSplit = $ipSix->split($splitCount);
         $gatewayNo = 1;
-        $profileNumber = (int) $profileConfig->getItem('profileNumber');
+        $profileNumber = $profileConfig->requireInt('profileNumber');
         for ($j = 0; $j < $splitCount; ++$j) {
             $noOfHosts = $ipFourSplit[$j]->getNumberOfHosts();
             $firstFourHost = $ipFourSplit[$j]->getFirstHost();

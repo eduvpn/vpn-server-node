@@ -85,9 +85,9 @@ class OpenVpn
      */
     public function writeProfile($profileId, ProfileConfig $profileConfig, array $certData)
     {
-        $range = new IP($profileConfig->getItem('range'));
-        $range6 = new IP($profileConfig->getItem('range6'));
-        $processCount = \count($profileConfig->getItem('vpnProtoPorts'));
+        $range = new IP($profileConfig->requireString('range'));
+        $range6 = new IP($profileConfig->requireString('range6'));
+        $processCount = \count($profileConfig->requireArray('vpnProtoPorts'));
 
         $allowedProcessCount = [1, 2, 4, 8, 16, 32, 64];
         if (!\in_array($processCount, $allowedProcessCount, true)) {
@@ -96,25 +96,25 @@ class OpenVpn
         $splitRange = $range->split($processCount);
         $splitRange6 = $range6->split($processCount);
 
-        $managementIp = $profileConfig->getItem('managementIp');
+        $managementIp = $profileConfig->requireString('managementIp');
         if ($this->useVpnDaemon) {
             $managementIp = '127.0.0.1';
         }
 
-        $profileNumber = $profileConfig->getItem('profileNumber');
+        $profileNumber = $profileConfig->requireInt('profileNumber');
 
         $processConfig = [
             'managementIp' => $managementIp,
         ];
 
         for ($i = 0; $i < $processCount; ++$i) {
-            list($proto, $port) = self::getProtoPort($profileConfig->getItem('vpnProtoPorts'), $profileConfig->getItem('listen'))[$i];
+            list($proto, $port) = self::getProtoPort($profileConfig->requireArray('vpnProtoPorts'), $profileConfig->requireString('listen'))[$i];
             $processConfig['range'] = $splitRange[$i];
             $processConfig['range6'] = $splitRange6[$i];
-            $processConfig['dev'] = sprintf('tun%d', self::toPort($profileConfig->getItem('profileNumber'), $i));
+            $processConfig['dev'] = sprintf('tun%d', self::toPort($profileConfig->requireInt('profileNumber'), $i));
             $processConfig['proto'] = $proto;
             $processConfig['port'] = $port;
-            $processConfig['local'] = $profileConfig->getItem('listen');
+            $processConfig['local'] = $profileConfig->requireString('listen');
             $processConfig['managementPort'] = 11940 + self::toPort($profileNumber, $i);
             $processConfig['configName'] = sprintf(
                 '%s-%d.conf',
@@ -139,15 +139,15 @@ class OpenVpn
             $profileConfig = new ProfileConfig($profileConfigData);
 
             // make sure profileNumber is not reused in multiple profiles
-            $profileNumber = $profileConfig->getItem('profileNumber');
+            $profileNumber = $profileConfig->requireInt('profileNumber');
             if (\in_array($profileNumber, $profileNumberList, true)) {
                 throw new RuntimeException(sprintf('"profileNumber" (%d) in profile "%s" already used', $profileNumber, $profileId));
             }
             $profileNumberList[] = $profileNumber;
 
             // make sure the listen/port/proto is unique
-            $listenAddress = $profileConfig->getItem('listen');
-            $vpnProtoPorts = $profileConfig->getItem('vpnProtoPorts');
+            $listenAddress = $profileConfig->requireString('listen');
+            $vpnProtoPorts = $profileConfig->requireArray('vpnProtoPorts');
             foreach ($vpnProtoPorts as $vpnProtoPort) {
                 $listenProtoPort = $listenAddress.' -> '.$vpnProtoPort;
                 if (\in_array($listenProtoPort, $listenProtoPortList, true)) {
@@ -157,7 +157,7 @@ class OpenVpn
             }
 
             // make sure "range" is 29 or lower (OpenVPN server limitation)
-            $rangeFour = $profileConfig->getItem('range');
+            $rangeFour = $profileConfig->requireString('range');
             list($ipRange, $ipPrefix) = explode('/', $rangeFour);
             if ((int) $ipPrefix > 29) {
                 throw new RuntimeException(sprintf('"range" in profile "%s" MUST be at least "/29"', $profileId));
@@ -165,7 +165,7 @@ class OpenVpn
             $rangeList[] = $rangeFour;
 
             // make sure "range6" is 112 or lower (OpenVPN server limitation)
-            $rangeSix = $profileConfig->getItem('range6');
+            $rangeSix = $profileConfig->requireString('range6');
             list($ipRange, $ipPrefix) = explode('/', $rangeSix);
             if ((int) $ipPrefix > 112) {
                 throw new RuntimeException(sprintf('"range"6 in profile "%s" MUST be at least "/112"', $profileId));
@@ -227,8 +227,8 @@ class OpenVpn
         $serverConfig = [
             'verb 3',
             'dev-type tun',
-            sprintf('user %s', $profileConfig->getItem('_user')),
-            sprintf('group %s', $profileConfig->getItem('_group')),
+            sprintf('user %s', $profileConfig->requireString('_user')),
+            sprintf('group %s', $profileConfig->requireString('_group')),
             'topology subnet',
             'persist-key',
             'persist-tun',
@@ -252,7 +252,7 @@ class OpenVpn
             sprintf('local %s', $processConfig['local']),
         ];
 
-        if ($profileConfig->hasItem('tlsOneThree') && $profileConfig->getItem('tlsOneThree')) {
+        if ($profileConfig->requireBool('tlsOneThree', false)) {
             // for TLSv1.3 we don't care about the tls-ciphers, they are all
             // fine, let the client choose
             $serverConfig[] = 'tls-version-min 1.3';
@@ -261,7 +261,7 @@ class OpenVpn
             $serverConfig[] = 'tls-cipher TLS-ECDHE-RSA-WITH-AES-256-GCM-SHA384:TLS-ECDHE-ECDSA-WITH-AES-256-GCM-SHA384';
         }
 
-        if (!$profileConfig->getItem('enableLog')) {
+        if (!$profileConfig->requireBool('enableLog')) {
             $serverConfig[] = 'log /dev/null';
         }
 
@@ -295,7 +295,7 @@ class OpenVpn
         $serverConfig[] = '<ca>'.PHP_EOL.$certData['ca'].PHP_EOL.'</ca>';
         $serverConfig[] = '<cert>'.PHP_EOL.$certData['certificate'].PHP_EOL.'</cert>';
         $serverConfig[] = '<key>'.PHP_EOL.$certData['private_key'].PHP_EOL.'</key>';
-        if ('tls-crypt' === $profileConfig->getItem('tlsProtection')) {
+        if ('tls-crypt' === $profileConfig->requireString('tlsProtection')) {
             $serverConfig[] = '<tls-crypt>'.PHP_EOL.$certData['tls_crypt'].PHP_EOL.'</tls-crypt>';
         }
 
@@ -323,16 +323,16 @@ class OpenVpn
     private static function getRoutes(ProfileConfig $profileConfig)
     {
         $routeConfig = [];
-        if ($profileConfig->getItem('defaultGateway')) {
+        if ($profileConfig->requireBool('defaultGateway')) {
             $redirectFlags = ['def1', 'ipv6'];
-            if ($profileConfig->hasItem('blockLan') && $profileConfig->getItem('blockLan')) {
+            if ($profileConfig->requireBool('blockLan')) {
                 $redirectFlags[] = 'block-local';
             }
 
             $routeConfig[] = sprintf('push "redirect-gateway %s"', implode(' ', $redirectFlags));
         }
 
-        $routeList = $profileConfig->getSection('routes')->toArray();
+        $routeList = $profileConfig->requireArray('routes');
         if (0 === \count($routeList)) {
             return $routeConfig;
         }
@@ -366,11 +366,11 @@ class OpenVpn
     private static function getDns(IP $rangeIp, IP $range6Ip, ProfileConfig $profileConfig)
     {
         $dnsEntries = [];
-        if ($profileConfig->getItem('defaultGateway')) {
+        if ($profileConfig->requireBool('defaultGateway')) {
             // prevent DNS leakage on Windows when VPN is default gateway
             $dnsEntries[] = 'push "block-outside-dns"';
         }
-        $dnsList = $profileConfig->getSection('dns')->toArray();
+        $dnsList = $profileConfig->requireArray('dns');
         foreach ($dnsList as $dnsAddress) {
             // replace the macros by IP addresses (LOCAL_DNS)
             if ('@GW4@' === $dnsAddress) {
@@ -383,7 +383,7 @@ class OpenVpn
         }
 
         // push (multiple) DOMAIN options to set DNS (search) suffix
-        $dnsSuffixList = $profileConfig->getSection('dnsSuffix')->toArray();
+        $dnsSuffixList = $profileConfig->requireArray('dnsSuffix');
         foreach ($dnsSuffixList as $dnsSuffix) {
             $dnsEntries[] = sprintf('push "dhcp-option DOMAIN %s"', $dnsSuffix);
         }
@@ -396,12 +396,12 @@ class OpenVpn
      */
     private static function getClientToClient(ProfileConfig $profileConfig)
     {
-        if (!$profileConfig->getItem('clientToClient')) {
+        if (!$profileConfig->requireBool('clientToClient')) {
             return [];
         }
 
-        $rangeIp = new IP($profileConfig->getItem('range'));
-        $range6Ip = new IP($profileConfig->getItem('range6'));
+        $rangeIp = new IP($profileConfig->requireString('range'));
+        $range6Ip = new IP($profileConfig->requireString('range6'));
 
         return [
             'client-to-client',

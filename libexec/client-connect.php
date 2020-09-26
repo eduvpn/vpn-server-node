@@ -42,8 +42,8 @@ try {
     );
 
     $serverClient = new ServerClient(
-        new CurlHttpClient([$config->getItem('apiUser'), $config->getItem('apiPass')]),
-        $config->getItem('apiUri')
+        new CurlHttpClient([$config->requireString('apiUser'), $config->requireString('apiPass')]),
+        $config->requireString('apiUri')
     );
 
     $connection = new Connection($serverClient);

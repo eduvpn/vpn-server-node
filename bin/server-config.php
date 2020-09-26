@@ -19,17 +19,17 @@ try {
     $configFile = sprintf('%s/config/config.php', $baseDir);
     $config = Config::fromFile($configFile);
 
-    $vpnUser = $config->hasItem('vpnUser') ? $config->getItem('vpnUser') : 'openvpn';
-    $vpnGroup = $config->hasItem('vpnGroup') ? $config->getItem('vpnGroup') : 'openvpn';
+    $vpnUser = $config->requireString('vpnUser', 'openvpn');
+    $vpnGroup = $config->requireString('vpnGroup', 'openvpn');
 
     $vpnConfigDir = sprintf('%s/openvpn-config', $baseDir);
     $serverClient = new ServerClient(
-        new CurlHttpClient([$config->getItem('apiUser'), $config->getItem('apiPass')]),
-        $config->getItem('apiUri')
+        new CurlHttpClient([$config->requireString('apiUser'), $config->requireString('apiPass')]),
+        $config->requireString('apiUri')
     );
 
-    $profileIdDeployList = $config->optionalItem('profileList', []);
-    $useVpnDaemon = $config->optionalItem('useVpnDaemon', false);
+    $profileIdDeployList = $config->requireArray('profileList', []);
+    $useVpnDaemon = $config->requireBool('useVpnDaemon', false);
     $o = new OpenVpn($vpnConfigDir, $useVpnDaemon);
     $o->writeProfiles($serverClient, $vpnUser, $vpnGroup, $profileIdDeployList);
 } catch (Exception $e) {
