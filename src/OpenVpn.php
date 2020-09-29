@@ -382,7 +382,19 @@ class OpenVpn
             $dnsEntries[] = sprintf('push "dhcp-option DNS %s"', $dnsAddress);
         }
 
-        // push (multiple) DOMAIN options to set DNS (search) suffix
+        // push DOMAIN
+        if (null !== $dnsDomain = $profileConfig->optionalString('dnsDomain')) {
+            $dnsEntries[] = sprintf('push "dhcp-option DOMAIN %s"', $dnsDomain);
+        }
+        // push DOMAIN-SEARCH
+        $dnsDomainSearchList = $profileConfig->requireArray('dnsDomainSearch', []);
+        foreach ($dnsDomainSearchList as $dnsDomainSearch) {
+            $dnsEntries[] = sprintf('push "dhcp-option DOMAIN-SEARCH %s"', $dnsDomainSearch);
+        }
+
+        // push DOMAIN **LEGACY** this does NOT work properly with OpenVPN 2.5
+        // clients out of the box, use dnsDomain and dnsDomainSearch... this
+        // simply pushes all domains in the dnsSuffix array as "DOMAIN"
         $dnsSuffixList = $profileConfig->requireArray('dnsSuffix');
         foreach ($dnsSuffixList as $dnsSuffix) {
             $dnsEntries[] = sprintf('push "dhcp-option DOMAIN %s"', $dnsSuffix);
