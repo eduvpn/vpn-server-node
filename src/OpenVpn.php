@@ -170,6 +170,12 @@ class OpenVpn
             if ((int) $ipPrefix > 112) {
                 throw new RuntimeException(sprintf('"range"6 in profile "%s" MUST be at least "/112"', $profileId));
             }
+
+            // make sure dnsSuffix is not set (anymore)
+            $dnsSuffix = $profileConfig->requireArray('dnsSuffix', []);
+            if (0 !== \count($dnsSuffix)) {
+                echo 'WARNING: "dnsSuffix" is deprecated. Please use "dnsDomain" and "dnsDomainSearch" instead'.PHP_EOL;
+            }
         }
 
         // for now we only warn when overlap occurs... we may refuse to work
