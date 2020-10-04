@@ -12,6 +12,7 @@
     - make sure `range6` is `/112` or lower (OpenVPN limitation)
 - implement changes for updated `Config` API
 - add support for pushing `DOMAIN-SEARCH` to VPN clients next to `DOMAIN`
+- update for common HTTP client
 
 ## 2.2.4 (2020-09-08)
 - add `ECDSA` certificate support for TLSv1.2, already supported on TLSv1.3

@@ -37,12 +37,7 @@ try {
     $config = Config::fromFile(sprintf('%s/config.php', $configDir));
 
     $serverClient = new ServerClient(
-        new CurlHttpClient(
-            [
-                $config->requireString('apiUser'),
-                $config->requireString('apiPass'),
-            ]
-        ),
+        new CurlHttpClient($config->requireString('apiUser'), $config->requireString('apiPass')),
         $config->requireString('apiUri')
     );
 

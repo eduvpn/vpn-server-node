@@ -42,7 +42,7 @@ try {
     );
 
     $serverClient = new ServerClient(
-        new CurlHttpClient([$config->requireString('apiUser'), $config->requireString('apiPass')]),
+        new CurlHttpClient($config->requireString('apiUser'), $config->requireString('apiPass')),
         $config->requireString('apiUri')
     );
 
