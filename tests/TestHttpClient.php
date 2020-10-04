@@ -80,7 +80,7 @@ class TestHttpClient implements HttpClientInterface
                         'ok' => true,
                     ],
                 ]
-            ),
+            )
         );
     }
 
@@ -96,7 +96,7 @@ class TestHttpClient implements HttpClientInterface
                         'error' => $errorMessage,
                     ],
                 ]
-            ),
+            )
         );
     }
 
@@ -112,7 +112,7 @@ class TestHttpClient implements HttpClientInterface
                         'data' => json_decode($jsonData, true),
                     ],
                 ]
-            ),
+            )
         );
     }
 }
