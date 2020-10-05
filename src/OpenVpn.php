@@ -389,7 +389,7 @@ class OpenVpn
         }
 
         // Having multiple "DOMAIN" push messages is NOT officially supported,
-        // but currently used by TunnelKit, and probably maybe others...
+        // but currently used by TunnelKit, and probably others...
         // @see https://github.com/passepartoutvpn/tunnelkit/issues/184
         //
         // If you want to support clients that do NOT yet support DOMAIN-SEARCH,
@@ -397,7 +397,7 @@ class OpenVpn
         // configuration below makes it work everywhere...
         //
         //  'dnsSuffix' => ['example.com', 'example.org'],
-        //  'dnsDomain' => ['example.com'],
+        //  'dnsDomain' => 'example.com',
         //  'dnsDomainSearch => ['example.org'],
         //
         // This will result in:
