@@ -388,13 +388,14 @@ class OpenVpn
             $dnsEntries[] = sprintf('push "dhcp-option DNS %s"', $dnsAddress);
         }
 
-        // Having multiple "DOMAIN" push messages is NOT officially supported,
-        // but currently used by TunnelKit, and probably others...
+        // Having multiple "DOMAIN" push messages is NOT officially supported
+        // by OpenVPN, but currently used by TunnelKit, and probably others...
         // @see https://github.com/passepartoutvpn/tunnelkit/issues/184
         //
-        // If you want to support clients that do NOT yet support DOMAIN-SEARCH,
-        // but DO support multiple DOMAIN, you MUST set everything. The
-        // configuration below makes it work everywhere...
+        // If you want to support clients that do NOT yet support
+        // DOMAIN-SEARCH, but DO support multiple DOMAIN, you MUST set
+        // everything. The configuration below makes it work everywhere
+        // (hopefully)...
         //
         //  'dnsSuffix' => ['example.com', 'example.org'],
         //  'dnsDomain' => 'example.com',
