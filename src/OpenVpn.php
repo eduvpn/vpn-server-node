@@ -388,6 +388,34 @@ class OpenVpn
             $dnsEntries[] = sprintf('push "dhcp-option DNS %s"', $dnsAddress);
         }
 
+        // Having multiple "DOMAIN" push messages is NOT officially supported,
+        // but currently used by TunnelKit, and probably maybe others...
+        // @see https://github.com/passepartoutvpn/tunnelkit/issues/184
+        //
+        // If you want to support clients that do NOT yet support DOMAIN-SEARCH,
+        // but DO support multiple DOMAIN, you MUST set everything. The
+        // configuration below makes it work everywhere...
+        //
+        //  'dnsSuffix' => ['example.com', 'example.org'],
+        //  'dnsDomain' => ['example.com'],
+        //  'dnsDomainSearch => ['example.org'],
+        //
+        // This will result in:
+        //
+        // push "dhcp-option DOMAIN example.com"
+        // push "dhcp-option DOMAIN example.org"
+        // push "dhcp-option DOMAIN example.com"
+        // push "dhcp-option DOMAIN-SEARCH example.org"
+        //
+        // Windows will take the LAST occurence of DOMAIN and use that as the
+        // connection specific suffix. Tunnelkit will take the FIRST occurrence
+        // the other DOMAIN items are considered search domains for TunnelKit.
+        // Windows will use DOMAIN-SEARCH to set the search domains.
+        $dnsSuffixList = $profileConfig->requireArray('dnsSuffix');
+        foreach ($dnsSuffixList as $dnsSuffix) {
+            $dnsEntries[] = sprintf('push "dhcp-option DOMAIN %s"', $dnsSuffix);
+        }
+
         // push DOMAIN
         if (null !== $dnsDomain = $profileConfig->optionalString('dnsDomain')) {
             $dnsEntries[] = sprintf('push "dhcp-option DOMAIN %s"', $dnsDomain);
@@ -396,14 +424,6 @@ class OpenVpn
         $dnsDomainSearchList = $profileConfig->requireArray('dnsDomainSearch', []);
         foreach ($dnsDomainSearchList as $dnsDomainSearch) {
             $dnsEntries[] = sprintf('push "dhcp-option DOMAIN-SEARCH %s"', $dnsDomainSearch);
-        }
-
-        // push DOMAIN **LEGACY** this does NOT work properly with OpenVPN 2.5
-        // clients out of the box, use dnsDomain and dnsDomainSearch... this
-        // simply pushes all domains in the dnsSuffix array as "DOMAIN"
-        $dnsSuffixList = $profileConfig->requireArray('dnsSuffix');
-        foreach ($dnsSuffixList as $dnsSuffix) {
-            $dnsEntries[] = sprintf('push "dhcp-option DOMAIN %s"', $dnsSuffix);
         }
 
         return $dnsEntries;
