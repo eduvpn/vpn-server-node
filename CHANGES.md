@@ -8,8 +8,10 @@
       between profiles
     - make sure there is no overlap in IPv4 ranges (`range` option) assigned to
       VPN profiles (for now shows warning if there is a problem)
-    - make sure `range` is `/29` or lower (OpenVPN limitation)
-    - make sure `range6` is `/112` or lower (OpenVPN limitation)
+    - make sure `range` is `/29` or lower per OpenVPN process 
+      (OpenVPN limitation)
+    - make sure `range6` is `/112` or lower per OpenVPN process 
+      (OpenVPN limitation)
 - implement changes for updated `Config` API
 - add support for pushing `DOMAIN-SEARCH` to VPN clients next to `DOMAIN`
 - update for common HTTP client

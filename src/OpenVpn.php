@@ -156,19 +156,29 @@ class OpenVpn
                 $listenProtoPortList[] = $listenProtoPort;
             }
 
-            // make sure "range" is 29 or lower (OpenVPN server limitation)
+            // network bits required for all processes
+            $prefixSpace = log(\count($vpnProtoPorts), 2);
+
+            // make sure "range" is 29 or lower for each OpenVPN process
+            // (OpenVPN server limitation)
             $rangeFour = $profileConfig->requireString('range');
             list($ipRange, $ipPrefix) = explode('/', $rangeFour);
-            if ((int) $ipPrefix > 29) {
-                throw new RuntimeException(sprintf('"range" in profile "%s" MUST be at least "/29"', $profileId));
+            if ((int) $ipPrefix > (29 - $prefixSpace)) {
+                throw new RuntimeException(sprintf('"range" in profile "%s" MUST be at least "/%d" to accommodate %d OpenVPN server process(es)', $profileId, 29 - $prefixSpace, \count($vpnProtoPorts)));
             }
             $rangeList[] = $rangeFour;
 
-            // make sure "range6" is 112 or lower (OpenVPN server limitation)
+            // make sure "range6" is 112 or lower for each OpenVPN process
+            // (OpenVPN server limitation)
             $rangeSix = $profileConfig->requireString('range6');
             list($ipRange, $ipPrefix) = explode('/', $rangeSix);
-            if ((int) $ipPrefix > 112) {
-                throw new RuntimeException(sprintf('"range"6 in profile "%s" MUST be at least "/112"', $profileId));
+            // we ALSO want the prefix to be divisible by 4 (restriction in
+            // IP.php)
+            if (0 !== ((int) $ipPrefix) % 4) {
+                throw new RuntimeException(sprintf('prefix length of "range6" in profile "%s" MUST be divisible by 4', $profileId, $ipPrefix));
+            }
+            if ((int) $ipPrefix > (112 - $prefixSpace)) {
+                throw new RuntimeException(sprintf('"range6" in profile "%s" MUST be at least "/%d" to accommodate %d OpenVPN server process(es)', $profileId, 112 - $prefixSpace, \count($vpnProtoPorts)));
             }
 
             // make sure dnsSuffix is not set (anymore)
