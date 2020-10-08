@@ -127,6 +127,63 @@ class OpenVpn
     }
 
     /**
+     * Check whether any of the provided IP ranges in CIDR notation overlaps any
+     * of the others.
+     *
+     * @param array<string> $ipRangeList
+     *
+     * @return array
+     */
+    public static function checkOverlap(array $ipRangeList)
+    {
+        $overlapList = [];
+        $minMaxFourList = [];
+        $minMaxSixList = [];
+        foreach ($ipRangeList as $ipRange) {
+            list($ipAddress, $ipPrefix) = explode('/', $ipRange);
+            if (false === strpos($ipAddress, ':')) {
+                // IPv4
+                $binaryIp = sprintf('%032s', base_convert(bin2hex(inet_pton($ipAddress)), 16, 2));
+                $minIp = sprintf('%08s', base_convert(substr($binaryIp, 0, (int) $ipPrefix).str_repeat('0', 32 - (int) $ipPrefix), 2, 16));
+                $maxIp = sprintf('%08s', base_convert(substr($binaryIp, 0, (int) $ipPrefix).str_repeat('1', 32 - (int) $ipPrefix), 2, 16));
+                foreach ($minMaxFourList as $minMax) {
+                    if ($minIp >= $minMax[0] && $minIp <= $minMax[1]) {
+                        $overlapList[] = [$ipRange, $minMax[2]];
+
+                        continue;
+                    }
+                    if ($maxIp >= $minMax[0] && $maxIp <= $minMax[1]) {
+                        $overlapList[] = [$ipRange, $minMax[2]];
+
+                        continue;
+                    }
+                }
+                $minMaxFourList[] = [$minIp, $maxIp, $ipRange];
+            } else {
+                // IPv6
+                $minIp = substr(self::ipSixToBin($ipAddress), 0, (int) $ipPrefix).str_repeat('0', 128 - (int) $ipPrefix);
+                $maxIp = substr(self::ipSixToBin($ipAddress), 0, (int) $ipPrefix).str_repeat('1', 128 - (int) $ipPrefix);
+                foreach ($minMaxSixList as $minMax) {
+                    if ($minIp >= $minMax[0] && $minIp <= $minMax[1]) {
+                        $overlapList[] = [$ipRange, $minMax[2]];
+
+                        continue;
+                    }
+                    if ($maxIp >= $minMax[0] && $maxIp <= $minMax[1]) {
+                        $overlapList[] = [$ipRange, $minMax[2]];
+
+                        continue;
+                    }
+                }
+                $minMaxSixList[] = [$minIp, $maxIp, $ipRange];
+            }
+        }
+
+        return $overlapList;
+//        return false;
+    }
+
+    /**
      * @return void
      */
     private static function verifyConfig(array $profileList)
@@ -191,7 +248,12 @@ class OpenVpn
 
         // for now we only warn when overlap occurs... we may refuse to work
         // in the future...
-        self::hasOverlap($rangeList);
+        $overlapList = self::checkOverlap($rangeList);
+        if (0 !== \count($overlapList)) {
+            foreach ($overlapList as $o) {
+                echo sprintf('WARNING: %s overlaps with IP range used in other profile (%s)', $o[0], $o[1]).PHP_EOL;
+            }
+        }
     }
 
     /**
@@ -498,61 +560,6 @@ class OpenVpn
         return [
             'up '.self::UP_PATH,
         ];
-    }
-
-    /**
-     * Check whether any of the provided IP ranges in CIDR notation overlaps any
-     * of the others.
-     *
-     * @param array<string> $ipRangeList
-     *
-     * @return bool
-     */
-    private static function hasOverlap(array $ipRangeList)
-    {
-        $minMaxFourList = [];
-        $minMaxSixList = [];
-        foreach ($ipRangeList as $ipRange) {
-            list($ipAddress, $ipPrefix) = explode('/', $ipRange);
-            if (false === strpos($ipAddress, ':')) {
-                // IPv4
-                $binaryIp = sprintf('%032s', base_convert(bin2hex(inet_pton($ipAddress)), 16, 2));
-                $minIp = sprintf('%08s', base_convert(substr($binaryIp, 0, (int) $ipPrefix).str_repeat('0', 32 - (int) $ipPrefix), 2, 16));
-                $maxIp = sprintf('%08s', base_convert(substr($binaryIp, 0, (int) $ipPrefix).str_repeat('1', 32 - (int) $ipPrefix), 2, 16));
-                foreach ($minMaxFourList as $minMax) {
-                    if ($minIp >= $minMax[0] && $minIp <= $minMax[1]) {
-                        echo sprintf('WARNING: %s overlaps with IP range used in other profile (%s)', $ipRange, $minMax[2]).PHP_EOL;
-
-                        return true;
-                    }
-                    if ($maxIp >= $minMax[0] && $maxIp <= $minMax[1]) {
-                        echo sprintf('WARNING: %s overlaps with IP range used in other profile (%s)', $ipRange, $minMax[2]).PHP_EOL;
-
-                        return true;
-                    }
-                }
-                $minMaxFourList[] = [$minIp, $maxIp, $ipRange];
-            } else {
-                // IPv6
-                $minIp = substr(self::ipSixToBin($ipAddress), 0, (int) $ipPrefix).str_repeat('0', 128 - (int) $ipPrefix);
-                $maxIp = substr(self::ipSixToBin($ipAddress), 0, (int) $ipPrefix).str_repeat('1', 128 - (int) $ipPrefix);
-                foreach ($minMaxSixList as $minMax) {
-                    if ($minIp >= $minMax[0] && $minIp <= $minMax[1]) {
-                        echo sprintf('WARNING: %s overlaps with IP range used in other profile (%s)', $ipRange, $minMax[2]).PHP_EOL;
-
-                        return true;
-                    }
-                    if ($maxIp >= $minMax[0] && $maxIp <= $minMax[1]) {
-                        echo sprintf('WARNING: %s overlaps with IP range used in other profile (%s)', $ipRange, $minMax[2]).PHP_EOL;
-
-                        return true;
-                    }
-                }
-                $minMaxSixList[] = [$minIp, $maxIp, $ipRange];
-            }
-        }
-
-        return false;
     }
 
     /**

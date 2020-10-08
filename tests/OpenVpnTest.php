@@ -43,4 +43,56 @@ class OpenVpnTest extends TestCase
             trim(file_get_contents(sprintf('%s/data/internet-0.conf', __DIR__)))
         );
     }
+
+    public function testcheckOverlap()
+    {
+        // IPv4
+        $this->assertEmpty(OpenVpn::checkOverlap(['192.168.0.0/24', '10.0.0.0/8']));
+        $this->assertEmpty(OpenVpn::checkOverlap(['192.168.0.0/24', '192.168.1.0/24']));
+        $this->assertEmpty(OpenVpn::checkOverlap(['192.168.0.0/25', '192.168.0.128/25']));
+
+        $this->assertSame(
+            [
+                [
+                    '192.168.0.0/24',
+                    '192.168.0.0/24',
+                ],
+            ],
+            OpenVpn::checkOverlap(['192.168.0.0/24', '192.168.0.0/24'])
+        );
+
+        $this->assertSame(
+            [
+                [
+                    '192.168.0.0/25',
+                    '192.168.0.0/24',
+                ],
+            ],
+            OpenVpn::checkOverlap(['192.168.0.0/24', '192.168.0.0/25'])
+        );
+
+        // IPv6
+        $this->assertEmpty(OpenVpn::checkOverlap(['fd00::/8', 'fc00::/8']));
+        $this->assertEmpty(OpenVpn::checkOverlap(['fd11:1111:1111:1111::/64', 'fd11:1111:1111:1112::/64']));
+
+        $this->assertSame(
+            [
+                [
+                    'fd11:1111:1111:1111::/64',
+                    'fd11:1111:1111:1111::/64',
+                ],
+            ],
+            OpenVpn::checkOverlap(['fd11:1111:1111:1111::/64', 'fd11:1111:1111:1111::/64'])
+        );
+
+        $this->assertSame(
+            [
+                [
+                    'fd11:1111:1111:1111::/100',
+                    'fd11:1111:1111:1111::/64',
+                ],
+            ],
+            OpenVpn::checkOverlap(['fd11:1111:1111:1111::/64', 'fd11:1111:1111:1111::/100'])
+        );
+    }
 }
