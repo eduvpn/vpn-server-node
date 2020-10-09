@@ -95,7 +95,7 @@ class ConfigCheck
      *
      * @param array<string> $ipRangeList
      *
-     * @return array<array<string,string>>
+     * @return array<array{0:string, 1:string}>
      */
     public static function checkOverlap(array $ipRangeList)
     {
