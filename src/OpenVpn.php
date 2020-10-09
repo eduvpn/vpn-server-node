@@ -60,7 +60,7 @@ class OpenVpn
 
         // profileList now contains only the profiles we want to deploy on this
         // node...
-        self::verifyConfig($profileList);
+        ConfigCheck::verify($profileList);
 
         foreach ($profileList as $profileId => $profileConfigData) {
             $profileConfigData['_user'] = $vpnUser;
@@ -123,136 +123,6 @@ class OpenVpn
             );
 
             $this->writeProcess($profileId, $profileConfig, $processConfig, $certData);
-        }
-    }
-
-    /**
-     * Check whether any of the provided IP ranges in CIDR notation overlaps any
-     * of the others.
-     *
-     * @param array<string> $ipRangeList
-     *
-     * @return array
-     */
-    public static function checkOverlap(array $ipRangeList)
-    {
-        $overlapList = [];
-        $minMaxFourList = [];
-        $minMaxSixList = [];
-        foreach ($ipRangeList as $ipRange) {
-            list($ipAddress, $ipPrefix) = explode('/', $ipRange);
-            if (false === strpos($ipAddress, ':')) {
-                // IPv4
-                $binaryIp = sprintf('%032s', base_convert(bin2hex(inet_pton($ipAddress)), 16, 2));
-                $minIp = sprintf('%08s', base_convert(substr($binaryIp, 0, (int) $ipPrefix).str_repeat('0', 32 - (int) $ipPrefix), 2, 16));
-                $maxIp = sprintf('%08s', base_convert(substr($binaryIp, 0, (int) $ipPrefix).str_repeat('1', 32 - (int) $ipPrefix), 2, 16));
-                foreach ($minMaxFourList as $minMax) {
-                    if ($minIp >= $minMax[0] && $minIp <= $minMax[1]) {
-                        $overlapList[] = [$ipRange, $minMax[2]];
-
-                        continue;
-                    }
-                    if ($maxIp >= $minMax[0] && $maxIp <= $minMax[1]) {
-                        $overlapList[] = [$ipRange, $minMax[2]];
-
-                        continue;
-                    }
-                }
-                $minMaxFourList[] = [$minIp, $maxIp, $ipRange];
-            } else {
-                // IPv6
-                $minIp = substr(self::ipSixToBin($ipAddress), 0, (int) $ipPrefix).str_repeat('0', 128 - (int) $ipPrefix);
-                $maxIp = substr(self::ipSixToBin($ipAddress), 0, (int) $ipPrefix).str_repeat('1', 128 - (int) $ipPrefix);
-                foreach ($minMaxSixList as $minMax) {
-                    if ($minIp >= $minMax[0] && $minIp <= $minMax[1]) {
-                        $overlapList[] = [$ipRange, $minMax[2]];
-
-                        continue;
-                    }
-                    if ($maxIp >= $minMax[0] && $maxIp <= $minMax[1]) {
-                        $overlapList[] = [$ipRange, $minMax[2]];
-
-                        continue;
-                    }
-                }
-                $minMaxSixList[] = [$minIp, $maxIp, $ipRange];
-            }
-        }
-
-        return $overlapList;
-//        return false;
-    }
-
-    /**
-     * @return void
-     */
-    private static function verifyConfig(array $profileList)
-    {
-        // make sure profileNumber is unique for all profiles
-        $profileNumberList = [];
-        $listenProtoPortList = [];
-        $rangeList = [];
-        foreach ($profileList as $profileId => $profileConfigData) {
-            $profileConfig = new ProfileConfig($profileConfigData);
-
-            // make sure profileNumber is not reused in multiple profiles
-            $profileNumber = $profileConfig->requireInt('profileNumber');
-            if (\in_array($profileNumber, $profileNumberList, true)) {
-                throw new RuntimeException(sprintf('"profileNumber" (%d) in profile "%s" already used', $profileNumber, $profileId));
-            }
-            $profileNumberList[] = $profileNumber;
-
-            // make sure the listen/port/proto is unique
-            $listenAddress = $profileConfig->requireString('listen');
-            $vpnProtoPorts = $profileConfig->requireArray('vpnProtoPorts');
-            foreach ($vpnProtoPorts as $vpnProtoPort) {
-                $listenProtoPort = $listenAddress.' -> '.$vpnProtoPort;
-                if (\in_array($listenProtoPort, $listenProtoPortList, true)) {
-                    throw new RuntimeException(sprintf('"listen/vpnProtoPorts combination "%s" in profile "%s" already used before', $listenProtoPort, $profileId));
-                }
-                $listenProtoPortList[] = $listenProtoPort;
-            }
-
-            // network bits required for all processes
-            $prefixSpace = log(\count($vpnProtoPorts), 2);
-
-            // make sure "range" is 29 or lower for each OpenVPN process
-            // (OpenVPN server limitation)
-            $rangeFour = $profileConfig->requireString('range');
-            list($ipRange, $ipPrefix) = explode('/', $rangeFour);
-            if ((int) $ipPrefix > (29 - $prefixSpace)) {
-                throw new RuntimeException(sprintf('"range" in profile "%s" MUST be at least "/%d" to accommodate %d OpenVPN server process(es)', $profileId, 29 - $prefixSpace, \count($vpnProtoPorts)));
-            }
-            $rangeList[] = $rangeFour;
-
-            // make sure "range6" is 112 or lower for each OpenVPN process
-            // (OpenVPN server limitation)
-            $rangeSix = $profileConfig->requireString('range6');
-            list($ipRange, $ipPrefix) = explode('/', $rangeSix);
-            // we ALSO want the prefix to be divisible by 4 (restriction in
-            // IP.php)
-            if (0 !== ((int) $ipPrefix) % 4) {
-                throw new RuntimeException(sprintf('prefix length of "range6" in profile "%s" MUST be divisible by 4', $profileId, $ipPrefix));
-            }
-            if ((int) $ipPrefix > (112 - $prefixSpace)) {
-                throw new RuntimeException(sprintf('"range6" in profile "%s" MUST be at least "/%d" to accommodate %d OpenVPN server process(es)', $profileId, 112 - $prefixSpace, \count($vpnProtoPorts)));
-            }
-            $rangeList[] = $rangeSix;
-
-            // make sure dnsSuffix is not set (anymore)
-            $dnsSuffix = $profileConfig->requireArray('dnsSuffix', []);
-            if (0 !== \count($dnsSuffix)) {
-                echo 'WARNING: "dnsSuffix" is deprecated. Please use "dnsDomain" and "dnsDomainSearch" instead'.PHP_EOL;
-            }
-        }
-
-        // for now we only warn when overlap occurs... we may refuse to work
-        // in the future...
-        $overlapList = self::checkOverlap($rangeList);
-        if (0 !== \count($overlapList)) {
-            foreach ($overlapList as $o) {
-                echo sprintf('WARNING: %s overlaps with IP range used in other profile (%s)', $o[0], $o[1]).PHP_EOL;
-            }
         }
     }
 
@@ -560,30 +430,5 @@ class OpenVpn
         return [
             'up '.self::UP_PATH,
         ];
-    }
-
-    /**
-     * @param string $ipAddr
-     *
-     * @return string
-     */
-    private static function ipSixToBin($ipAddr)
-    {
-        $hexStr = bin2hex(inet_pton($ipAddr));
-        $binStr = '';
-        for ($i = 0; $i < 4; ++$i) {
-            $binStr .= str_pad(
-                base_convert(
-                    substr($hexStr, $i * 8, 8),
-                    16,
-                    2
-                ),
-                32,
-                '0',
-                STR_PAD_LEFT
-            );
-        }
-
-        return $binStr;
     }
 }
