@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.2.5 (...)
+## 2.2.5 (2020-10-20)
 - perform some checks on the profile configuration before writing the OpenVPN
   server configuration:
     - make sure `profileNumber` is not reused;
