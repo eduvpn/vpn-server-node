@@ -48,16 +48,16 @@ try {
     $reverseFour = [];
     $reverseSix = [];
     foreach ($profileList as $profileData) {
-        $profileConfig = new ProfileConfig($profileData);
-        $rangeFour = $profileConfig->requireString('range');
-        $rangeSix = $profileConfig->requireString('range6');
-        $splitCount = count($profileConfig->requireArray('vpnProtoPorts'));
+        $profileConfig = new ProfileConfig(new Config($profileData));
+        $rangeFour = $profileConfig->range();
+        $rangeSix = $profileConfig->range6();
+        $splitCount = count($profileConfig->vpnProtoPorts());
         $ipFour = new IP($rangeFour);
         $ipSix = new IP($rangeSix);
         $ipFourSplit = $ipFour->split($splitCount);
         $ipSixSplit = $ipSix->split($splitCount);
         $gatewayNo = 1;
-        $profileNumber = $profileConfig->requireInt('profileNumber');
+        $profileNumber = $profileConfig->profileNumber();
         for ($j = 0; $j < $splitCount; ++$j) {
             $noOfHosts = $ipFourSplit[$j]->getNumberOfHosts();
             $firstFourHost = $ipFourSplit[$j]->getFirstHost();

@@ -9,6 +9,7 @@
 
 namespace LC\Node;
 
+use LC\Common\Config;
 use LC\Common\ProfileConfig;
 use RuntimeException;
 
@@ -27,18 +28,18 @@ class ConfigCheck
         $listenProtoPortList = [];
         $rangeList = [];
         foreach ($profileList as $profileId => $profileConfigData) {
-            $profileConfig = new ProfileConfig($profileConfigData);
+            $profileConfig = new ProfileConfig(new Config($profileConfigData));
 
             // make sure profileNumber is not reused in multiple profiles
-            $profileNumber = $profileConfig->requireInt('profileNumber');
+            $profileNumber = $profileConfig->profileNumber();
             if (\in_array($profileNumber, $profileNumberList, true)) {
                 throw new RuntimeException(sprintf('"profileNumber" (%d) in profile "%s" already used', $profileNumber, $profileId));
             }
             $profileNumberList[] = $profileNumber;
 
             // make sure the listen/port/proto is unique
-            $listenAddress = $profileConfig->requireString('listen');
-            $vpnProtoPorts = $profileConfig->requireArray('vpnProtoPorts');
+            $listenAddress = $profileConfig->listen();
+            $vpnProtoPorts = $profileConfig->vpnProtoPorts();
             foreach ($vpnProtoPorts as $vpnProtoPort) {
                 $listenProtoPort = $listenAddress.' -> '.$vpnProtoPort;
                 if (\in_array($listenProtoPort, $listenProtoPortList, true)) {
@@ -52,7 +53,7 @@ class ConfigCheck
 
             // make sure "range" is 29 or lower for each OpenVPN process
             // (OpenVPN server limitation)
-            $rangeFour = $profileConfig->requireString('range');
+            $rangeFour = $profileConfig->range();
             list($ipRange, $ipPrefix) = explode('/', $rangeFour);
             if ((int) $ipPrefix > (29 - $prefixSpace)) {
                 throw new RuntimeException(sprintf('"range" in profile "%s" MUST be at least "/%d" to accommodate %d OpenVPN server process(es)', $profileId, 29 - $prefixSpace, \count($vpnProtoPorts)));
@@ -61,7 +62,7 @@ class ConfigCheck
 
             // make sure "range6" is 112 or lower for each OpenVPN process
             // (OpenVPN server limitation)
-            $rangeSix = $profileConfig->requireString('range6');
+            $rangeSix = $profileConfig->range6();
             list($ipRange, $ipPrefix) = explode('/', $rangeSix);
             // we ALSO want the prefix to be divisible by 4 (restriction in
             // IP.php)
@@ -74,7 +75,7 @@ class ConfigCheck
             $rangeList[] = $rangeSix;
 
             // make sure dnsSuffix is not set (anymore)
-            $dnsSuffix = $profileConfig->requireArray('dnsSuffix', []);
+            $dnsSuffix = $profileConfig->dnsSuffix();
             if (0 !== \count($dnsSuffix)) {
                 echo 'WARNING: "dnsSuffix" is deprecated. Please use "dnsDomain" and "dnsDomainSearch" instead'.PHP_EOL;
             }
