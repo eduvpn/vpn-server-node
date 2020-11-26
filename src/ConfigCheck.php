@@ -165,7 +165,7 @@ class ConfigCheck
                     16,
                     2
                 ),
-                \strlen($hexStr),
+                32,
                 '0',
                 STR_PAD_LEFT
             );
