@@ -215,6 +215,8 @@ class OpenVpn
             // We MUST set max-clients to this number as that will cause a nice
             // timout on the OpenVPN process for the client, until it will try
             // the next available OpenVPN process...
+            // @see https://community.openvpn.net/openvpn/ticket/1347
+            // @see https://community.openvpn.net/openvpn/ticket/1348
             sprintf('max-clients %d', $rangeIp->getNumberOfHosts() - 2),
             'script-security 2',
             sprintf('dev %s', $processConfig['dev']),
