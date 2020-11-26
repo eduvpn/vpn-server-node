@@ -194,7 +194,28 @@ class OpenVpn
             sprintf('client-disconnect %s/client-disconnect', self::LIBEXEC_DIR),
             sprintf('server %s %s', $rangeIp->getNetwork(), $rangeIp->getNetmask()),
             sprintf('server-ipv6 %s', $range6Ip->getAddressPrefix()),
-            sprintf('max-clients %d', $rangeIp->getNumberOfHosts() - 1),
+            // OpenVPN's pool management does NOT include the last usable IP in
+            // the range in the pool, and obviously not the first one as that
+            // will be used by OpenVPN itself. So, if you have the range
+            // 10.3.240/25 that would give room for 128 - 3 (network,
+            // broadcast, OpenVPN) = 125 clients. But OpenVPN thinks
+            // differently:
+            //
+            //      ifconfig_pool_start = 10.3.240.2
+            //      ifconfig_pool_end = 10.3.240.125
+            //
+            // it keeps 10.3.240.126 out of the pool, which is a totally valid
+            // address, but alas, won't be available to clients... So we only
+            // have *124* possible client IPs to be issued...
+            //
+            // the same is true for the smallest possible network (/29):
+            //      ifconfig_pool_start = 10.3.240.2
+            //      ifconfig_pool_end = 10.3.240.5
+            //
+            // We MUST set max-clients to this number as that will cause a nice
+            // timout on the OpenVPN process for the client, until it will try
+            // the next available OpenVPN process...
+            sprintf('max-clients %d', $rangeIp->getNumberOfHosts() - 2),
             'script-security 2',
             sprintf('dev %s', $processConfig['dev']),
             sprintf('port %d', $processConfig['port']),
