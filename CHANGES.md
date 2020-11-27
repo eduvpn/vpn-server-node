@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.2.6 (...)
+- update for `ProfileConfig` refactor
+- fix IP range check
+- fix a bug where `max-clients` was one higher than available IPs in the 
+  OpenVPN client IP pool
+
 ## 2.2.5 (2020-10-20)
 - perform some checks on the profile configuration before writing the OpenVPN
   server configuration:
