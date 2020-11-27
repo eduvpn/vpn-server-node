@@ -218,6 +218,14 @@ class OpenVpn
             // @see https://community.openvpn.net/openvpn/ticket/1347
             // @see https://community.openvpn.net/openvpn/ticket/1348
             sprintf('max-clients %d', $rangeIp->getNumberOfHosts() - 2),
+            // technically we do NOT need "keepalive" (ping/ping-restart) on
+            // TCP, but it seems we do need it to avoid clients disconnecting
+            // after 2 minutes of inactivity when the first (previous?) remote
+            // was UDP and the default of 120s was set and not properly reset
+            // when switching to a TCP remote... This is pure speculation, but
+            // having "keepalive" on TCP does keep clients over TCP
+            // connected, so it does something at least...
+            'keepalive 10 60',
             'script-security 2',
             sprintf('dev %s', $processConfig['dev']),
             sprintf('port %d', $processConfig['port']),
@@ -247,7 +255,6 @@ class OpenVpn
         if ('udp' === $processConfig['proto'] || 'udp6' === $processConfig['proto']) {
             // notify the clients to reconnect to the exact same OpenVPN process
             // when the OpenVPN process restarts...
-            $serverConfig[] = 'keepalive 10 60';
             $serverConfig[] = 'explicit-exit-notify 1';
             // also ask the clients on UDP to tell us when they leave...
             // https://github.com/OpenVPN/openvpn/commit/422ecdac4a2738cd269361e048468d8b58793c4e
