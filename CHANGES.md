@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.2.6 (...)
+## 2.2.6 (2020-11-27)
 - update for `ProfileConfig` refactor
 - fix IP range check
 - fix a bug where `max-clients` was one higher than available IPs in the 
