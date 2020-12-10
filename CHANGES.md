@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.2.7 (...)
+- `tlsProtection` is no longer an option, it is always `tls-crypt`
+
 ## 2.2.6 (2020-11-27)
 - update for `ProfileConfig` refactor
 - fix IP range check
