@@ -69,6 +69,19 @@ class TestHttpClient implements HttpClientInterface
         }
     }
 
+    /**
+     * @param string               $requestUrl
+     * @param array<string,string> $queryParameters
+     * @param string               $rawPost
+     * @param array<string>        $requestHeaders
+     *
+     * @return HttpClientResponse
+     */
+    public function postRaw($requestUrl, array $queryParameters, $rawPost, array $requestHeaders = [])
+    {
+        throw new RuntimeException('"postRaw" not implemented');
+    }
+
     private static function wrap($key, $statusCode = 200)
     {
         return new HttpClientResponse(
