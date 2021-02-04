@@ -42,7 +42,7 @@
     },
     "support": {
         "email": "eduvpn@surfnet.nl",
-        "source": "https://github.com/eduvpn/vpn-server-node"
+        "source": "https://git.sr.ht/~fkooman/vpn-server-node"
     },
     "type": "project"
 }
