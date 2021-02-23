@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.2.7 (...)
+## 2.2.7 (2021-02-23)
 - `tlsProtection` is no longer an option, it is always `tls-crypt`
 
 ## 2.2.6 (2020-11-27)
