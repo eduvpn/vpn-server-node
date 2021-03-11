@@ -313,6 +313,11 @@ class OpenVpn
         }
 
         $routeList = $profileConfig->routes();
+        // Push extra 0.0.0.0/0 if we're the default gateway
+        // Temporary workaround for Microsoft Office on Windows
+        if ($profileConfig->defaultGateway() && !in_array('0.0.0.0/0', $routeList, true)) {
+            array_unshift($routeList, '0.0.0.0/0');
+        }
         if (0 === \count($routeList)) {
             return $routeConfig;
         }
