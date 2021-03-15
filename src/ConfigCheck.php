@@ -73,19 +73,13 @@ class ConfigCheck
                 throw new RuntimeException(sprintf('"range6" in profile "%s" MUST be at least "/%d" to accommodate %d OpenVPN server process(es)', $profileId, 112 - $prefixSpace, \count($vpnProtoPorts)));
             }
             $rangeList[] = $rangeSix;
-
-            // make sure dnsSuffix is not set (anymore)
-            $dnsSuffix = $profileConfig->dnsSuffix();
-            if (0 !== \count($dnsSuffix)) {
-                echo 'WARNING: "dnsSuffix" is deprecated. Please use "dnsDomain" and "dnsDomainSearch" instead'.PHP_EOL;
-            }
         }
 
         // Check for IPv4/IPv6 range overlaps between profiles
         $overlapList = self::checkOverlap($rangeList);
         if (0 !== \count($overlapList)) {
             foreach ($overlapList as $o) {
-                echo sprintf('WARNING: IP range %s overlaps with IP range %s', $o[0], $o[1]).PHP_EOL;
+                echo sprintf('WARNING: IP range %s overlaps with IP range %s', $o[0], $o[1]).\PHP_EOL;
             }
         }
     }
@@ -167,7 +161,7 @@ class ConfigCheck
                 ),
                 32,
                 '0',
-                STR_PAD_LEFT
+                \STR_PAD_LEFT
             );
         }
 

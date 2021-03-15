@@ -8,5 +8,5 @@ return [
 
     'apiUser' => 'vpn-server-node',
     'apiPass' => 'XXX-vpn-server-node/vpn-server-api-XXX',
-    'apiUri' => 'http://localhost/vpn-server-api/api.php',
+    'apiUri' => 'http://localhost/vpn-user-portal/node-api.php',
 ];

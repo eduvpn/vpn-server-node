@@ -32,13 +32,13 @@
         "ext-openssl": "*",
         "ext-pcre": "*",
         "ext-spl": "*",
-        "lc/common": "v2.x-dev",
-        "php": ">=5.4",
+        "lc/common": "dev-dev",
+        "php": ">=7.4",
         "psr/log": "^1"
     },
     "require-dev": {
         "ext-json": "*",
-        "phpunit/phpunit": "^4.8.35|^5|^6|^7"
+        "phpunit/phpunit": "^8|^9"
     },
     "support": {
         "email": "eduvpn@surfnet.nl",

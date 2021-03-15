@@ -185,9 +185,16 @@ class OpenVpn
             'persist-key',
             'persist-tun',
             'remote-cert-tls client',
-            'dh none', // Only ECDHE
-            'ncp-ciphers AES-256-GCM',  // only AES-256-GCM
-            'cipher AES-256-GCM',       // only AES-256-GCM
+
+            // Only ECDHE
+            'dh none',
+
+            // >= TLSv1.3
+            'tls-version-min 1.3',
+
+            // only allow AES-256-GCM
+            'data-ciphers AES-256-GCM',
+
             // renegotiate data channel key every 10 hours instead of every hour
             sprintf('reneg-sec %d', 10 * 60 * 60),
             sprintf('client-connect %s/client-connect', self::LIBEXEC_DIR),
@@ -235,15 +242,6 @@ class OpenVpn
             sprintf('local %s', $processConfig['local']),
         ];
 
-        if ($profileConfig->tlsOneThree()) {
-            // for TLSv1.3 we don't care about the tls-ciphers, they are all
-            // fine, let the client choose
-            $serverConfig[] = 'tls-version-min 1.3';
-        } else {
-            $serverConfig[] = 'tls-version-min 1.2';
-            $serverConfig[] = 'tls-cipher TLS-ECDHE-RSA-WITH-AES-256-GCM-SHA384:TLS-ECDHE-ECDSA-WITH-AES-256-GCM-SHA384';
-        }
-
         if (!$profileConfig->enableLog()) {
             $serverConfig[] = 'log /dev/null';
         }
@@ -274,10 +272,10 @@ class OpenVpn
         $serverConfig = array_merge($serverConfig, self::getUp());
 
         // add Certificates / keys
-        $serverConfig[] = '<ca>'.PHP_EOL.$certData['ca'].PHP_EOL.'</ca>';
-        $serverConfig[] = '<cert>'.PHP_EOL.$certData['certificate'].PHP_EOL.'</cert>';
-        $serverConfig[] = '<key>'.PHP_EOL.$certData['private_key'].PHP_EOL.'</key>';
-        $serverConfig[] = '<tls-crypt>'.PHP_EOL.$certData['tls_crypt'].PHP_EOL.'</tls-crypt>';
+        $serverConfig[] = '<ca>'.\PHP_EOL.$certData['ca'].\PHP_EOL.'</ca>';
+        $serverConfig[] = '<cert>'.\PHP_EOL.$certData['certificate'].\PHP_EOL.'</cert>';
+        $serverConfig[] = '<key>'.\PHP_EOL.$certData['private_key'].\PHP_EOL.'</key>';
+        $serverConfig[] = '<tls-crypt>'.\PHP_EOL.$certData['tls_crypt'].\PHP_EOL.'</tls-crypt>';
 
         $serverConfig = array_merge(
             [
@@ -294,7 +292,7 @@ class OpenVpn
 
         $configFile = sprintf('%s/%s', $this->vpnConfigDir, $processConfig['configName']);
 
-        FileIO::writeFile($configFile, implode(PHP_EOL, $serverConfig), 0600);
+        FileIO::writeFile($configFile, implode(\PHP_EOL, $serverConfig), 0600);
     }
 
     /**
@@ -364,35 +362,6 @@ class OpenVpn
                 $dnsAddress = $range6Ip->getFirstHost();
             }
             $dnsEntries[] = sprintf('push "dhcp-option DNS %s"', $dnsAddress);
-        }
-
-        // Having multiple "DOMAIN" push messages is NOT officially supported
-        // by OpenVPN, but currently used by TunnelKit, and probably others...
-        // @see https://github.com/passepartoutvpn/tunnelkit/issues/184
-        //
-        // If you want to support clients that do NOT yet support
-        // DOMAIN-SEARCH, but DO support multiple DOMAIN, you MUST set
-        // everything. The configuration below makes it work everywhere
-        // (hopefully)...
-        //
-        //  'dnsSuffix' => ['example.com', 'example.org'],
-        //  'dnsDomain' => 'example.com',
-        //  'dnsDomainSearch => ['example.org'],
-        //
-        // This will result in:
-        //
-        // push "dhcp-option DOMAIN example.com"
-        // push "dhcp-option DOMAIN example.org"
-        // push "dhcp-option DOMAIN example.com"
-        // push "dhcp-option DOMAIN-SEARCH example.org"
-        //
-        // Windows will take the LAST occurence of DOMAIN and use that as the
-        // connection specific suffix. Tunnelkit will take the FIRST occurrence
-        // the other DOMAIN items are considered search domains for TunnelKit.
-        // Windows will use DOMAIN-SEARCH to set the search domains.
-        $dnsSuffixList = $profileConfig->dnsSuffix();
-        foreach ($dnsSuffixList as $dnsSuffix) {
-            $dnsEntries[] = sprintf('push "dhcp-option DOMAIN %s"', $dnsSuffix);
         }
 
         // push DOMAIN

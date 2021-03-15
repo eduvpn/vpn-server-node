@@ -19,7 +19,7 @@ class ConnectionTest extends TestCase
     /** @var Connection */
     private $connection;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $this->connection = new Connection(
             new ServerClient(
