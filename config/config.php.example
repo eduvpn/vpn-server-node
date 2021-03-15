@@ -5,8 +5,7 @@ return [
     // is openvpn:openvpn, on Debian this is nobody:nogroup
     'vpnUser' => 'openvpn',
     'vpnGroup' => 'openvpn',
-
-    'apiUser' => 'vpn-server-node',
-    'apiPass' => 'XXX-vpn-server-node/vpn-server-api-XXX',
+    
+    // Node API
     'apiUri' => 'http://localhost/vpn-user-portal/node-api.php',
 ];

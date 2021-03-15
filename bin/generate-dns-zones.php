@@ -15,6 +15,7 @@ use LC\Common\HttpClient\CurlHttpClient;
 use LC\Common\HttpClient\ServerClient;
 use LC\Common\ProfileConfig;
 use LC\Node\IP;
+use LC\Common\FileIO;
 
 /*
  * We want to generate forward and reverse DNS zones for all VPN profiles. But
@@ -37,7 +38,7 @@ try {
     $config = Config::fromFile(sprintf('%s/config.php', $configDir));
 
     $serverClient = new ServerClient(
-        new CurlHttpClient($config->requireString('apiUser'), $config->requireString('apiPass')),
+        new CurlHttpClient('vpn-server-node', trim(FileIO::readFile($configDir.'/node.key'))),
         $config->requireString('apiUri')
     );
 

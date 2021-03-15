@@ -14,9 +14,11 @@ use LC\Common\Config;
 use LC\Common\HttpClient\CurlHttpClient;
 use LC\Common\HttpClient\ServerClient;
 use LC\Node\OpenVpn;
+use LC\Common\FileIO;
 
 try {
-    $configFile = sprintf('%s/config/config.php', $baseDir);
+    $configDir = $baseDir.'/config';
+    $configFile = sprintf($configDir.'/config.php');
     $config = Config::fromFile($configFile);
 
     $vpnUser = $config->requireString('vpnUser', 'openvpn');
@@ -24,7 +26,7 @@ try {
 
     $vpnConfigDir = sprintf('%s/openvpn-config', $baseDir);
     $serverClient = new ServerClient(
-        new CurlHttpClient($config->requireString('apiUser'), $config->requireString('apiPass')),
+        new CurlHttpClient('vpn-server-node', FileIO::readFile($configDir.'/node.key')),
         $config->requireString('apiUri')
     );
 

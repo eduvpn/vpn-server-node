@@ -16,6 +16,7 @@ use LC\Common\HttpClient\ServerClient;
 use LC\Common\Logger;
 use LC\Node\Connection;
 use LC\Node\Exception\ConnectionException;
+use LC\Common\FileIO;
 
 $logger = new Logger(
     basename($argv[0])
@@ -45,7 +46,7 @@ try {
     );
 
     $serverClient = new ServerClient(
-        new CurlHttpClient($config->requireString('apiUser'), $config->requireString('apiPass')),
+        new CurlHttpClient('vpn-server-node', trim(FileIO::readFile($configDir.'/node.key'))),
         $config->requireString('apiUri')
     );
 
