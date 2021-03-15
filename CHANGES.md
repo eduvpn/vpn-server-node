@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.2.8 (2021-03-15)
+- also push `0.0.0.0/0` when `defaultGateway` is `true` to work around bug in 
+  Windows online detection
+
 ## 2.2.7 (2021-02-23)
 - `tlsProtection` is no longer an option, it is always `tls-crypt`
 

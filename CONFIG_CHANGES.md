@@ -8,6 +8,14 @@ This will help upgrades to a future 3.x release. Configuration changes during
 the 2.x life cycle are NOT required. Any existing configuration file will keep
 working!
 
+## 2.2.8
+
+- until 2.2.8 when setting `defaultGateway` to `true`, also the routes 
+  specified in `routes` were pushed to the VPN client. This allowed servers to
+  also push `0.0.0.0/0` to the clients to work around a bug in Windows' online
+  detection. In 2.2.8 this `0.0.0.0/0` is pushed by default when 
+  `defaultGateway` is `true`. All routes in `routes` are ignored in this case.
+  
 ## 2.2.0
 
 - As all the firewall generation support, i.e. 
