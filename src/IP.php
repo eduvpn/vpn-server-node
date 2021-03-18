@@ -148,6 +148,7 @@ class IP
 
         $hexIp = bin2hex(inet_pton($this->ipAddress));
         $lastDigit = hexdec(substr($hexIp, -1));
+        // XXX how does this even work?!
         $hexIp = substr_replace($hexIp, $lastDigit + 1, -1);
 
         return inet_ntop(hex2bin($hexIp));
