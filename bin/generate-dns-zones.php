@@ -38,7 +38,7 @@ try {
     $config = Config::fromFile(sprintf('%s/config.php', $configDir));
 
     $serverClient = new ServerClient(
-        new CurlHttpClient('vpn-server-node', trim(FileIO::readFile($configDir.'/node.key'))),
+        new CurlHttpClient(FileIO::readFile($configDir.'/node.key')),
         $config->requireString('apiUri')
     );
 

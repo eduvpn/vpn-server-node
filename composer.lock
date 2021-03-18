@@ -12,7 +12,7 @@
             "dist": {
                 "type": "path",
                 "url": "../vpn-lib-common",
-                "reference": "b5f7522921b110e142ad06313c568ee0ce968238"
+                "reference": "301f8cfc66fef1451a888e9b8be0c6a7a99af6ed"
             },
             "require": {
                 "ext-curl": "*",

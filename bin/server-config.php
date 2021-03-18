@@ -26,7 +26,7 @@ try {
 
     $vpnConfigDir = sprintf('%s/openvpn-config', $baseDir);
     $serverClient = new ServerClient(
-        new CurlHttpClient('vpn-server-node', FileIO::readFile($configDir.'/node.key')),
+        new CurlHttpClient(FileIO::readFile($configDir.'/node.key')),
         $config->requireString('apiUri')
     );
 
