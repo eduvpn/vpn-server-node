@@ -11,12 +11,12 @@ require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
 use LC\Common\Config;
+use LC\Common\FileIO;
 use LC\Common\HttpClient\CurlHttpClient;
 use LC\Common\HttpClient\ServerClient;
 use LC\Common\Logger;
 use LC\Node\Connection;
 use LC\Node\Exception\ConnectionException;
-use LC\Common\FileIO;
 
 $logger = new Logger(
     basename($argv[0])

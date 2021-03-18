@@ -38,7 +38,7 @@ class ConfigCheck
             $profileNumberList[] = $profileNumber;
 
             // make sure the listen/port/proto is unique
-            $listenAddress = $profileConfig->listen();
+            $listenAddress = $profileConfig->listenIp();
             $vpnProtoPorts = $profileConfig->vpnProtoPorts();
             foreach ($vpnProtoPorts as $vpnProtoPort) {
                 $listenProtoPort = $listenAddress.' -> '.$vpnProtoPort;

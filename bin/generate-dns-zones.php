@@ -11,11 +11,11 @@ require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
 use LC\Common\Config;
+use LC\Common\FileIO;
 use LC\Common\HttpClient\CurlHttpClient;
 use LC\Common\HttpClient\ServerClient;
 use LC\Common\ProfileConfig;
 use LC\Node\IP;
-use LC\Common\FileIO;
 
 /*
  * We want to generate forward and reverse DNS zones for all VPN profiles. But
@@ -29,7 +29,7 @@ try {
     // ask for the domain name for the (reverse) DNS entries
     $systemHostName = gethostname();
     echo sprintf('(Reverse) Domain [%s]: ', $systemHostName);
-    $domainName = trim(fgets(STDIN));
+    $domainName = trim(fgets(\STDIN));
     if (empty($domainName)) {
         $domainName = $systemHostName;
     }
@@ -84,38 +84,38 @@ try {
         }
     }
 
-    echo '###############'.PHP_EOL;
-    echo '# FORWARD DNS #'.PHP_EOL;
-    echo '###############'.PHP_EOL;
-    echo sprintf('$ORIGIN %s.', $domainName).PHP_EOL;
+    echo '###############'.\PHP_EOL;
+    echo '# FORWARD DNS #'.\PHP_EOL;
+    echo '###############'.\PHP_EOL;
+    echo sprintf('$ORIGIN %s.', $domainName).\PHP_EOL;
     foreach ($forwardDns as $hostName => $ipList) {
         echo sprintf('%-20s', $hostName);
-        echo sprintf('IN A    %s', $ipList['ipFour']).PHP_EOL;
-        echo sprintf('%20sIN AAAA %s', '', $ipList['ipSix']).PHP_EOL;
+        echo sprintf('IN A    %s', $ipList['ipFour']).\PHP_EOL;
+        echo sprintf('%20sIN AAAA %s', '', $ipList['ipSix']).\PHP_EOL;
     }
 
-    echo '####################'.PHP_EOL;
-    echo '# REVERSE IPv4 DNS #'.PHP_EOL;
-    echo '####################'.PHP_EOL;
+    echo '####################'.\PHP_EOL;
+    echo '# REVERSE IPv4 DNS #'.\PHP_EOL;
+    echo '####################'.\PHP_EOL;
     foreach ($reverseFour as $ipFourOrigin => $ipEntryList) {
-        echo sprintf('$ORIGIN %s', $ipFourOrigin).PHP_EOL;
+        echo sprintf('$ORIGIN %s', $ipFourOrigin).\PHP_EOL;
         foreach ($ipEntryList as $ipEntry => $hostName) {
             $ipLast = explode('.', $ipEntry)[3];
-            echo sprintf('%-8s IN PTR %s', $ipLast, $hostName).PHP_EOL;
+            echo sprintf('%-8s IN PTR %s', $ipLast, $hostName).\PHP_EOL;
         }
     }
 
-    echo '####################'.PHP_EOL;
-    echo '# REVERSE IPv6 DNS #'.PHP_EOL;
-    echo '####################'.PHP_EOL;
+    echo '####################'.\PHP_EOL;
+    echo '# REVERSE IPv6 DNS #'.\PHP_EOL;
+    echo '####################'.\PHP_EOL;
     foreach ($reverseSix as $ipSixOrigin => $ipEntryList) {
-        echo sprintf('$ORIGIN %s', $ipSixOrigin).PHP_EOL;
+        echo sprintf('$ORIGIN %s', $ipSixOrigin).\PHP_EOL;
         foreach ($ipEntryList as $ipEntry => $hostName) {
             $ipLast = implode('.', str_split(strrev(substr(bin2hex(inet_pton($ipEntry)), 16)), 1));
-            echo sprintf('%s IN PTR %s', $ipLast, $hostName).PHP_EOL;
+            echo sprintf('%s IN PTR %s', $ipLast, $hostName).\PHP_EOL;
         }
     }
 } catch (Exception $e) {
-    echo sprintf('ERROR: %s', $e->getMessage()).PHP_EOL;
+    echo sprintf('ERROR: %s', $e->getMessage()).\PHP_EOL;
     exit(1);
 }

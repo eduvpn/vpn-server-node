@@ -11,14 +11,14 @@ require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
 use LC\Common\Config;
+use LC\Common\FileIO;
 use LC\Common\HttpClient\CurlHttpClient;
 use LC\Common\HttpClient\ServerClient;
 use LC\Node\OpenVpn;
-use LC\Common\FileIO;
 
 try {
     $configDir = $baseDir.'/config';
-    $configFile = sprintf($configDir.'/config.php');
+    $configFile = $configDir.'/config.php';
     $config = Config::fromFile($configFile);
 
     $vpnUser = $config->requireString('vpnUser', 'openvpn');
@@ -35,6 +35,6 @@ try {
     $o = new OpenVpn($vpnConfigDir, $useVpnDaemon);
     $o->writeProfiles($serverClient, $vpnUser, $vpnGroup, $profileIdDeployList);
 } catch (Exception $e) {
-    echo sprintf('ERROR: %s', $e->getMessage()).PHP_EOL;
+    echo sprintf('ERROR: %s', $e->getMessage()).\PHP_EOL;
     exit(1);
 }

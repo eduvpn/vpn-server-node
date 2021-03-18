@@ -97,25 +97,25 @@ class OpenVpn
         $splitRange = $range->split($processCount);
         $splitRange6 = $range6->split($processCount);
 
-        $managementIp = $profileConfig->managementIp();
+        $nodeIp = $profileConfig->nodeIp();
         if ($this->useVpnDaemon) {
-            $managementIp = '127.0.0.1';
+            $nodeIp = '127.0.0.1';
         }
 
         $profileNumber = $profileConfig->profileNumber();
 
         $processConfig = [
-            'managementIp' => $managementIp,
+            'nodeIp' => $nodeIp,
         ];
 
         for ($i = 0; $i < $processCount; ++$i) {
-            list($proto, $port) = self::getProtoPort($profileConfig->vpnProtoPorts(), $profileConfig->listen())[$i];
+            list($proto, $port) = self::getProtoPort($profileConfig->vpnProtoPorts(), $profileConfig->listenIp())[$i];
             $processConfig['range'] = $splitRange[$i];
             $processConfig['range6'] = $splitRange6[$i];
             $processConfig['dev'] = sprintf('tun%d', self::toPort($profileConfig->profileNumber(), $i));
             $processConfig['proto'] = $proto;
             $processConfig['port'] = $port;
-            $processConfig['local'] = $profileConfig->listen();
+            $processConfig['local'] = $profileConfig->listenIp();
             $processConfig['managementPort'] = 11940 + self::toPort($profileNumber, $i);
             $processConfig['configName'] = sprintf(
                 '%s-%d.conf',
@@ -236,7 +236,7 @@ class OpenVpn
             'script-security 2',
             sprintf('dev %s', $processConfig['dev']),
             sprintf('port %d', $processConfig['port']),
-            sprintf('management %s %d', $processConfig['managementIp'], $processConfig['managementPort']),
+            sprintf('management %s %d', $processConfig['nodeIp'], $processConfig['managementPort']),
             sprintf('setenv PROFILE_ID %s', $profileId),
             sprintf('proto %s', $processConfig['proto']),
             sprintf('local %s', $processConfig['local']),

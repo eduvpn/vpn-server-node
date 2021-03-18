@@ -38,7 +38,7 @@ class IP
         }
 
         // validate the IP address
-        if (false === filter_var($ipAddress, FILTER_VALIDATE_IP)) {
+        if (false === filter_var($ipAddress, \FILTER_VALIDATE_IP)) {
             throw new IPException('invalid IP address');
         }
 

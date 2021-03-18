@@ -22,7 +22,7 @@ class OpenVpnTest extends TestCase
 
     private $tmpDir;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         // create temporary directory
         $tmpDir = sprintf('%s/%s', sys_get_temp_dir(), bin2hex(random_bytes(16)));
