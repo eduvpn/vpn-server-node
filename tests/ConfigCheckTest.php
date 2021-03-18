@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * eduVPN - End-user friendly VPN.
  *
@@ -14,7 +16,7 @@ use PHPUnit\Framework\TestCase;
 
 class ConfigCheckTest extends TestCase
 {
-    public function testcheckOverlap()
+    public function testcheckOverlap(): void
     {
         // IPv4
         $this->assertEmpty(ConfigCheck::checkOverlap(['192.168.0.0/24', '10.0.0.0/8']));

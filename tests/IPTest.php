@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * eduVPN - End-user friendly VPN.
  *
@@ -14,7 +16,7 @@ use PHPUnit\Framework\TestCase;
 
 class IPTest extends TestCase
 {
-    public function testIPv4One()
+    public function testIPv4One(): void
     {
         $ip = new IP('192.168.1.0/24');
         $splitRange = $ip->split(1);
@@ -22,7 +24,7 @@ class IPTest extends TestCase
         $this->assertSame('192.168.1.0/24', (string) $splitRange[0]);
     }
 
-    public function testIPv4Two()
+    public function testIPv4Two(): void
     {
         $ip = new IP('192.168.1.0/24');
         $splitRange = $ip->split(2);
@@ -31,7 +33,7 @@ class IPTest extends TestCase
         $this->assertSame('192.168.1.128/25', (string) $splitRange[1]);
     }
 
-    public function testIPv4Four()
+    public function testIPv4Four(): void
     {
         $ip = new IP('192.168.1.0/24');
         $splitRange = $ip->split(4);
@@ -42,7 +44,7 @@ class IPTest extends TestCase
         $this->assertSame('192.168.1.192/26', (string) $splitRange[3]);
     }
 
-    public function testIPv4ThirtyTwo()
+    public function testIPv4ThirtyTwo(): void
     {
         $ip = new IP('10.0.0.0/8');
         $splitRange = $ip->split(32);
@@ -81,7 +83,7 @@ class IPTest extends TestCase
         $this->assertSame('10.248.0.0/13', (string) $splitRange[31]);
     }
 
-    public function testIPv6One()
+    public function testIPv6One(): void
     {
         $ip = new IP('1111:2222:3333:4444::/64');
         $splitRange = $ip->split(1);
@@ -89,7 +91,7 @@ class IPTest extends TestCase
         $this->assertSame('1111:2222:3333:4444::/112', (string) $splitRange[0]);
     }
 
-    public function testIPv6OneWithMinSpace()
+    public function testIPv6OneWithMinSpace(): void
     {
         $ip = new IP('1111:2222:3333:4444::/112');
         $splitRange = $ip->split(1);
@@ -97,7 +99,7 @@ class IPTest extends TestCase
         $this->assertSame('1111:2222:3333:4444::/112', (string) $splitRange[0]);
     }
 
-    public function testIPv6Two()
+    public function testIPv6Two(): void
     {
         $ip = new IP('1111:2222:3333:4444::/64');
         $splitRange = $ip->split(2);
@@ -106,7 +108,7 @@ class IPTest extends TestCase
         $this->assertSame('1111:2222:3333:4444::1:0/112', (string) $splitRange[1]);
     }
 
-    public function testIPv6Four()
+    public function testIPv6Four(): void
     {
         $ip = new IP('1111:2222:3333:4444::/64');
         $splitRange = $ip->split(4);
@@ -117,7 +119,7 @@ class IPTest extends TestCase
         $this->assertSame('1111:2222:3333:4444::3:0/112', (string) $splitRange[3]);
     }
 
-    public function testIPv6ThirtyTwo()
+    public function testIPv6ThirtyTwo(): void
     {
         $ip = new IP('1111:2222:3333:4444::/64');
         $splitRange = $ip->split(32);
@@ -156,7 +158,7 @@ class IPTest extends TestCase
         $this->assertSame('1111:2222:3333:4444::1f:0/112', (string) $splitRange[31]);
     }
 
-    public function testGetFirstHost()
+    public function testGetFirstHost(): void
     {
         $ip = new IP('192.168.1.0/24');
         $splitRange = $ip->split(4);
@@ -171,7 +173,7 @@ class IPTest extends TestCase
         $this->assertSame('192.168.1.193', $splitRange[3]->getFirstHost());
     }
 
-    public function testGetFirstHost6()
+    public function testGetFirstHost6(): void
     {
         $ip = new IP('1111:2222:3333:4444::/64');
         $splitRange = $ip->split(4);
@@ -186,7 +188,7 @@ class IPTest extends TestCase
         $this->assertSame('1111:2222:3333:4444::3:1', $splitRange[3]->getFirstHost());
     }
 
-    public function testIPv4NonFirstTwo()
+    public function testIPv4NonFirstTwo(): void
     {
         $ip = new IP('192.168.1.128/24');
         $splitRange = $ip->split(2);
@@ -195,7 +197,7 @@ class IPTest extends TestCase
         $this->assertSame('192.168.1.128/25', (string) $splitRange[1]);
     }
 
-    public function testIPv6NonFirstTwo()
+    public function testIPv6NonFirstTwo(): void
     {
         $ip = new IP('1111:2222:3333:4444::ffff/64');
         $splitRange = $ip->split(2);

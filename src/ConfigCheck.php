@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * eduVPN - End-user friendly VPN.
  *
@@ -18,10 +20,7 @@ use RuntimeException;
  */
 class ConfigCheck
 {
-    /**
-     * @return void
-     */
-    public static function verify(array $profileList)
+    public static function verify(array $profileList): void
     {
         // make sure profileNumber is unique for all profiles
         $profileNumberList = [];
@@ -54,7 +53,7 @@ class ConfigCheck
             // make sure "range" is 29 or lower for each OpenVPN process
             // (OpenVPN server limitation)
             $rangeFour = $profileConfig->range();
-            list($ipRange, $ipPrefix) = explode('/', $rangeFour);
+            [$ipRange, $ipPrefix] = explode('/', $rangeFour);
             if ((int) $ipPrefix > (29 - $prefixSpace)) {
                 throw new RuntimeException(sprintf('"range" in profile "%s" MUST be at least "/%d" to accommodate %d OpenVPN server process(es)', $profileId, 29 - $prefixSpace, \count($vpnProtoPorts)));
             }
@@ -63,7 +62,7 @@ class ConfigCheck
             // make sure "range6" is 112 or lower for each OpenVPN process
             // (OpenVPN server limitation)
             $rangeSix = $profileConfig->range6();
-            list($ipRange, $ipPrefix) = explode('/', $rangeSix);
+            [$ipRange, $ipPrefix] = explode('/', $rangeSix);
             // we ALSO want the prefix to be divisible by 4 (restriction in
             // IP.php)
             if (0 !== ((int) $ipPrefix) % 4) {
@@ -112,12 +111,10 @@ class ConfigCheck
 
     /**
      * @param string $ipRange
-     *
-     * @return void
      */
-    private static function getMinMax(array &$minMaxList, array &$overlapList, $ipRange)
+    private static function getMinMax(array &$minMaxList, array &$overlapList, $ipRange): void
     {
-        list($ipAddress, $ipPrefix) = explode('/', $ipRange);
+        [$ipAddress, $ipPrefix] = explode('/', $ipRange);
         $binIp = self::ipToBin($ipAddress);
         $minIp = substr($binIp, 0, (int) $ipPrefix).str_repeat('0', \strlen($binIp) - (int) $ipPrefix);
         $maxIp = substr($binIp, 0, (int) $ipPrefix).str_repeat('1', \strlen($binIp) - (int) $ipPrefix);

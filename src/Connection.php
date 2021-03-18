@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * eduVPN - End-user friendly VPN.
  *
@@ -21,10 +23,7 @@ class Connection
         $this->serverClient = $serverClient;
     }
 
-    /**
-     * @return void
-     */
-    public function connect(array $envData)
+    public function connect(array $envData): void
     {
         $this->serverClient->post(
             'connect',
@@ -38,10 +37,7 @@ class Connection
         );
     }
 
-    /**
-     * @return void
-     */
-    public function disconnect(array $envData)
+    public function disconnect(array $envData): void
     {
         $this->serverClient->post(
             'disconnect',

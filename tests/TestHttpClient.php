@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * eduVPN - End-user friendly VPN.
  *
@@ -16,13 +18,10 @@ use RuntimeException;
 class TestHttpClient implements HttpClientInterface
 {
     /**
-     * @param string               $requestUrl
      * @param array<string,string> $queryParameters
      * @param array<string>        $requestHeaders
-     *
-     * @return HttpClientResponse
      */
-    public function get($requestUrl, array $queryParameters, array $requestHeaders = [])
+    public function get(string $requestUrl, array $queryParameters, array $requestHeaders = []): HttpClientResponse
     {
         switch ($requestUrl) {
             case 'openVpnServerClient/instance_number':
@@ -36,14 +35,11 @@ class TestHttpClient implements HttpClientInterface
     }
 
     /**
-     * @param string               $requestUrl
      * @param array<string,string> $queryParameters
      * @param array<string,string> $postData
      * @param array<string>        $requestHeaders
-     *
-     * @return HttpClientResponse
      */
-    public function post($requestUrl, array $queryParameters, array $postData, array $requestHeaders = [])
+    public function post(string $requestUrl, array $queryParameters, array $postData, array $requestHeaders = []): HttpClientResponse
     {
         switch ($requestUrl) {
             case 'openVpnServerClient/add_server_certificate':
@@ -70,14 +66,10 @@ class TestHttpClient implements HttpClientInterface
     }
 
     /**
-     * @param string               $requestUrl
      * @param array<string,string> $queryParameters
-     * @param string               $rawPost
      * @param array<string>        $requestHeaders
-     *
-     * @return HttpClientResponse
      */
-    public function postRaw($requestUrl, array $queryParameters, $rawPost, array $requestHeaders = [])
+    public function postRaw(string $requestUrl, array $queryParameters, string $rawPost, array $requestHeaders = []): HttpClientResponse
     {
         throw new RuntimeException('"postRaw" not implemented');
     }
@@ -86,7 +78,7 @@ class TestHttpClient implements HttpClientInterface
     {
         return new HttpClientResponse(
             $statusCode,
-            [],
+            '',
             json_encode(
                 [
                     $key => [
@@ -101,7 +93,7 @@ class TestHttpClient implements HttpClientInterface
     {
         return new HttpClientResponse(
             $statusCode,
-            [],
+            '',
             json_encode(
                 [
                     $key => [
@@ -117,7 +109,7 @@ class TestHttpClient implements HttpClientInterface
     {
         return new HttpClientResponse(
             $statusCode,
-            [],
+            '',
             json_encode(
                 [
                     $key => [

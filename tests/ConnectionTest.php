@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * eduVPN - End-user friendly VPN.
  *
@@ -29,7 +31,7 @@ class ConnectionTest extends TestCase
         );
     }
 
-    public function testValidConnection()
+    public function testValidConnection(): void
     {
         $this->connection->connect(
             [
@@ -42,7 +44,7 @@ class ConnectionTest extends TestCase
         );
     }
 
-    public function testInvalidConnection()
+    public function testInvalidConnection(): void
     {
         try {
             $this->connection->connect(
@@ -60,7 +62,7 @@ class ConnectionTest extends TestCase
         }
     }
 
-    public function testDisconnect()
+    public function testDisconnect(): void
     {
         $this->connection->disconnect(
             [

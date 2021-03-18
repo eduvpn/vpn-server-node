@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * eduVPN - End-user friendly VPN.
  *
@@ -44,10 +46,8 @@ class OpenVpn
      * @param string        $vpnUser
      * @param string        $vpnGroup
      * @param array<string> $profileIdDeployList the list of profile IDs to deploy on this node
-     *
-     * @return void
      */
-    public function writeProfiles(ServerClient $serverClient, $vpnUser, $vpnGroup, array $profileIdDeployList)
+    public function writeProfiles(ServerClient $serverClient, $vpnUser, $vpnGroup, array $profileIdDeployList): void
     {
         $profileList = $serverClient->getRequireArray('profile_list');
         // filter out the profiles we do not want on this node
@@ -81,10 +81,8 @@ class OpenVpn
      * @param string $profileId
      * @param string $vpnUser
      * @param string $vpnGroup
-     *
-     * @return void
      */
-    public function writeProfile($profileId, ProfileConfig $profileConfig, array $certData, $vpnUser, $vpnGroup)
+    public function writeProfile($profileId, ProfileConfig $profileConfig, array $certData, $vpnUser, $vpnGroup): void
     {
         $range = new IP($profileConfig->range());
         $range6 = new IP($profileConfig->range6());
@@ -109,7 +107,7 @@ class OpenVpn
         ];
 
         for ($i = 0; $i < $processCount; ++$i) {
-            list($proto, $port) = self::getProtoPort($profileConfig->vpnProtoPorts(), $profileConfig->listenIp())[$i];
+            [$proto, $port] = self::getProtoPort($profileConfig->vpnProtoPorts(), $profileConfig->listenIp())[$i];
             $processConfig['range'] = $splitRange[$i];
             $processConfig['range6'] = $splitRange6[$i];
             $processConfig['dev'] = sprintf('tun%d', self::toPort($profileConfig->profileNumber(), $i));
@@ -156,7 +154,7 @@ class OpenVpn
         $convertedPortProto = [];
 
         foreach ($vpnProcesses as $vpnProcess) {
-            list($proto, $port) = explode('/', $vpnProcess);
+            [$proto, $port] = explode('/', $vpnProcess);
             $convertedPortProto[] = [self::getFamilyProto($listenAddress, $proto), $port];
         }
 
@@ -167,13 +165,11 @@ class OpenVpn
      * @param string $profileId
      * @param string $vpnUser
      * @param string $vpnGroup
-     *
-     * @return void
      */
-    private function writeProcess($profileId, ProfileConfig $profileConfig, array $processConfig, array $certData, $vpnUser, $vpnGroup)
+    private function writeProcess($profileId, ProfileConfig $profileConfig, array $processConfig, array $certData, $vpnUser, $vpnGroup): void
     {
-        $rangeIp = new IP($processConfig['range']);
-        $range6Ip = new IP($processConfig['range6']);
+        $rangeIp = $processConfig['range'];
+        $range6Ip = $processConfig['range6'];
 
         // static options
         $serverConfig = [

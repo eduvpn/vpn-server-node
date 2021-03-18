@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * eduVPN - End-user friendly VPN.
  *
@@ -23,15 +25,12 @@ class IP
     /** @var int */
     private $ipFamily;
 
-    /**
-     * @param string $ipAddressPrefix
-     */
-    public function __construct($ipAddressPrefix)
+    public function __construct(string $ipAddressPrefix)
     {
         // detect if there is a prefix
         $hasPrefix = false !== mb_strpos($ipAddressPrefix, '/');
         if ($hasPrefix) {
-            list($ipAddress, $ipPrefix) = explode('/', $ipAddressPrefix);
+            [$ipAddress, $ipPrefix] = explode('/', $ipAddressPrefix);
         } else {
             $ipAddress = $ipAddressPrefix;
             $ipPrefix = null;
@@ -67,52 +66,35 @@ class IP
         $this->ipFamily = $is6 ? 6 : 4;
     }
 
-    /**
-     * @return string
-     */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->getAddressPrefix();
     }
 
-    /**
-     * @return string
-     */
-    public function getAddress()
+    public function getAddress(): string
     {
         return $this->ipAddress;
     }
 
-    /**
-     * @return int
-     */
-    public function getPrefix()
+    public function getPrefix(): int
     {
         return $this->ipPrefix;
     }
 
-    /**
-     * @return string
-     */
-    public function getAddressPrefix()
+    public function getAddressPrefix(): string
     {
         return sprintf('%s/%d', $this->getAddress(), $this->getPrefix());
     }
 
-    /**
-     * @return int
-     */
-    public function getFamily()
+    public function getFamily(): int
     {
         return $this->ipFamily;
     }
 
     /**
      * IPv4 only.
-     *
-     * @return string
      */
-    public function getNetmask()
+    public function getNetmask(): string
     {
         $this->requireIPv4();
 
@@ -121,10 +103,8 @@ class IP
 
     /**
      * IPv4 only.
-     *
-     * @return string
      */
-    public function getNetwork()
+    public function getNetwork(): string
     {
         $this->requireIPv4();
 
@@ -133,10 +113,8 @@ class IP
 
     /**
      * IPv4 only.
-     *
-     * @return int
      */
-    public function getNumberOfHosts()
+    public function getNumberOfHosts(): int
     {
         $this->requireIPv4();
 
@@ -144,11 +122,9 @@ class IP
     }
 
     /**
-     * @param int $networkCount
-     *
      * @return array<IP>
      */
-    public function split($networkCount)
+    public function split(int $networkCount): array
     {
         if (0 !== ($networkCount & ($networkCount - 1))) {
             throw new InvalidArgumentException('parameter must be power of 2');
@@ -161,10 +137,7 @@ class IP
         return $this->split6($networkCount);
     }
 
-    /**
-     * @return string
-     */
-    public function getFirstHost()
+    public function getFirstHost(): string
     {
         if (4 === $this->ipFamily && 31 <= $this->ipPrefix) {
             throw new IPException('network not big enough');
@@ -181,11 +154,9 @@ class IP
     }
 
     /**
-     * @param int $networkCount
-     *
      * @return array<IP>
      */
-    private function split4($networkCount)
+    private function split4(int $networkCount): array
     {
         if (2 ** (32 - $this->getPrefix() - 2) < $networkCount) {
             throw new IPException('network too small to split in this many networks');
@@ -203,11 +174,9 @@ class IP
     }
 
     /**
-     * @param int $networkCount
-     *
      * @return array<IP>
      */
-    private function split6($networkCount)
+    private function split6(int $networkCount): array
     {
         // we will ALWAYS assign a /112 to every OpenVPN process. So we need to
         // figure out how big our network needs to be *AT LEAST* given the
@@ -241,10 +210,7 @@ class IP
         return $splitRanges;
     }
 
-    /**
-     * @return void
-     */
-    private function requireIPv4()
+    private function requireIPv4(): void
     {
         if (4 !== $this->getFamily()) {
             throw new IPException('method only for IPv4');

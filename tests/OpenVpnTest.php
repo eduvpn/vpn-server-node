@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * eduVPN - End-user friendly VPN.
  *
@@ -35,7 +37,7 @@ class OpenVpnTest extends TestCase
         );
     }
 
-    public function testWriteProfiles()
+    public function testWriteProfiles(): void
     {
         $this->openVpn->writeProfiles($this->serverClient, 'openvpn', 'openvpn', []);
         $this->assertSame(
