@@ -3,7 +3,7 @@
 /*
  * eduVPN - End-user friendly VPN.
  *
- * Copyright: 2016-2019, The Commons Conservancy eduVPN Programme
+ * Copyright: 2016-2021, The Commons Conservancy eduVPN Programme
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
@@ -140,7 +140,7 @@ class IP
     {
         $this->requireIPv4();
 
-        return (int) pow(2, 32 - $this->getPrefix()) - 2;
+        return (int) 2 ** (32 - $this->getPrefix()) - 2;
     }
 
     /**
@@ -187,14 +187,14 @@ class IP
      */
     private function split4($networkCount)
     {
-        if (pow(2, 32 - $this->getPrefix() - 2) < $networkCount) {
+        if (2 ** (32 - $this->getPrefix() - 2) < $networkCount) {
             throw new IPException('network too small to split in this many networks');
         }
 
         $prefix = $this->getPrefix() + log($networkCount, 2);
         $splitRanges = [];
         for ($i = 0; $i < $networkCount; ++$i) {
-            $noHosts = pow(2, 32 - $prefix);
+            $noHosts = 2 ** (32 - $prefix);
             $networkAddress = long2ip((int) ($i * $noHosts + ip2long($this->getNetwork())));
             $splitRanges[] = new self($networkAddress.'/'.$prefix);
         }
