@@ -3,3 +3,4 @@
 /openvpn-config
 /config/*.php
 /config/*.key
+/.phpunit.cache
