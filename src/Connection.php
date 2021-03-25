@@ -11,11 +11,11 @@ declare(strict_types=1);
 
 namespace LC\Node;
 
-use LC\Common\HttpClient\ServerClient;
+use LC\Node\HttpClient\ServerClient;
 
 class Connection
 {
-    /** @var \LC\Common\HttpClient\ServerClient */
+    /** @var \LC\Node\HttpClient\ServerClient */
     private $serverClient;
 
     public function __construct(ServerClient $serverClient)

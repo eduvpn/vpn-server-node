@@ -12,13 +12,13 @@ declare(strict_types=1);
 require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
-use LC\Common\Config;
-use LC\Common\FileIO;
-use LC\Common\HttpClient\CurlHttpClient;
-use LC\Common\HttpClient\Exception\ApiException;
-use LC\Common\HttpClient\ServerClient;
-use LC\Common\Logger;
+use LC\Node\Config;
 use LC\Node\Connection;
+use LC\Node\FileIO;
+use LC\Node\HttpClient\CurlHttpClient;
+use LC\Node\HttpClient\Exception\ApiException;
+use LC\Node\HttpClient\ServerClient;
+use LC\Node\Logger;
 
 $logger = new Logger(
     basename($argv[0])

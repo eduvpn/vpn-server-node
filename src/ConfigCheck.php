@@ -11,8 +11,6 @@ declare(strict_types=1);
 
 namespace LC\Node;
 
-use LC\Common\Config;
-use LC\Common\ProfileConfig;
 use RuntimeException;
 
 /**

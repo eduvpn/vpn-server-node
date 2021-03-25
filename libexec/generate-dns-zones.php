@@ -12,12 +12,12 @@ declare(strict_types=1);
 require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
-use LC\Common\Config;
-use LC\Common\FileIO;
-use LC\Common\HttpClient\CurlHttpClient;
-use LC\Common\HttpClient\ServerClient;
-use LC\Common\ProfileConfig;
+use LC\Node\Config;
+use LC\Node\FileIO;
+use LC\Node\HttpClient\CurlHttpClient;
+use LC\Node\HttpClient\ServerClient;
 use LC\Node\IP;
+use LC\Node\ProfileConfig;
 
 /*
  * We want to generate forward and reverse DNS zones for all VPN profiles. But
@@ -45,7 +45,7 @@ try {
     );
 
     $profileList = $serverClient->getRequireArray('profile_list');
-    /** @var array<string,LC\Common\ProfileConfig> */
+    /** @var array<string,LC\Node\ProfileConfig> */
     $profileConfigList = [];
     $forwardDns = [];
     $reverseFour = [];

@@ -11,9 +11,9 @@ declare(strict_types=1);
 
 namespace LC\Node\Tests;
 
-use LC\Common\HttpClient\Exception\ApiException;
-use LC\Common\HttpClient\ServerClient;
 use LC\Node\Connection;
+use LC\Node\HttpClient\Exception\ApiException;
+use LC\Node\HttpClient\ServerClient;
 use PHPUnit\Framework\TestCase;
 
 class ConnectionTest extends TestCase

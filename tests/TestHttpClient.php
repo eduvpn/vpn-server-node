@@ -11,8 +11,8 @@ declare(strict_types=1);
 
 namespace LC\Node\Tests;
 
-use LC\Common\HttpClient\HttpClientInterface;
-use LC\Common\HttpClient\HttpClientResponse;
+use LC\Node\HttpClient\HttpClientInterface;
+use LC\Node\HttpClient\HttpClientResponse;
 use RuntimeException;
 
 class TestHttpClient implements HttpClientInterface

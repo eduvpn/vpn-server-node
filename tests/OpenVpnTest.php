@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace LC\Node\Tests;
 
-use LC\Common\HttpClient\ServerClient;
+use LC\Node\HttpClient\ServerClient;
 use LC\Node\OpenVpn;
 use PHPUnit\Framework\TestCase;
 
