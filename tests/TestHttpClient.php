@@ -43,7 +43,7 @@ class TestHttpClient implements HttpClientInterface
     {
         switch ($requestUrl) {
             case 'openVpnServerClient/add_server_certificate':
-                return self::wrapData('add_server_certificate', '{"certificate":"-----BEGIN CERTIFICATE----X-----END CERTIFICATE-----","private_key":"-----BEGIN PRIVATE KEY-----Y-----END PRIVATE KEY-----","valid_from":1509909938,"valid_to":1541445938,"tls_crypt":"#\n# 2048 bit OpenVPN static key\n#\n-----BEGIN OpenVPN Static key V1-----A-----END OpenVPN Static key V1-----","ca":"-----BEGIN CERTIFICATE-----B-----END CERTIFICATE-----"}');
+                return self::wrapData('add_server_certificate', '{"cert":"-----BEGIN CERTIFICATE----X-----END CERTIFICATE-----","key":"-----BEGIN PRIVATE KEY-----Y-----END PRIVATE KEY-----","valid_from":1509909938,"valid_to":1541445938,"tls_crypt":"#\n# 2048 bit OpenVPN static key\n#\n-----BEGIN OpenVPN Static key V1-----A-----END OpenVPN Static key V1-----","ca":"-----BEGIN CERTIFICATE-----B-----END CERTIFICATE-----"}');
 
             case 'connectionServerClient/connect':
                 if ('foo_bar' === $postData['common_name']) {
