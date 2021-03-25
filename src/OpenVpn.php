@@ -266,8 +266,8 @@ class OpenVpn
 
         // add Certificates / keys
         $serverConfig[] = '<ca>'.\PHP_EOL.$certData['ca'].\PHP_EOL.'</ca>';
-        $serverConfig[] = '<cert>'.\PHP_EOL.$certData['certificate'].\PHP_EOL.'</cert>';
-        $serverConfig[] = '<key>'.\PHP_EOL.$certData['private_key'].\PHP_EOL.'</key>';
+        $serverConfig[] = '<cert>'.\PHP_EOL.$certData['cert'].\PHP_EOL.'</cert>';
+        $serverConfig[] = '<key>'.\PHP_EOL.$certData['key'].\PHP_EOL.'</key>';
         $serverConfig[] = '<tls-crypt>'.\PHP_EOL.$certData['tls_crypt'].\PHP_EOL.'</tls-crypt>';
 
         $serverConfig = array_merge(
