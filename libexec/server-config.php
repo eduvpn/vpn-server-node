@@ -13,29 +13,21 @@ require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
 use LC\Node\Config;
-use LC\Node\FileIO;
+use LC\Node\ConfigWriter;
 use LC\Node\HttpClient\CurlHttpClient;
-use LC\Node\HttpClient\ServerClient;
-use LC\Node\OpenVpn;
 
 try {
-    $configDir = $baseDir.'/config';
-    $configFile = $configDir.'/config.php';
-    $config = Config::fromFile($configFile);
-
-    $vpnUser = $config->requireString('vpnUser', 'openvpn');
-    $vpnGroup = $config->requireString('vpnGroup', 'openvpn');
-
     $vpnConfigDir = sprintf('%s/openvpn-config', $baseDir);
-    $serverClient = new ServerClient(
-        new CurlHttpClient(FileIO::readFile($configDir.'/node.key')),
-        $config->requireString('apiUri')
-    );
-
-    $profileIdDeployList = $config->requireArray('profileList', []);
-    $useVpnDaemon = $config->requireBool('useVpnDaemon', false);
-    $o = new OpenVpn($vpnConfigDir, $useVpnDaemon);
-    $o->writeProfiles($serverClient, $vpnUser, $vpnGroup, $profileIdDeployList);
+    $configDir = sprintf('%s/config', $baseDir);
+    $config = Config::fromFile($configDir.'/config.php');
+    $apiSecretFile = $configDir.'/node.key';
+    if (false === $apiSecret = file_get_contents($apiSecretFile)) {
+        throw new RuntimeException('unable to read "'.$apiSecretFile.'"');
+    }
+    $httpClient = new CurlHttpClient($apiSecret);
+    $apiUrl = $config->requireString('apiUrl');
+    $configWriter = new ConfigWriter($vpnConfigDir, $httpClient, $apiUrl);
+    $configWriter->write($config->requireArray('profileList', []));
 } catch (Exception $e) {
     echo sprintf('ERROR: %s', $e->getMessage()).\PHP_EOL;
     exit(1);

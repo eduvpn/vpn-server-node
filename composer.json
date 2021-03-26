@@ -20,17 +20,13 @@
     "license": "AGPL-3.0-or-later",
     "name": "lc/vpn-server-node",
     "require": {
-        "ext-date": "*",
-        "ext-filter": "*",
-        "ext-mbstring": "*",
-        "ext-openssl": "*",
-        "ext-pcre": "*",
+        "ext-curl": "*",
         "ext-spl": "*",
+        "ext-sodium": "*",
         "php": ">=7.4",
         "psr/log": "^1"
     },
     "require-dev": {
-        "ext-json": "*",
         "phpunit/phpunit": "^9"
     },
     "support": {

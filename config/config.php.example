@@ -1,11 +1,5 @@
 <?php
 
 return [
-    // Override the user/group under which OpenVPN will run, on CentOS/Fedora this
-    // is openvpn:openvpn, on Debian this is nobody:nogroup
-    'vpnUser' => 'openvpn',
-    'vpnGroup' => 'openvpn',
-    
-    // Node API
-    'apiUri' => 'http://localhost/vpn-user-portal/node-api.php',
+    'apiUrl' => 'http://localhost/vpn-user-portal/node-api.php',
 ];

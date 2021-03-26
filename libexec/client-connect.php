@@ -14,10 +14,7 @@ $baseDir = dirname(__DIR__);
 
 use LC\Node\Config;
 use LC\Node\Connection;
-use LC\Node\FileIO;
 use LC\Node\HttpClient\CurlHttpClient;
-use LC\Node\HttpClient\Exception\ApiException;
-use LC\Node\HttpClient\ServerClient;
 use LC\Node\Logger;
 
 $logger = new Logger(
@@ -40,20 +37,15 @@ try {
     }
 
     $configDir = sprintf('%s/config', $baseDir);
-    $config = Config::fromFile(
-        sprintf('%s/config.php', $configDir)
-    );
-
-    $serverClient = new ServerClient(
-        new CurlHttpClient(FileIO::readFile($configDir.'/node.key')),
-        $config->requireString('apiUri')
-    );
-
-    $connection = new Connection($serverClient);
+    $config = Config::fromFile($configDir.'/config.php');
+    $apiSecretFile = $configDir.'/node.key';
+    if (false === $apiSecret = file_get_contents($apiSecretFile)) {
+        throw new RuntimeException('unable to read "'.$apiSecretFile.'"');
+    }
+    $httpClient = new CurlHttpClient($apiSecret);
+    $apiUrl = $config->requireString('apiUrl');
+    $connection = new Connection($httpClient, $apiUrl);
     $connection->connect($envData);
-} catch (ApiException $e) {
-    $logger->warning($e->getMessage());
-    exit(1);
 } catch (Exception $e) {
     $logger->error($e->getMessage());
     exit(1);
