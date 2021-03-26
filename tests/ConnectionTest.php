@@ -12,69 +12,66 @@ declare(strict_types=1);
 namespace LC\Node\Tests;
 
 use LC\Node\Connection;
-use LC\Node\HttpClient\Exception\ApiException;
-use LC\Node\HttpClient\ServerClient;
+use LC\Node\Exception\ConnectionException;
 use PHPUnit\Framework\TestCase;
 
 class ConnectionTest extends TestCase
 {
-    /** @var Connection */
-    private $connection;
-
-    protected function setUp(): void
+    public function testConnect(): void
     {
-        $this->connection = new Connection(
-            new ServerClient(
-                new TestHttpClient(),
-                'connectionServerClient'
-            )
+        $connection = new Connection(new TestHttpClient(), 'http://localhost/vpn-user-portal/node-api.php');
+        $connection->connect(
+            'profile_id',
+            'common_name',
+            'ip_four',
+            'ip_six',
+            'connected_at'
         );
     }
 
-    public function testValidConnection(): void
+    public function testConnectError(): void
     {
-        $this->connection->connect(
-            [
-                'common_name' => 'foo_bar',
-                'PROFILE_ID' => 'internet',
-                'time_unix' => '12345678',
-                'ifconfig_pool_remote_ip' => '10.0.42.0',
-                'ifconfig_pool_remote_ip6' => 'fd00:4242:4242:4242::',
-            ]
+        $this->expectException(ConnectionException::class);
+        $this->expectExceptionMessage('unable to connect');
+        $connection = new Connection(new TestHttpClient(), 'http://localhost/vpn-user-portal/node-api.php');
+        $connection->connect(
+            'profile_id',
+            'common_name_error',
+            'ip_four',
+            'ip_six',
+            'connected_at'
         );
-    }
-
-    public function testInvalidConnection(): void
-    {
-        try {
-            $this->connection->connect(
-                [
-                    'common_name' => 'foo_baz',
-                    'PROFILE_ID' => 'internet',
-                    'time_unix' => '12345678',
-                    'ifconfig_pool_remote_ip' => '10.0.42.0',
-                    'ifconfig_pool_remote_ip6' => 'fd00:4242:4242:4242::',
-                ]
-            );
-            self::fail();
-        } catch (ApiException $e) {
-            self::assertSame('error message', $e->getMessage());
-        }
     }
 
     public function testDisconnect(): void
     {
-        $this->connection->disconnect(
-            [
-                'common_name' => 'foo_bar',
-                'PROFILE_ID' => 'acl2',
-                'time_unix' => '12345678',
-                'ifconfig_pool_remote_ip' => '10.0.42.0',
-                'ifconfig_pool_remote_ip6' => 'fd00:4242:4242:4242::',
-                'time_duration' => '3600',
-                'bytes_sent' => '123456',
-                'bytes_received' => '444444',
-            ]
+        $connection = new Connection(new TestHttpClient(), 'http://localhost/vpn-user-portal/node-api.php');
+        $connection->disconnect(
+            'profile_id',
+            'common_name',
+            'ip_four',
+            'ip_six',
+            'connected_at',
+            'connection_duration',
+            'bytes_received',
+            'bytes_sent'
+        );
+    }
+
+    public function testDisconnectError(): void
+    {
+        $this->expectException(ConnectionException::class);
+        $this->expectExceptionMessage('unable to disconnect');
+        $connection = new Connection(new TestHttpClient(), 'http://localhost/vpn-user-portal/node-api.php');
+        $connection->disconnect(
+            'profile_id',
+            'common_name_error',
+            'ip_four',
+            'ip_six',
+            'connected_at',
+            'connection_duration',
+            'bytes_received',
+            'bytes_sent'
         );
     }
 }
