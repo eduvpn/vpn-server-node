@@ -29,6 +29,6 @@ try {
     $configWriter = new ConfigWriter($vpnConfigDir, $httpClient, $apiUrl);
     $configWriter->write();
 } catch (Exception $e) {
-    echo 'ERROR: '.$e->getMessage();
+    echo 'ERROR: '.$e->getMessage().\PHP_EOL;
     exit(1);
 }

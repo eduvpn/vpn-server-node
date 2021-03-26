@@ -32,6 +32,9 @@ class ConfigWriter
     public function write(): void
     {
         $httpResponse = $this->httpClient->post($this->apiUrl.'/server_config', []);
+        if (200 !== $httpCode = $httpResponse->getCode()) {
+            throw new RuntimeException(sprintf('unable to retrieve server_config [HTTP=%d:%s]', $httpCode, $httpResponse->getBody()));
+        }
         foreach (explode("\r\n", $httpResponse->getBody()) as $configNameData) {
             [$configName, $configData] = explode(':', $configNameData);
             if (false === file_put_contents($this->vpnConfigDir.'/'.$configName, sodium_base642bin($configData, \SODIUM_BASE64_VARIANT_ORIGINAL))) {
