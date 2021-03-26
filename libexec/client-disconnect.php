@@ -15,11 +15,7 @@ $baseDir = dirname(__DIR__);
 use LC\Node\Config;
 use LC\Node\Connection;
 use LC\Node\HttpClient\CurlHttpClient;
-use LC\Node\Logger;
-
-$logger = new Logger(
-    basename($argv[0])
-);
+use LC\Node\Syslog;
 
 function envString(string $envKey): string
 {
@@ -51,6 +47,7 @@ try {
         envString('bytes_sent'),
     );
 } catch (Exception $e) {
-    $logger->error($e->getMessage());
+    $log = new Syslog('client-disconnect');
+    $log->error($e->getMessage());
     exit(1);
 }

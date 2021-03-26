@@ -29,6 +29,6 @@ try {
     $configWriter = new ConfigWriter($vpnConfigDir, $httpClient, $apiUrl);
     $configWriter->write($config->requireArray('profileList', []));
 } catch (Exception $e) {
-    echo sprintf('ERROR: %s', $e->getMessage()).\PHP_EOL;
+    echo 'ERROR: '.$e->getMessage();
     exit(1);
 }

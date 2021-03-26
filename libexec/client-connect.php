@@ -15,12 +15,8 @@ $baseDir = dirname(__DIR__);
 use LC\Node\Config;
 use LC\Node\Connection;
 use LC\Node\HttpClient\CurlHttpClient;
-use LC\Node\Logger;
+use LC\Node\Syslog;
 use RuntimeException;
-
-$logger = new Logger(
-    basename($argv[0])
-);
 
 function envString(string $envKey): string
 {
@@ -49,6 +45,7 @@ try {
         envString('time_unix')
     );
 } catch (Exception $e) {
-    $logger->error($e->getMessage());
+    $log = new Syslog('client-connect');
+    $log->error($e->getMessage());
     exit(1);
 }
