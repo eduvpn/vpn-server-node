@@ -53,11 +53,12 @@ class Config
         if (!\array_key_exists($k, $this->configData)) {
             return null;
         }
-        if (!\is_array($this->configData[$k])) {
+        $configValue = $this->configData[$k];
+        if (!\is_array($configValue)) {
             throw new ConfigException('key "'.$k.'" not of type array');
         }
 
-        return $this->configData[$k];
+        return $configValue;
     }
 
     public function requireArray(string $k, array $d = null): array
