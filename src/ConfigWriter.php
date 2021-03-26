@@ -34,7 +34,7 @@ class ConfigWriter
      */
     public function write(array $profileIdList): void
     {
-        $httpResponse = $this->httpClient->post($this->apiUrl.'/server_config', [], []);
+        $httpResponse = $this->httpClient->post($this->apiUrl.'/server_config', []);
         // XXX figure out why we need trim
         foreach (explode("\r\n", trim($httpResponse->getBody())) as $configNameData) {
             [$configName, $configData] = explode(':', $configNameData);

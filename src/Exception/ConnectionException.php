@@ -15,24 +15,4 @@ use Exception;
 
 class ConnectionException extends Exception
 {
-    /** @var array */
-    private $envData;
-
-    /**
-     * @param string $message
-     * @param int    $code
-     */
-    public function __construct($message, array $envData, $code = 0, Exception $previous = null)
-    {
-        $this->envData = $envData;
-        parent::__construct($message, $code, $previous);
-    }
-
-    /**
-     * @return array
-     */
-    public function getEnvData()
-    {
-        return $this->envData;
-    }
 }

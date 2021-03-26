@@ -26,43 +26,41 @@ class Connection
         $this->apiUrl = $apiUrl;
     }
 
-    public function connect(array $envData): void
+    public function connect(string $profileId, string $commonName, string $ipFour, string $ipSix, string $connectedAt): void
     {
         $httpResponse = $this->httpClient->post(
             $this->apiUrl.'/connect',
-            [],
             [
-                'profile_id' => $envData['PROFILE_ID'],
-                'common_name' => $envData['common_name'],
-                'ip4' => $envData['ifconfig_pool_remote_ip'],
-                'ip6' => $envData['ifconfig_pool_remote_ip6'],
-                'connected_at' => $envData['time_unix'],
+                'profile_id' => $profileId,
+                'common_name' => $commonName,
+                'ip_four' => $ipFour,
+                'ip_six' => $ipSix,
+                'connected_at' => $connectedAt,
             ]
         );
         if ('OK' !== $httpResponse->getBody()) {
-            // XXX fix exception message
-            throw new ConnectionException('', $envData);
+            // XXX fix exception
+            throw new ConnectionException();
         }
     }
 
-    public function disconnect(array $envData): void
+    public function disconnect(string $profileId, string $commonName, string $ipFour, string $ipSix, string $connectedAt, string $connectionDuration, string $bytesReceived, string $bytesSent): void
     {
         $httpResponse = $this->httpClient->post(
             $this->apiUrl.'/disconnect',
-            [],
             [
-                'profile_id' => $envData['PROFILE_ID'],
-                'common_name' => $envData['common_name'],
-                'ip4' => $envData['ifconfig_pool_remote_ip'],
-                'ip6' => $envData['ifconfig_pool_remote_ip6'],
-                'connected_at' => $envData['time_unix'],
-                'disconnected_at' => $envData['time_unix'] + $envData['time_duration'],
-                'bytes_transferred' => $envData['bytes_received'] + $envData['bytes_sent'],
+                'profile_id' => $profileId,
+                'common_name' => $commonName,
+                'ip_four' => $ipFour,
+                'ip_six' => $ipSix,
+                'connected_at' => $connectedAt,
+                'disconnected_at' => (string) ((int) $connectedAt + (int) $connectionDuration),
+                'bytes_transferred' => (string) ((int) $bytesReceived + (int) $bytesSent),
             ]
         );
         if ('OK' !== $httpResponse->getBody()) {
-            // XXX fix exception message
-            throw new ConnectionException('', $envData);
+            // XXX fix exception
+            throw new ConnectionException();
         }
     }
 }

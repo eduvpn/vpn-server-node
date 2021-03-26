@@ -21,35 +21,35 @@ $logger = new Logger(
     basename($argv[0])
 );
 
-try {
-    $envData = [];
-    $envKeys = [
-        'PROFILE_ID',
-        'common_name',
-        'time_unix',
-        'ifconfig_pool_remote_ip',
-        'ifconfig_pool_remote_ip6',
-        'bytes_received',
-        'bytes_sent',
-        'time_duration',
-    ];
-
-    // read environment variables
-    foreach ($envKeys as $envKey) {
-        $envData[$envKey] = getenv($envKey);
+function envString(string $envKey): string
+{
+    if (false === $envValue = getenv($envKey)) {
+        throw new RuntimeException('environment variable "'.$envKey.'" not set');
     }
 
-    $configDir = sprintf('%s/config', $baseDir);
-    $config = Config::fromFile($configDir.'/config.php');
-    $apiSecretFile = $configDir.'/node.key';
+    return $envValue;
+}
+
+try {
+    $configFile = $baseDir.'/config/config.php';
+    $config = Config::fromFile($configFile);
+    $apiSecretFile = $baseDir.'/config/node.key';
     if (false === $apiSecret = file_get_contents($apiSecretFile)) {
-        throw new RuntimeException('unable to read "'.$apiSecretFile.'"');
+        throw new RuntimeException('unable to read file "'.$apiSecretFile.'"');
     }
     $httpClient = new CurlHttpClient($apiSecret);
     $apiUrl = $config->requireString('apiUrl');
-
     $connection = new Connection($httpClient, $apiUrl);
-    $connection->disconnect($envData);
+    $connection->disconnect(
+        envString('PROFILE_ID'),
+        envString('common_name'),
+        envString('ifconfig_pool_remote_ip'),
+        envString('ifconfig_pool_remote_ip6'),
+        envString('time_unix'),
+        envString('time_duration'),
+        envString('bytes_received'),
+        envString('bytes_sent'),
+    );
 } catch (Exception $e) {
     $logger->error($e->getMessage());
     exit(1);
