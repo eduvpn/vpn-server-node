@@ -16,7 +16,6 @@ use LC\Node\Config;
 use LC\Node\Connection;
 use LC\Node\HttpClient\CurlHttpClient;
 use LC\Node\Syslog;
-use RuntimeException;
 
 function envString(string $envKey): string
 {
