@@ -20,12 +20,14 @@ class ConnectionTest extends TestCase
     public function testConnect(): void
     {
         $connection = new Connection(new TestHttpClient(), 'http://localhost/vpn-user-portal/node-api.php');
-        $connection->connect(
-            'profile_id',
-            'common_name',
-            'ip_four',
-            'ip_six',
-            'connected_at'
+        $this->assertNull(
+            $connection->connect(
+                'profile_id',
+                'common_name',
+                'ip_four',
+                'ip_six',
+                'connected_at'
+            )
         );
     }
 
@@ -46,15 +48,17 @@ class ConnectionTest extends TestCase
     public function testDisconnect(): void
     {
         $connection = new Connection(new TestHttpClient(), 'http://localhost/vpn-user-portal/node-api.php');
-        $connection->disconnect(
-            'profile_id',
-            'common_name',
-            'ip_four',
-            'ip_six',
-            'connected_at',
-            'connection_duration',
-            'bytes_received',
-            'bytes_sent'
+        $this->assertNull(
+            $connection->disconnect(
+                'profile_id',
+                'common_name',
+                'ip_four',
+                'ip_six',
+                'connected_at',
+                'connection_duration',
+                'bytes_received',
+                'bytes_sent'
+            )
         );
     }
 
