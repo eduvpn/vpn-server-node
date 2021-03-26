@@ -40,6 +40,7 @@ class Connection
             ]
         );
         if ('OK' !== $httpResponse->getBody()) {
+            // XXX fix exception message
             throw new ConnectionException('', $envData);
         }
     }
@@ -60,6 +61,7 @@ class Connection
             ]
         );
         if ('OK' !== $httpResponse->getBody()) {
+            // XXX fix exception message
             throw new ConnectionException('', $envData);
         }
     }
