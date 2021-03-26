@@ -29,16 +29,13 @@ class ConfigWriter
         $this->apiUrl = $apiUrl;
     }
 
-    /**
-     * @param array<string> $profileIdList
-     */
-    public function write(array $profileIdList): void
+    public function write(): void
     {
         $httpResponse = $this->httpClient->post($this->apiUrl.'/server_config', []);
         // XXX figure out why we need trim
         foreach (explode("\r\n", trim($httpResponse->getBody())) as $configNameData) {
             [$configName, $configData] = explode(':', $configNameData);
-            if (false === file_put_contents($this->vpnConfigDir.'/'.$configName, sodium_base642bin(trim($configData), \SODIUM_BASE64_VARIANT_ORIGINAL))) {
+            if (false === file_put_contents($this->vpnConfigDir.'/'.$configName, sodium_base642bin($configData, \SODIUM_BASE64_VARIANT_ORIGINAL))) {
                 throw new RuntimeException('unable to write to "'.$this->vpnConfigDir.'/'.$configName.'"');
             }
         }

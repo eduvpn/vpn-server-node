@@ -35,7 +35,7 @@ class TestHttpClient implements HttpClientInterface
 
                 return new HttpClientResponse(200, 'ERR');
             case 'http://localhost/vpn-user-portal/node-api.php/server_config':
-                return new HttpClientResponse(200, 'default-0.conf: ZGVmYXVsdC0w'."\r\ndefault-1.conf: ZGVmYXVsdC0x");
+                return new HttpClientResponse(200, 'default-0.conf:ZGVmYXVsdC0w'."\r\ndefault-1.conf:ZGVmYXVsdC0x");
             default:
                 return new HttpClientResponse(404, 'Not Found');
         }

@@ -27,7 +27,7 @@ try {
     $httpClient = new CurlHttpClient($apiSecret);
     $apiUrl = $config->requireString('apiUrl');
     $configWriter = new ConfigWriter($vpnConfigDir, $httpClient, $apiUrl);
-    $configWriter->write($config->requireArray('profileList', []));
+    $configWriter->write();
 } catch (Exception $e) {
     echo 'ERROR: '.$e->getMessage();
     exit(1);
