@@ -38,9 +38,9 @@ class Connection
                 'connected_at' => $connectedAt,
             ]
         );
-        if ('OK' !== $httpResponse->getBody()) {
-            // XXX fix exception
-            throw new ConnectionException();
+
+        if (200 !== $httpResponse->getCode() || 'OK' !== $httpResponse->getBody()) {
+            throw new ConnectionException('unable to connect');
         }
     }
 
@@ -58,9 +58,9 @@ class Connection
                 'bytes_transferred' => (string) ((int) $bytesReceived + (int) $bytesSent),
             ]
         );
-        if ('OK' !== $httpResponse->getBody()) {
-            // XXX fix exception
-            throw new ConnectionException();
+
+        if (200 !== $httpResponse->getCode() || 'OK' !== $httpResponse->getBody()) {
+            throw new ConnectionException('unable to disconnect');
         }
     }
 }
