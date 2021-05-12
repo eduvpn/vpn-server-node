@@ -23,60 +23,19 @@ class Config
         $this->configData = $configData;
     }
 
-    public function optionalString(string $k): ?string
+    public function apiUrl(): string
     {
-        if (!\array_key_exists($k, $this->configData)) {
-            return null;
-        }
-        if (!\is_string($this->configData[$k])) {
-            throw new ConfigException('key "'.$k.'" not of type string');
+        if (!\array_key_exists('apiUrl', $this->configData)) {
+            throw new ConfigException('key "apiUrl" not available');
         }
 
-        return $this->configData[$k];
+        if (!\is_string($this->configData['apiUrl'])) {
+            throw new ConfigException('key "apiUrl" not of type string');
+        }
+
+        return $this->configData['apiUrl'];
     }
 
-    public function requireString(string $k, ?string $d = null): string
-    {
-        if (null === $v = $this->optionalString($k)) {
-            if (null !== $d) {
-                return $d;
-            }
-
-            throw new ConfigException('key "'.$k.'" not available');
-        }
-
-        return $v;
-    }
-
-    public function optionalArray(string $k): ?array
-    {
-        if (!\array_key_exists($k, $this->configData)) {
-            return null;
-        }
-        $configValue = $this->configData[$k];
-        if (!\is_array($configValue)) {
-            throw new ConfigException('key "'.$k.'" not of type array');
-        }
-
-        return $configValue;
-    }
-
-    public function requireArray(string $k, array $d = null): array
-    {
-        if (null === $v = $this->optionalArray($k)) {
-            if (null !== $d) {
-                return $d;
-            }
-
-            throw new ConfigException('key "'.$k.'" not available');
-        }
-
-        return $v;
-    }
-
-    /**
-     * @psalm-suppress UnresolvableInclude
-     */
     public static function fromFile(string $configFile): self
     {
         if (false === file_exists($configFile)) {

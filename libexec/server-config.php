@@ -24,9 +24,7 @@ try {
     if (false === $apiSecret = file_get_contents($apiSecretFile)) {
         throw new RuntimeException('unable to read "'.$apiSecretFile.'"');
     }
-    $httpClient = new CurlHttpClient($apiSecret);
-    $apiUrl = $config->requireString('apiUrl');
-    $configWriter = new ConfigWriter($vpnConfigDir, $httpClient, $apiUrl);
+    $configWriter = new ConfigWriter($vpnConfigDir, new CurlHttpClient($apiSecret), $config->apiUrl());
     $configWriter->write();
 } catch (Exception $e) {
     echo 'ERROR: '.$e->getMessage().\PHP_EOL;

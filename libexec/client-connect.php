@@ -33,9 +33,7 @@ try {
     if (false === $apiSecret = file_get_contents($apiSecretFile)) {
         throw new RuntimeException('unable to read file "'.$apiSecretFile.'"');
     }
-    $httpClient = new CurlHttpClient($apiSecret);
-    $apiUrl = $config->requireString('apiUrl');
-    $connection = new Connection($httpClient, $apiUrl);
+    $connection = new Connection(new CurlHttpClient($apiSecret), $config->apiUrl());
     $connection->connect(
         envString('PROFILE_ID'),
         envString('common_name'),
