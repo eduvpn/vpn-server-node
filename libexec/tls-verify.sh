@@ -17,7 +17,7 @@ if [ "${1}" -eq 0 ]; then
     fi
 
     if [ "${PROFILE_ID}" != "${X509_0_OU}" ]; then
-        /usr/bin/logger -s -p user.warning "${0}: PROFILE_ID '${PROFILE_ID}' does not match client certificate OU '${X509_0_OU}'"
+        /usr/bin/logger -s -p user.warning "${0}: client certificate has OU '${X509_0_OU}', but requires '${PROFILE_ID}' for this profile"
         exit 1
     fi
 fi
