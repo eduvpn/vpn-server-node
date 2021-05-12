@@ -3,6 +3,10 @@
 # OpenVPN --tls-verify script
 # @see openvpn(8)
 #
+# We use the --tls-verify script to enforce that the client's cerificate was 
+# issued for a particular profile. This prevents clients from using a 
+# certificate meant for profile A with profile B.
+#
 # OpenVPN executes this script multiple times for each certificate in the 
 # chain. We are only interested in the client certificate (depth 0)
 
