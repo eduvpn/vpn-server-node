@@ -26,8 +26,11 @@ class Connection
         $this->apiUrl = $apiUrl;
     }
 
-    public function connect(string $profileId, string $commonName, string $ipFour, string $ipSix, string $connectedAt): void
+    public function connect(string $profileId, string $clientCertOU, string $commonName, string $ipFour, string $ipSix, string $connectedAt): void
     {
+        if ($profileId != $clientCertOU) {
+            throw new ConnectionException('client certificate has OU "'.$clientCertOU.'", but requires "'.$profileId.'" for this profile');
+        }
         $httpResponse = $this->httpClient->post(
             $this->apiUrl.'/connect',
             [

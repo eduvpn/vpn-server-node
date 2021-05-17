@@ -36,6 +36,7 @@ try {
     $connection = new Connection(new CurlHttpClient($apiSecret), $config->apiUrl());
     $connection->connect(
         envString('PROFILE_ID'),
+        envString('X509_0_OU'),
         envString('common_name'),
         envString('ifconfig_pool_remote_ip'),
         envString('ifconfig_pool_remote_ip6'),
