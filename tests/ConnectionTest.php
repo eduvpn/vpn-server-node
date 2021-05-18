@@ -23,6 +23,7 @@ class ConnectionTest extends TestCase
         $this->assertNull(
             $connection->connect(
                 'profile_id',
+                'profile_id',
                 'common_name',
                 'ip_four',
                 'ip_six',
@@ -38,6 +39,22 @@ class ConnectionTest extends TestCase
         $connection = new Connection(new TestHttpClient(), 'http://localhost/vpn-user-portal/node-api.php');
         $connection->connect(
             'profile_id',
+            'profile_id',
+            'common_name_error',
+            'ip_four',
+            'ip_six',
+            'connected_at'
+        );
+    }
+
+    public function testConnectWrongProfileWithOu(): void
+    {
+        $this->expectException(ConnectionException::class);
+        $this->expectExceptionMessage('client certificate has OU "wrong_cert_ou", but requires "profile_id" for this profile');
+        $connection = new Connection(new TestHttpClient(), 'http://localhost/vpn-user-portal/node-api.php');
+        $connection->connect(
+            'profile_id',
+            'wrong_cert_ou',
             'common_name_error',
             'ip_four',
             'ip_six',
