@@ -16,15 +16,15 @@ use RuntimeException;
 
 class ConfigWriter
 {
-    private $vpnConfigDir;
-
+    private string $openVpnConfigDir;
+    private string $wgConfigDir;
     private HttpClientInterface $httpClient;
-
     private string $apiUrl;
 
-    public function __construct(string $vpnConfigDir, HttpClientInterface $httpClient, string $apiUrl)
+    public function __construct(string $openVpnConfigDir, string $wgConfigDir, HttpClientInterface $httpClient, string $apiUrl)
     {
-        $this->vpnConfigDir = $vpnConfigDir;
+        $this->openVpnConfigDir = $openVpnConfigDir;
+        $this->wgConfigDir = $wgConfigDir;
         $this->httpClient = $httpClient;
         $this->apiUrl = $apiUrl;
     }
@@ -37,9 +37,21 @@ class ConfigWriter
         }
         foreach (explode("\r\n", $httpResponse->getBody()) as $configNameData) {
             [$configName, $configData] = explode(':', $configNameData);
-            if (false === file_put_contents($this->vpnConfigDir.'/'.$configName, sodium_base642bin($configData, \SODIUM_BASE64_VARIANT_ORIGINAL))) {
-                throw new RuntimeException('unable to write to "'.$this->vpnConfigDir.'/'.$configName.'"');
+
+            $configFile = self::getConfigFile($configName);
+            if (false === file_put_contents($configFile, sodium_base642bin($configData, \SODIUM_BASE64_VARIANT_ORIGINAL))) {
+                throw new RuntimeException('unable to write to "'.$configFile.'"');
             }
         }
+    }
+
+    private function getConfigFile(string $configName): string
+    {
+        if (0 === strpos($configName, 'wg')) {
+            // XXX can't do this, need a "type"!
+            return $this->wgConfigDir.'/'.$configName;
+        }
+
+        return $this->openVpnConfigDir.'/'.$configName;
     }
 }

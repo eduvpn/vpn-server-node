@@ -17,14 +17,15 @@ use LC\Node\ConfigWriter;
 use LC\Node\HttpClient\CurlHttpClient;
 
 try {
-    $vpnConfigDir = sprintf('%s/openvpn-config', $baseDir);
+    $openVpnConfigDir = sprintf('%s/openvpn-config', $baseDir);
+    $wgConfigDir = sprintf('%s/wg-config', $baseDir);
     $configDir = sprintf('%s/config', $baseDir);
     $config = Config::fromFile($configDir.'/config.php');
     $apiSecretFile = $configDir.'/node.key';
     if (false === $apiSecret = file_get_contents($apiSecretFile)) {
         throw new RuntimeException('unable to read "'.$apiSecretFile.'"');
     }
-    $configWriter = new ConfigWriter($vpnConfigDir, new CurlHttpClient($apiSecret), $config->apiUrl());
+    $configWriter = new ConfigWriter($openVpnConfigDir, $wgConfigDir, new CurlHttpClient($apiSecret), $config->apiUrl());
     $configWriter->write();
 } catch (Exception $e) {
     echo 'ERROR: '.$e->getMessage().\PHP_EOL;

@@ -20,7 +20,7 @@ class ConfigWriterTest extends TestCase
     {
         $tmpDir = sprintf('%s/%s', sys_get_temp_dir(), bin2hex(random_bytes(16)));
         mkdir($tmpDir, 0700, true);
-        $configWriter = new ConfigWriter($tmpDir, new TestHttpClient(), 'http://localhost/vpn-user-portal/node-api.php');
+        $configWriter = new ConfigWriter($tmpDir, $tmpDir, new TestHttpClient(), 'http://localhost/vpn-user-portal/node-api.php');
         $configWriter->write();
         $this->assertSame('default-0', file_get_contents($tmpDir.'/default-0.conf'));
         $this->assertSame('default-1', file_get_contents($tmpDir.'/default-1.conf'));
