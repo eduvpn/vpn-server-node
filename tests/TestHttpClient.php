@@ -17,7 +17,7 @@ use LC\Node\HttpClient\HttpClientResponse;
 class TestHttpClient implements HttpClientInterface
 {
     /**
-     * @param array<string,string> $postData
+     * @param array<string,string|null> $postData
      */
     public function post(string $requestUrl, array $postData): HttpClientResponse
     {

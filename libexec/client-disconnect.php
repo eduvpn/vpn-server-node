@@ -16,15 +16,7 @@ use LC\Node\Config;
 use LC\Node\Connection;
 use LC\Node\HttpClient\CurlHttpClient;
 use LC\Node\Syslog;
-
-function envString(string $envKey): string
-{
-    if (false === $envValue = getenv($envKey)) {
-        throw new RuntimeException('environment variable "'.$envKey.'" not set');
-    }
-
-    return $envValue;
-}
+use LC\Node\Utils;
 
 try {
     $configFile = $baseDir.'/config/config.php';
@@ -35,14 +27,16 @@ try {
     }
     $connection = new Connection(new CurlHttpClient($apiSecret), $config->apiUrl());
     $connection->disconnect(
-        envString('PROFILE_ID'),
-        envString('common_name'),
-        envString('ifconfig_pool_remote_ip'),
-        envString('ifconfig_pool_remote_ip6'),
-        envString('time_unix'),
-        envString('time_duration'),
-        envString('bytes_received'),
-        envString('bytes_sent'),
+        Utils::reqEnvString('PROFILE_ID'),
+        Utils::reqEnvString('common_name'),
+        Utils::optEnvString('trusted_ip'),
+        Utils::optEnvString('trusted_ip6'),
+        Utils::reqEnvString('ifconfig_pool_remote_ip'),
+        Utils::reqEnvString('ifconfig_pool_remote_ip6'),
+        Utils::reqEnvString('time_unix'),
+        Utils::reqEnvString('time_duration'),
+        Utils::reqEnvString('bytes_received'),
+        Utils::reqEnvString('bytes_sent'),
     );
 } catch (Exception $e) {
     $log = new Syslog('client-disconnect');

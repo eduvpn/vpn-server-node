@@ -25,6 +25,8 @@ class ConnectionTest extends TestCase
                 'profile_id',
                 'profile_id',
                 'common_name',
+                'orig_ip_four',
+                'orig_ip_six',
                 'ip_four',
                 'ip_six',
                 'connected_at'
@@ -41,6 +43,8 @@ class ConnectionTest extends TestCase
             'profile_id',
             'profile_id',
             'common_name_error',
+            'orig_ip_four',
+            'orig_ip_six',
             'ip_four',
             'ip_six',
             'connected_at'
@@ -56,6 +60,8 @@ class ConnectionTest extends TestCase
             'profile_id',
             'wrong_cert_ou',
             'common_name_error',
+            'orig_ip_four',
+            'orig_ip_six',
             'ip_four',
             'ip_six',
             'connected_at'
@@ -69,6 +75,8 @@ class ConnectionTest extends TestCase
             $connection->disconnect(
                 'profile_id',
                 'common_name',
+                'orig_ip_four',
+                'orig_ip_six',
                 'ip_four',
                 'ip_six',
                 'connected_at',
@@ -87,6 +95,8 @@ class ConnectionTest extends TestCase
         $connection->disconnect(
             'profile_id',
             'common_name_error',
+            'orig_ip_four',
+            'orig_ip_six',
             'ip_four',
             'ip_six',
             'connected_at',
