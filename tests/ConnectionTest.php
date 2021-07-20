@@ -36,6 +36,8 @@ class ConnectionTest extends TestCase
                 'common_name' => 'foo_bar',
                 'PROFILE_ID' => 'internet',
                 'time_unix' => '12345678',
+                'trusted_ip' => '1.2.3.4',
+                'trusted_ip6' => false,
                 'ifconfig_pool_remote_ip' => '10.0.42.0',
                 'ifconfig_pool_remote_ip6' => 'fd00:4242:4242:4242::',
             ]
@@ -50,6 +52,8 @@ class ConnectionTest extends TestCase
                     'common_name' => 'foo_baz',
                     'PROFILE_ID' => 'internet',
                     'time_unix' => '12345678',
+                    'trusted_ip' => '1.2.3.4',
+                    'trusted_ip6' => false,
                     'ifconfig_pool_remote_ip' => '10.0.42.0',
                     'ifconfig_pool_remote_ip6' => 'fd00:4242:4242:4242::',
                 ]
@@ -67,6 +71,8 @@ class ConnectionTest extends TestCase
                 'common_name' => 'foo_bar',
                 'PROFILE_ID' => 'acl2',
                 'time_unix' => '12345678',
+                'trusted_ip' => '1.2.3.4',
+                'trusted_ip6' => false,
                 'ifconfig_pool_remote_ip' => '10.0.42.0',
                 'ifconfig_pool_remote_ip6' => 'fd00:4242:4242:4242::',
                 'time_duration' => '3600',

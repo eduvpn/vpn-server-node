@@ -12,10 +12,10 @@ $baseDir = dirname(__DIR__);
 
 use LC\Common\Config;
 use LC\Common\HttpClient\CurlHttpClient;
+use LC\Common\HttpClient\Exception\ApiException;
 use LC\Common\HttpClient\ServerClient;
 use LC\Common\Logger;
 use LC\Node\Connection;
-use LC\Node\Exception\ConnectionException;
 
 $logger = new Logger(
     basename($argv[0])
@@ -27,6 +27,8 @@ try {
         'PROFILE_ID',
         'common_name',
         'time_unix',
+        'trusted_ip',
+        'trusted_ip6',
         'ifconfig_pool_remote_ip',
         'ifconfig_pool_remote_ip6',
         'bytes_received',
@@ -51,8 +53,8 @@ try {
 
     $connection = new Connection($serverClient);
     $connection->disconnect($envData);
-} catch (ConnectionException $e) {
-    $logger->info($e->getMessage(), $e->getEnvData());
+} catch (ApiException $e) {
+    $logger->warning($e->getMessage());
     exit(1);
 } catch (Exception $e) {
     $logger->error($e->getMessage());

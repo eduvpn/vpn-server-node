@@ -27,6 +27,8 @@ try {
         'PROFILE_ID',
         'common_name',
         'time_unix',
+        'trusted_ip',
+        'trusted_ip6',
         'ifconfig_pool_remote_ip',
         'ifconfig_pool_remote_ip6',
     ];
