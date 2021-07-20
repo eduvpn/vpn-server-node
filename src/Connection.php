@@ -39,8 +39,7 @@ class Connection
                 'common_name' => $commonName,
                 'ip_four' => $ipFour,
                 'ip_six' => $ipSix,
-                'originating_ip_four' => $origIpFour,
-                'originating_ip_six' => $origIpSix,
+                'originating_ip' => self::requireOriginatingIp($origIpFour, $origIpSix),
                 'connected_at' => $connectedAt,
             ]
         );
@@ -59,8 +58,7 @@ class Connection
                 'common_name' => $commonName,
                 'ip_four' => $ipFour,
                 'ip_six' => $ipSix,
-                'originating_ip_four' => $origIpFour,
-                'originating_ip_six' => $origIpSix,
+                'originating_ip' => self::requireOriginatingIp($origIpFour, $origIpSix),
                 'connected_at' => $connectedAt,
                 'disconnected_at' => (string) ((int) $connectedAt + (int) $connectionDuration),
                 'bytes_transferred' => (string) ((int) $bytesReceived + (int) $bytesSent),
@@ -70,5 +68,21 @@ class Connection
         if (200 !== $httpResponse->getCode() || 'OK' !== $httpResponse->getBody()) {
             throw new ConnectionException('unable to disconnect');
         }
+    }
+
+    /**
+     * Make sure that we have either an IPv4 or an IPv6 originating IP address.
+     */
+    private static function requireOriginatingIp(?string $ipFour, ?string $ipSix): string
+    {
+        if (null !== $ipFour) {
+            return $ipFour;
+        }
+
+        if (null !== $ipSix) {
+            return $ipSix;
+        }
+
+        throw new ConnectionException('neither IPv4 nor IPv6 originating IP is available');
     }
 }
