@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.2.9 (...)
+## 2.2.9 (2021-08-02)
 - also provide "originating" client IP to the server API for logging
 
 ## 2.2.8 (2021-03-15)
