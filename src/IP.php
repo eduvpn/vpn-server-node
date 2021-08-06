@@ -173,7 +173,21 @@ class IP
             throw new IPException('network not big enough');
         }
 
-        $hexIp = bin2hex(inet_pton($this->ipAddress));
+        if (6 === $this->ipFamily) {
+            // we make math much easier for us like this!
+            if (0 !== $this->getPrefix() % 4) {
+                throw new IPException('network prefix length must be divisible by 4');
+            }
+
+            // just strip the last nibbles
+            $hexAddress = bin2hex(inet_pton($this->getAddress()));
+            $clearPrefixLength = (int) (32 - ($this->getPrefix() / 4));
+            $hexAddress = substr($hexAddress, 0, -$clearPrefixLength).str_repeat('0', $clearPrefixLength);
+
+            return inet_ntop(hex2bin(substr($hexAddress, 0, -1).'1'));
+        }
+
+        $hexIp = bin2hex(inet_pton($this->getNetwork()));
         $lastDigit = hexdec(substr($hexIp, -1));
         $hexIp = substr_replace($hexIp, $lastDigit + 1, -1);
 

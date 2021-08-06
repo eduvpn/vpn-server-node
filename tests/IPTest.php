@@ -158,6 +158,15 @@ class IPTest extends TestCase
 
     public function testGetFirstHost()
     {
+        $i = new IP('192.168.1.5/24');
+        $this->assertSame('192.168.1.1', $i->getFirstHost());
+
+        $j = new IP('fd42::5/112');
+        $this->assertSame('fd42::1', $j->getFirstHost());
+    }
+
+    public function testGetSplitFirstHost()
+    {
         $ip = new IP('192.168.1.0/24');
         $splitRange = $ip->split(4);
         $this->assertSame(4, \count($splitRange));
@@ -171,7 +180,7 @@ class IPTest extends TestCase
         $this->assertSame('192.168.1.193', $splitRange[3]->getFirstHost());
     }
 
-    public function testGetFirstHost6()
+    public function testGetSplitFirstHost6()
     {
         $ip = new IP('1111:2222:3333:4444::/64');
         $splitRange = $ip->split(4);
