@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.2.10 (...)
+- make sure the IPv6 pool always starts at `::1000` which was the default on
+  OpenVPN 2.4, but changed to `::2` in OpenVPN 2.5 for `/112` prefixes
+  
 ## 2.2.9 (2021-08-02)
 - also provide "originating" client IP to the server API for logging
 

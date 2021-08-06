@@ -38,7 +38,7 @@ class IP
         }
 
         // validate the IP address
-        if (false === filter_var($ipAddress, FILTER_VALIDATE_IP)) {
+        if (false === filter_var($ipAddress, \FILTER_VALIDATE_IP)) {
             throw new IPException('invalid IP address');
         }
 
@@ -178,6 +178,22 @@ class IP
         $hexIp = substr_replace($hexIp, $lastDigit + 1, -1);
 
         return inet_ntop(hex2bin($hexIp));
+    }
+
+    /**
+     * Quick hack to determine the pool start ::1000 of the prefix of this
+     * IPv6 object.
+     *
+     * @return string
+     */
+    public function getPoolStart()
+    {
+        if (6 !== $this->getFamily()) {
+            throw new IPException('method only for IPv6');
+        }
+        $hexIp = bin2hex(inet_pton($this->ipAddress));
+
+        return inet_ntop(hex2bin(substr($hexIp, 0, -4).'1000'));
     }
 
     /**

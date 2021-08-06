@@ -193,7 +193,14 @@ class OpenVpn
             sprintf('client-connect %s/client-connect', self::LIBEXEC_DIR),
             sprintf('client-disconnect %s/client-disconnect', self::LIBEXEC_DIR),
             sprintf('server %s %s', $rangeIp->getNetwork(), $rangeIp->getNetmask()),
-            sprintf('server-ipv6 %s', $range6Ip->getAddressPrefix()),
+            //sprintf('server-ipv6 %s', $range6Ip->getAddressPrefix()),
+            // we no longer use "server-ipv6" because this results in the pool
+            // to start at ::1000 in OpenVPN 2.4 servers and at ::2 in OpenVPN
+            // 2.5 servers for /112 prefixes. We force it here to always be
+            // ::1000 no matter the version of the OpenVPN server
+            sprintf('ifconfig-ipv6 %s/%d %s', $range6Ip->getFirstHost(), $range6Ip->getPrefix(), $range6Ip->getFirstHost()),
+            sprintf('ifconfig-ipv6-pool %s/%d', $range6Ip->getPoolStart(), $range6Ip->getPrefix()),
+
             // OpenVPN's pool management does NOT include the last usable IP in
             // the range in the pool, and obviously not the first one as that
             // will be used by OpenVPN itself. So, if you have the range
@@ -274,10 +281,10 @@ class OpenVpn
         $serverConfig = array_merge($serverConfig, self::getUp());
 
         // add Certificates / keys
-        $serverConfig[] = '<ca>'.PHP_EOL.$certData['ca'].PHP_EOL.'</ca>';
-        $serverConfig[] = '<cert>'.PHP_EOL.$certData['certificate'].PHP_EOL.'</cert>';
-        $serverConfig[] = '<key>'.PHP_EOL.$certData['private_key'].PHP_EOL.'</key>';
-        $serverConfig[] = '<tls-crypt>'.PHP_EOL.$certData['tls_crypt'].PHP_EOL.'</tls-crypt>';
+        $serverConfig[] = '<ca>'.\PHP_EOL.$certData['ca'].\PHP_EOL.'</ca>';
+        $serverConfig[] = '<cert>'.\PHP_EOL.$certData['certificate'].\PHP_EOL.'</cert>';
+        $serverConfig[] = '<key>'.\PHP_EOL.$certData['private_key'].\PHP_EOL.'</key>';
+        $serverConfig[] = '<tls-crypt>'.\PHP_EOL.$certData['tls_crypt'].\PHP_EOL.'</tls-crypt>';
 
         $serverConfig = array_merge(
             [
@@ -294,7 +301,7 @@ class OpenVpn
 
         $configFile = sprintf('%s/%s', $this->vpnConfigDir, $processConfig['configName']);
 
-        FileIO::writeFile($configFile, implode(PHP_EOL, $serverConfig), 0600);
+        FileIO::writeFile($configFile, implode(\PHP_EOL, $serverConfig), 0600);
     }
 
     /**
