@@ -1,11 +1,15 @@
 # Changelog
 
 ## 2.2.10 (...)
-- make sure the IPv6 pool always starts at `::1000` which was the default on
-  OpenVPN 2.4, but changed to `::2` in OpenVPN 2.5 for `/112` prefixes
+- make sure the IPv6 client pool always starts at `::1000` which was the 
+  default on OpenVPN 2.4, but 
+  [changed](https://sourceforge.net/p/openvpn/mailman/openvpn-devel/thread/cc7faf4a-5c6e-fe03-01c3-8446faddf4a9%40tuxed.net/#msg37331648) 
+  to `::2` in OpenVPN 2.5 for `/112` prefixes
 - fix bug in `IP::getFirstHost()` that would not start from "network" address, 
-  but from IP address
-
+  but from IP address specified in `range` and `range6`, breaking `@GW4@` and 
+  `@GW6@` substitutions for local DNS and also calculating the client IP pool 
+  start address
+  
 ## 2.2.9 (2021-08-02)
 - also provide "originating" client IP to the server API for logging
 
