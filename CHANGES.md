@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.2.10 (...)
+## 2.2.10 (2021-08-09)
 - make sure the IPv6 client pool always starts at `::1000` which was the 
   default on OpenVPN 2.4, but 
   [changed](https://sourceforge.net/p/openvpn/mailman/openvpn-devel/thread/cc7faf4a-5c6e-fe03-01c3-8446faddf4a9%40tuxed.net/#msg37331648) 
