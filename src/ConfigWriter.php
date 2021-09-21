@@ -31,7 +31,12 @@ class ConfigWriter
 
     public function write(): void
     {
-        $httpResponse = $this->httpClient->post($this->apiUrl.'/server_config', []);
+        $httpResponse = $this->httpClient->post(
+            $this->apiUrl.'/server_config',
+            [
+                'aes_hw' => sodium_crypto_aead_aes256gcm_is_available() ? 'on' : 'off',
+            ]
+        );
         if (200 !== $httpCode = $httpResponse->getCode()) {
             throw new RuntimeException(sprintf('unable to retrieve server_config [HTTP=%d:%s]', $httpCode, $httpResponse->getBody()));
         }
