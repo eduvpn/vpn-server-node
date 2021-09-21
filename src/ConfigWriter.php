@@ -34,7 +34,7 @@ class ConfigWriter
         $httpResponse = $this->httpClient->post(
             $this->apiUrl.'/server_config',
             [
-                'aes_hw' => sodium_crypto_aead_aes256gcm_is_available() ? 'on' : 'off',
+                'cpu_has_aes' => sodium_crypto_aead_aes256gcm_is_available() ? 'on' : 'off',
             ]
         );
         if (200 !== $httpCode = $httpResponse->getCode()) {
