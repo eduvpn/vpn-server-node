@@ -39,5 +39,6 @@ try {
 } catch (Exception $e) {
     $log = new Syslog('client-connect');
     $log->error($e->getMessage());
+
     exit(1);
 }

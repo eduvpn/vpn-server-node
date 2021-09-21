@@ -27,7 +27,7 @@ class CurlHttpClient implements HttpClientInterface
     }
 
     /**
-     * @param array<string,string|null> $postData
+     * @param array<string,null|string> $postData
      */
     public function post(string $requestUrl, array $postData): HttpClientResponse
     {
@@ -36,15 +36,15 @@ class CurlHttpClient implements HttpClientInterface
         }
 
         $curlOptions = [
-            \CURLOPT_URL => $requestUrl,
-            \CURLOPT_HTTPHEADER => $this->requestHeaders,
-            \CURLOPT_POSTFIELDS => http_build_query($postData),
-            \CURLOPT_HEADER => false,
-            \CURLOPT_RETURNTRANSFER => true,
-            \CURLOPT_FOLLOWLOCATION => false,
-            \CURLOPT_CONNECTTIMEOUT => 10,
-            \CURLOPT_TIMEOUT => 15,
-            \CURLOPT_PROTOCOLS => \CURLPROTO_HTTP | \CURLPROTO_HTTPS,
+            CURLOPT_URL => $requestUrl,
+            CURLOPT_HTTPHEADER => $this->requestHeaders,
+            CURLOPT_POSTFIELDS => http_build_query($postData),
+            CURLOPT_HEADER => false,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_FOLLOWLOCATION => false,
+            CURLOPT_CONNECTTIMEOUT => 10,
+            CURLOPT_TIMEOUT => 15,
+            CURLOPT_PROTOCOLS => CURLPROTO_HTTP | CURLPROTO_HTTPS,
         ];
 
         if (false === curl_setopt_array($curlChannel, $curlOptions)) {
@@ -56,7 +56,7 @@ class CurlHttpClient implements HttpClientInterface
             throw new HttpClientException(sprintf('failure performing the HTTP request: "%s"', curl_error($curlChannel)));
         }
 
-        $responseCode = (int) curl_getinfo($curlChannel, \CURLINFO_HTTP_CODE);
+        $responseCode = (int) curl_getinfo($curlChannel, CURLINFO_HTTP_CODE);
         curl_close($curlChannel);
 
         return new HttpClientResponse(

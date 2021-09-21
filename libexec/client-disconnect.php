@@ -41,5 +41,6 @@ try {
 } catch (Exception $e) {
     $log = new Syslog('client-disconnect');
     $log->error($e->getMessage());
+
     exit(1);
 }

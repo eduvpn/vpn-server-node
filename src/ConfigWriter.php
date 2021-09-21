@@ -39,7 +39,7 @@ class ConfigWriter
             [$configName, $configData] = explode(':', $configNameData);
 
             $configFile = self::getConfigFile($configName);
-            if (false === file_put_contents($configFile, sodium_base642bin($configData, \SODIUM_BASE64_VARIANT_ORIGINAL))) {
+            if (false === file_put_contents($configFile, sodium_base642bin($configData, SODIUM_BASE64_VARIANT_ORIGINAL))) {
                 throw new RuntimeException('unable to write to "'.$configFile.'"');
             }
         }

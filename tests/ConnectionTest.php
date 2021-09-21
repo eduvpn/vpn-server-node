@@ -15,12 +15,16 @@ use LC\Node\Connection;
 use LC\Node\Exception\ConnectionException;
 use PHPUnit\Framework\TestCase;
 
-class ConnectionTest extends TestCase
+/**
+ * @internal
+ * @coversNothing
+ */
+final class ConnectionTest extends TestCase
 {
     public function testConnect(): void
     {
         $connection = new Connection(new TestHttpClient(), 'http://localhost/vpn-user-portal/node-api.php');
-        $this->assertNull(
+        static::assertNull(
             $connection->connect(
                 'profile_id',
                 'profile_id',
@@ -71,7 +75,7 @@ class ConnectionTest extends TestCase
     public function testDisconnect(): void
     {
         $connection = new Connection(new TestHttpClient(), 'http://localhost/vpn-user-portal/node-api.php');
-        $this->assertNull(
+        static::assertNull(
             $connection->disconnect(
                 'profile_id',
                 'common_name',

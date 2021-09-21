@@ -17,7 +17,7 @@ use LC\Node\HttpClient\HttpClientResponse;
 class TestHttpClient implements HttpClientInterface
 {
     /**
-     * @param array<string,string|null> $postData
+     * @param array<string,null|string> $postData
      */
     public function post(string $requestUrl, array $postData): HttpClientResponse
     {
@@ -28,14 +28,17 @@ class TestHttpClient implements HttpClientInterface
                 }
 
                 return new HttpClientResponse(200, 'ERR');
+
             case 'http://localhost/vpn-user-portal/node-api.php/disconnect':
                 if ('common_name' === $postData['common_name']) {
                     return new HttpClientResponse(200, 'OK');
                 }
 
                 return new HttpClientResponse(200, 'ERR');
+
             case 'http://localhost/vpn-user-portal/node-api.php/server_config':
                 return new HttpClientResponse(200, 'default-0.conf:ZGVmYXVsdC0w'."\r\ndefault-1.conf:ZGVmYXVsdC0x");
+
             default:
                 return new HttpClientResponse(404, 'Not Found');
         }

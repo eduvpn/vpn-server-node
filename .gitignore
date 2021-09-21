@@ -1,6 +1,6 @@
 /vendor
 /data
-/openvpn-config
 /config/*.php
 /config/*.key
 /.phpunit.cache
+/.php-cs-fixer.cache

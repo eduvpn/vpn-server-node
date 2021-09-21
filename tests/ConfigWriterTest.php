@@ -14,7 +14,11 @@ namespace LC\Node\Tests;
 use LC\Node\ConfigWriter;
 use PHPUnit\Framework\TestCase;
 
-class ConfigWriterTest extends TestCase
+/**
+ * @internal
+ * @coversNothing
+ */
+final class ConfigWriterTest extends TestCase
 {
     public function testWrite(): void
     {
@@ -22,7 +26,7 @@ class ConfigWriterTest extends TestCase
         mkdir($tmpDir, 0700, true);
         $configWriter = new ConfigWriter($tmpDir, $tmpDir, new TestHttpClient(), 'http://localhost/vpn-user-portal/node-api.php');
         $configWriter->write();
-        $this->assertSame('default-0', file_get_contents($tmpDir.'/default-0.conf'));
-        $this->assertSame('default-1', file_get_contents($tmpDir.'/default-1.conf'));
+        static::assertSame('default-0', file_get_contents($tmpDir.'/default-0.conf'));
+        static::assertSame('default-1', file_get_contents($tmpDir.'/default-1.conf'));
     }
 }
