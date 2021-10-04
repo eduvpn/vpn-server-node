@@ -52,9 +52,10 @@ class ConfigWriter
 
     private function getConfigFile(string $configName): string
     {
-        if (0 === strpos($configName, 'wg')) {
-            // XXX can't do this, need a "type"!
-            return $this->wgConfigDir.'/'.$configName;
+        if ('wg.conf' === $configName) {
+            // XXX we should probably make this wgX configurable, we allow to
+            // configure it in vpn-daemon...
+            return $this->wgConfigDir.'/wg0.conf';
         }
 
         return $this->openVpnConfigDir.'/'.$configName;
