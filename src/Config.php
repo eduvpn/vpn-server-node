@@ -38,8 +38,8 @@ class Config
 
     public static function fromFile(string $configFile): self
     {
-        if (false === file_exists($configFile)) {
-            throw new ConfigException(sprintf('unable to read "%s"', $configFile));
+        if (!Utils::fileExists($configFile)) {
+            throw new ConfigException(sprintf('file "%s" does not exist', $configFile));
         }
 
         return new self(require $configFile);

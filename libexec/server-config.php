@@ -15,6 +15,7 @@ $baseDir = dirname(__DIR__);
 use LC\Node\Config;
 use LC\Node\ConfigWriter;
 use LC\Node\HttpClient\CurlHttpClient;
+use LC\Node\Utils;
 
 try {
     $openVpnConfigDir = sprintf('%s/openvpn-config', $baseDir);
@@ -22,9 +23,7 @@ try {
     $configDir = sprintf('%s/config', $baseDir);
     $config = Config::fromFile($configDir.'/config.php');
     $apiSecretFile = $configDir.'/node.key';
-    if (false === $apiSecret = file_get_contents($apiSecretFile)) {
-        throw new RuntimeException('unable to read "'.$apiSecretFile.'"');
-    }
+    $apiSecret = Utils::readFile($apiSecretFile);
     $configWriter = new ConfigWriter($openVpnConfigDir, $wgConfigDir, new CurlHttpClient($apiSecret), $config->apiUrl());
     $configWriter->write();
 } catch (Exception $e) {

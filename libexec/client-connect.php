@@ -22,9 +22,7 @@ try {
     $configFile = $baseDir.'/config/config.php';
     $config = Config::fromFile($configFile);
     $apiSecretFile = $baseDir.'/config/node.key';
-    if (false === $apiSecret = file_get_contents($apiSecretFile)) {
-        throw new RuntimeException('unable to read file "'.$apiSecretFile.'"');
-    }
+    $apiSecret = Utils::readFile($apiSecretFile);
     $connection = new Connection(new CurlHttpClient($apiSecret), $config->apiUrl());
     $connection->connect(
         Utils::reqEnvString('PROFILE_ID'),
