@@ -44,9 +44,9 @@ class ConfigWriter
             [$configName, $configData] = explode(':', $configNameData);
 
             $configFile = self::getConfigFile($configName);
-            if (false === file_put_contents($configFile, sodium_base642bin($configData, SODIUM_BASE64_VARIANT_ORIGINAL))) {
-                throw new RuntimeException('unable to write to "'.$configFile.'"');
-            }
+            $configData = self::getConfigData($configName, $configData);
+
+            Utils::writeFile($configFile, $configData);
         }
     }
 
@@ -59,5 +59,15 @@ class ConfigWriter
         }
 
         return $this->openVpnConfigDir.'/'.$configName;
+    }
+
+    private function getConfigData(string $configName, string $configData): string
+    {
+        $decodedFile = sodium_base642bin($configData, SODIUM_BASE64_VARIANT_ORIGINAL);
+        if ('wg.conf' === $configName) {
+            $decodedFile = str_replace('{{PRIVATE_KEY}}', Utils::readFile($this->wgConfigDir.'/wireguard.key'), $decodedFile);
+        }
+
+        return $decodedFile;
     }
 }
