@@ -44,7 +44,7 @@ class ConfigWriter
             [$configName, $configData] = explode(':', $configNameData);
 
             $configFile = self::getConfigFile($configName);
-            $configData = self::getConfigData($configName, $configData);
+            $configData = sodium_base642bin($configData, SODIUM_BASE64_VARIANT_ORIGINAL);
 
             Utils::writeFile($configFile, $configData);
         }
@@ -53,21 +53,9 @@ class ConfigWriter
     private function getConfigFile(string $configName): string
     {
         if ('wg.conf' === $configName) {
-            // XXX we should probably make this wgX configurable, we allow to
-            // configure it in vpn-daemon...
             return $this->wgConfigDir.'/wg0.conf';
         }
 
         return $this->openVpnConfigDir.'/'.$configName;
-    }
-
-    private function getConfigData(string $configName, string $configData): string
-    {
-        $decodedFile = sodium_base642bin($configData, SODIUM_BASE64_VARIANT_ORIGINAL);
-        if ('wg.conf' === $configName) {
-            $decodedFile = str_replace('{{PRIVATE_KEY}}', Utils::readFile($this->wgConfigDir.'/wireguard.key'), $decodedFile);
-        }
-
-        return $decodedFile;
     }
 }
