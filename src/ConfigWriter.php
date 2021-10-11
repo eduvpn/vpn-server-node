@@ -34,6 +34,9 @@ class ConfigWriter
         $httpResponse = $this->httpClient->post(
             $this->apiUrl.'/server_config',
             [
+                // XXX take this from config file
+                'node_number' => 0,
+                // XXX allow overriding this flag in config?!
                 'cpu_has_aes' => sodium_crypto_aead_aes256gcm_is_available() ? 'yes' : 'no',
             ]
         );
