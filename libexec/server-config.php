@@ -24,7 +24,7 @@ try {
     $config = Config::fromFile($configDir.'/config.php');
     $apiSecretFile = $configDir.'/node.key';
     $apiSecret = Utils::readFile($apiSecretFile);
-    $configWriter = new ConfigWriter($openVpnConfigDir, $wgConfigDir, new CurlHttpClient($apiSecret), $config->apiUrl());
+    $configWriter = new ConfigWriter($openVpnConfigDir, $wgConfigDir, new CurlHttpClient($apiSecret), $config->apiUrl(), $config->nodeNumber());
     $configWriter->write();
 } catch (Exception $e) {
     echo 'ERROR: '.$e->getMessage().\PHP_EOL;

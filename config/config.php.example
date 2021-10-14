@@ -2,4 +2,8 @@
 
 return [
     'apiUrl' => 'http://localhost/vpn-user-portal/node-api.php',
+
+    // specify the number of this node
+    // DEFAULT: 0
+    //'nodeNumber' => 0,
 ];

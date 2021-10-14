@@ -20,13 +20,15 @@ class ConfigWriter
     private string $wgConfigDir;
     private HttpClientInterface $httpClient;
     private string $apiUrl;
+    private int $nodeNumber;
 
-    public function __construct(string $openVpnConfigDir, string $wgConfigDir, HttpClientInterface $httpClient, string $apiUrl)
+    public function __construct(string $openVpnConfigDir, string $wgConfigDir, HttpClientInterface $httpClient, string $apiUrl, int $nodeNumber)
     {
         $this->openVpnConfigDir = $openVpnConfigDir;
         $this->wgConfigDir = $wgConfigDir;
         $this->httpClient = $httpClient;
         $this->apiUrl = $apiUrl;
+        $this->nodeNumber = $nodeNumber;
     }
 
     public function write(): void
@@ -34,8 +36,7 @@ class ConfigWriter
         $httpResponse = $this->httpClient->post(
             $this->apiUrl.'/server_config',
             [
-                // XXX take this from config file
-                'node_number' => 0,
+                'node_number' => (string) $this->nodeNumber,
                 // XXX allow overriding this flag in config?!
                 'cpu_has_aes' => sodium_crypto_aead_aes256gcm_is_available() ? 'yes' : 'no',
             ]

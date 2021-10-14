@@ -36,6 +36,19 @@ class Config
         return $this->configData['apiUrl'];
     }
 
+    public function nodeNumber(): int
+    {
+        if (!\array_key_exists('nodeNumber', $this->configData)) {
+            return 0;
+        }
+
+        if (!\is_int($this->configData['nodeNumber'])) {
+            throw new ConfigException('key "nodeNumber" not of type int');
+        }
+
+        return $this->configData['nodeNumber'];
+    }
+
     public static function fromFile(string $configFile): self
     {
         if (!Utils::fileExists($configFile)) {
