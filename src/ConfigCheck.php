@@ -84,23 +84,24 @@ class ConfigCheck
             // whether the pushed range does not contain the hostName...
             if (!$profileConfig->defaultGateway()) {
                 // collect IPv4 addresses assigned to hostName
-                $ipFourList = gethostbynamel($profileConfig->hostName());
-                if (\is_array($ipFourList)) {
-                    $overlapCheck = [];
-                    // we now have the list of IPv4 addresses associated with hostName...
-                    foreach ($profileConfig->routes() as $pushedRange) {
-                        if (false === strpos($pushedRange, ':')) {
-                            // IPv4
-                            $overlapCheck[] = $pushedRange;
-                        }
+                if (false === $ipFourList = gethostbynamel($profileConfig->hostName())) {
+                    echo sprintf('WARNING: unable to resolve "%s" to IP', $profileConfig->hostName()).\PHP_EOL;
+                    break;
+                }
+                $overlapCheck = [];
+                // we now have the list of IPv4 addresses associated with hostName...
+                foreach ($profileConfig->routes() as $pushedRange) {
+                    if (false === strpos($pushedRange, ':')) {
+                        // IPv4
+                        $overlapCheck[] = $pushedRange;
                     }
-                    foreach ($ipFourList as $ipFour) {
-                        $overlapCheck[] = $ipFour.'/32';
-                    }
+                }
+                foreach ($ipFourList as $ipFour) {
+                    $overlapCheck[] = $ipFour.'/32';
+                }
 
-                    if (0 !== \count(self::checkOverlap($overlapCheck))) {
-                        echo sprintf('WARNING: IPv4 address(es) associated with hostName [%s] will *also* be pushed to VPN clients using "routes". This MAY result in connectivity problems!', implode(',', $ipFourList)).\PHP_EOL;
-                    }
+                if (0 !== \count(self::checkOverlap($overlapCheck))) {
+                    echo sprintf('WARNING: IPv4 address(es) associated with hostName [%s] will *also* be pushed to VPN clients using "routes". This MAY result in connectivity problems!', implode(',', $ipFourList)).\PHP_EOL;
                 }
             }
         }

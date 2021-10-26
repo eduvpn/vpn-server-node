@@ -326,15 +326,16 @@ class OpenVpn
             return [];
         }
 
+        $routeConfig = [];
         // Always set a route to the remote host through the client's default
         // gateway to avoid problems when the "split routes" pushed also
         // contain a range with the public IP address of the VPN server.
         // When connecting to a VPN server _over_ IPv6, OpenVPN takes care of
         // this all by itself by setting a /128 through the client's original
         // IPv6 gateway
-        $routeConfig = [
-            'push "route remote_host 255.255.255.255 net_gateway"',
-        ];
+        if (self::checkHostnameOverlapsRoutes($routeList, $profileConfig->hostName())) {
+            $routeConfig[] = 'push "route remote_host 255.255.255.255 net_gateway"';
+        }
 
         // there may be some routes specified, push those, and not the default
         foreach ($routeList as $route) {
@@ -472,5 +473,35 @@ class OpenVpn
         return [
             'up '.self::UP_PATH,
         ];
+    }
+
+    /**
+     * @param array<string> $pushedRanges
+     * @param string        $hostName
+     *
+     * @return bool
+     */
+    private static function checkHostnameOverlapsRoutes(array $pushedRanges, $hostName)
+    {
+        if (false === $ipFourList = gethostbynamel($hostName)) {
+            // unable to resolve "hostName", give up, assume no overlap
+            return false;
+        }
+
+        $overlapCheck = [];
+        foreach ($pushedRanges as $pushedRange) {
+            // we only care about IPv4
+            if (false === strpos($pushedRange, ':')) {
+                $overlapCheck[] = $pushedRange;
+            }
+        }
+
+        // add the IPv4 addresses assigned to "hostName" also to the list to
+        // check
+        foreach ($ipFourList as $ipFour) {
+            $overlapCheck[] = $ipFour.'/32';
+        }
+
+        return 0 !== \count(ConfigCheck::checkOverlap($overlapCheck));
     }
 }
