@@ -14,7 +14,7 @@ use PHPUnit\Framework\TestCase;
 
 class ConfigCheckTest extends TestCase
 {
-    public function testcheckOverlap()
+    public function testCheckOverlap()
     {
         // IPv4
         $this->assertEmpty(ConfigCheck::checkOverlap(['192.168.0.0/24', '10.0.0.0/8']));
@@ -64,5 +64,11 @@ class ConfigCheckTest extends TestCase
             ],
             ConfigCheck::checkOverlap(['fd11:1111:1111:1111::/64', 'fd11:1111:1111:1111::/100'])
         );
+    }
+
+    public function testHostOverlap()
+    {
+        $this->assertEmpty(ConfigCheck::checkOverlap(['192.168.2.0/24', '192.168.1.5/32']));
+        $this->assertNotEmpty(ConfigCheck::checkOverlap(['192.168.1.0/24', '192.168.1.5/32']));
     }
 }
