@@ -77,7 +77,31 @@ class ConfigCheck
             // make sure dnsSuffix is not set (anymore)
             $dnsSuffix = $profileConfig->dnsSuffix();
             if (0 !== \count($dnsSuffix)) {
-                echo 'WARNING: "dnsSuffix" is deprecated. Please use "dnsDomain" and "dnsDomainSearch" instead'.PHP_EOL;
+                echo 'WARNING: "dnsSuffix" is deprecated. Please use "dnsDomain" and "dnsDomainSearch" instead'.\PHP_EOL;
+            }
+
+            // figure out the IPv4 addresses belonging to hostName and check
+            // whether the pushed range does not contain the hostName...
+            if (!$profileConfig->defaultGateway()) {
+                // collect IPv4 addresses assigned to hostName
+                $ipFourList = gethostbynamel($profileConfig->hostName());
+                if (\is_array($ipFourList)) {
+                    $overlapCheck = [];
+                    // we now have the list of IPv4 addresses associated with hostName...
+                    foreach ($profileConfig->routes() as $pushedRange) {
+                        if (false === strpos($pushedRange, ':')) {
+                            // IPv4
+                            $overlapCheck[] = $pushedRange;
+                        }
+                    }
+                    foreach ($ipFourList as $ipFour) {
+                        $overlapCheck[] = $ipFour.'/32';
+                    }
+
+                    if (0 !== \count(self::checkOverlap($overlapCheck))) {
+                        echo sprintf('WARNING: IPv4 address(es) associated with hostName [%s] will *also* be pushed to VPN clients using "routes". This MAY result in connectivity problems!', implode(',', $ipFourList)).\PHP_EOL;
+                    }
+                }
             }
         }
 
@@ -85,7 +109,7 @@ class ConfigCheck
         $overlapList = self::checkOverlap($rangeList);
         if (0 !== \count($overlapList)) {
             foreach ($overlapList as $o) {
-                echo sprintf('WARNING: IP range %s overlaps with IP range %s', $o[0], $o[1]).PHP_EOL;
+                echo sprintf('WARNING: IP range %s overlaps with IP range %s', $o[0], $o[1]).\PHP_EOL;
             }
         }
     }
@@ -167,7 +191,7 @@ class ConfigCheck
                 ),
                 32,
                 '0',
-                STR_PAD_LEFT
+                \STR_PAD_LEFT
             );
         }
 
