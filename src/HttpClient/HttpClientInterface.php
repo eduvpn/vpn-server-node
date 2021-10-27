@@ -13,8 +13,5 @@ namespace LC\Node\HttpClient;
 
 interface HttpClientInterface
 {
-    /**
-     * @param array<string,null|string> $postData
-     */
-    public function post(string $requestUrl, array $postData): HttpClientResponse;
+    public function send(HttpClientRequest $httpClientRequest): HttpClientResponse;
 }

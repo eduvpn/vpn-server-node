@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace LC\Node;
 
 use LC\Node\HttpClient\HttpClientInterface;
+use LC\Node\HttpClient\HttpClientRequest;
 use RuntimeException;
 
 class ConfigWriter
@@ -33,18 +34,22 @@ class ConfigWriter
 
     public function write(): void
     {
-        $httpResponse = $this->httpClient->post(
-            $this->apiUrl.'/server_config',
-            [
-                'node_number' => (string) $this->nodeNumber,
-                // XXX allow overriding this flag in config?!
-                'cpu_has_aes' => sodium_crypto_aead_aes256gcm_is_available() ? 'yes' : 'no',
-            ]
+        $httpResponse = $this->httpClient->send(
+            new HttpClientRequest(
+                'POST',
+                $this->apiUrl.'/server_config',
+                [],
+                [
+                    'node_number' => (string) $this->nodeNumber,
+                    // XXX allow overriding this flag in config?!
+                    'cpu_has_aes' => sodium_crypto_aead_aes256gcm_is_available() ? 'yes' : 'no',
+                ]
+            )
         );
-        if (200 !== $httpCode = $httpResponse->getCode()) {
-            throw new RuntimeException(sprintf('unable to retrieve server_config [HTTP=%d:%s]', $httpCode, $httpResponse->getBody()));
+        if (!$httpResponse->isOkay()) {
+            throw new RuntimeException(sprintf('unable to retrieve server_config [HTTP=%d:%s]', $httpResponse->statusCode(), $httpResponse->body()));
         }
-        foreach (explode("\r\n", $httpResponse->getBody()) as $configNameData) {
+        foreach (explode("\r\n", $httpResponse->body()) as $configNameData) {
             [$configName, $configData] = explode(':', $configNameData);
 
             $configFile = self::getConfigFile($configName);

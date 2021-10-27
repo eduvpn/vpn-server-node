@@ -13,6 +13,7 @@ namespace LC\Node;
 
 use LC\Node\Exception\ConnectionException;
 use LC\Node\HttpClient\HttpClientInterface;
+use LC\Node\HttpClient\HttpClientRequest;
 
 class Connection
 {
@@ -32,40 +33,48 @@ class Connection
             throw new ConnectionException('client certificate has OU "'.$certOrgUnit.'", but requires "'.$profileId.'" for this profile');
         }
 
-        $httpResponse = $this->httpClient->post(
-            $this->apiUrl.'/connect',
-            [
-                'profile_id' => $profileId,
-                'common_name' => $commonName,
-                'ip_four' => $ipFour,
-                'ip_six' => $ipSix,
-                'originating_ip' => self::requireOriginatingIp($origIpFour, $origIpSix),
-                'connected_at' => $connectedAt,
-            ]
+        $httpResponse = $this->httpClient->send(
+            new HttpClientRequest(
+                'POST',
+                $this->apiUrl.'/connect',
+                [],
+                [
+                    'profile_id' => $profileId,
+                    'common_name' => $commonName,
+                    'ip_four' => $ipFour,
+                    'ip_six' => $ipSix,
+                    'originating_ip' => self::requireOriginatingIp($origIpFour, $origIpSix),
+                    'connected_at' => $connectedAt,
+                ]
+            )
         );
 
-        if (200 !== $httpResponse->getCode() || 'OK' !== $httpResponse->getBody()) {
+        if (!$httpResponse->isOkay() || 'OK' !== $httpResponse->body()) {
             throw new ConnectionException('unable to connect');
         }
     }
 
     public function disconnect(string $profileId, string $commonName, ?string $origIpFour, ?string $origIpSix, string $ipFour, string $ipSix, string $connectedAt, string $connectionDuration, string $bytesReceived, string $bytesSent): void
     {
-        $httpResponse = $this->httpClient->post(
-            $this->apiUrl.'/disconnect',
-            [
-                'profile_id' => $profileId,
-                'common_name' => $commonName,
-                'ip_four' => $ipFour,
-                'ip_six' => $ipSix,
-                'originating_ip' => self::requireOriginatingIp($origIpFour, $origIpSix),
-                'connected_at' => $connectedAt,
-                'disconnected_at' => (string) ((int) $connectedAt + (int) $connectionDuration),
-                'bytes_transferred' => (string) ((int) $bytesReceived + (int) $bytesSent),
-            ]
+        $httpResponse = $this->httpClient->send(
+            new HttpClientRequest(
+                'POST',
+                $this->apiUrl.'/disconnect',
+                [],
+                [
+                    'profile_id' => $profileId,
+                    'common_name' => $commonName,
+                    'ip_four' => $ipFour,
+                    'ip_six' => $ipSix,
+                    'originating_ip' => self::requireOriginatingIp($origIpFour, $origIpSix),
+                    'connected_at' => $connectedAt,
+                    'disconnected_at' => (string) ((int) $connectedAt + (int) $connectionDuration),
+                    'bytes_transferred' => (string) ((int) $bytesReceived + (int) $bytesSent),
+                ]
+            )
         );
 
-        if (200 !== $httpResponse->getCode() || 'OK' !== $httpResponse->getBody()) {
+        if (!$httpResponse->isOkay() || 'OK' !== $httpResponse->body()) {
             throw new ConnectionException('unable to disconnect');
         }
     }

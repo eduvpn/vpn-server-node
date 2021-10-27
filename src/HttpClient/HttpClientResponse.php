@@ -13,23 +13,64 @@ namespace LC\Node\HttpClient;
 
 class HttpClientResponse
 {
-    private int $responseCode;
+    /** @var int */
+    private $statusCode;
 
-    private string $responseBody;
+    /** @var string */
+    private $headerList;
 
-    public function __construct(int $responseCode, string $responseBody)
+    /** @var string */
+    private $responseBody;
+
+    public function __construct(int $statusCode, string $headerList, string $responseBody)
     {
-        $this->responseCode = $responseCode;
+        $this->statusCode = $statusCode;
+        $this->headerList = $headerList;
         $this->responseBody = $responseBody;
     }
 
-    public function getCode(): int
+    public function __toString(): string
     {
-        return $this->responseCode;
+        return $this->statusCode().' '.$this->body().' ['.$this->headerList().']';
     }
 
-    public function getBody(): string
+    public function statusCode(): int
+    {
+        return $this->statusCode;
+    }
+
+    /**
+     * We loop over all available headers and return the value of the first
+     * matching header key. If multiple headers with the same name are present
+     * the next ones are ignored!
+     */
+    public function header(string $headerKey): ?string
+    {
+        foreach (explode("\r\n", $this->headerList) as $headerLine) {
+            if (!str_contains($headerLine, ':')) {
+                continue;
+            }
+            [$k, $v] = explode(':', $headerLine, 2);
+            if (strtolower(trim($headerKey)) === strtolower(trim($k))) {
+                return trim($v);
+            }
+        }
+
+        return null;
+    }
+
+    public function headerList(): string
+    {
+        return $this->headerList;
+    }
+
+    public function body(): string
     {
         return $this->responseBody;
+    }
+
+    public function isOkay(): bool
+    {
+        return 200 <= $this->statusCode && 300 > $this->statusCode;
     }
 }

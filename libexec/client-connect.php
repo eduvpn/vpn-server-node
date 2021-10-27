@@ -23,7 +23,9 @@ try {
     $config = Config::fromFile($configFile);
     $apiSecretFile = $baseDir.'/config/node.key';
     $apiSecret = Utils::readFile($apiSecretFile);
-    $connection = new Connection(new CurlHttpClient($apiSecret), $config->apiUrl());
+    $httpClient = new CurlHttpClient();
+    $httpClient->setRequestHeader('Authorization', 'Bearer '.$apiSecret);
+    $connection = new Connection($httpClient, $config->apiUrl());
     $connection->connect(
         Utils::reqEnvString('PROFILE_ID'),
         Utils::reqEnvString('X509_0_OU'),

@@ -12,35 +12,33 @@ declare(strict_types=1);
 namespace LC\Node\Tests;
 
 use LC\Node\HttpClient\HttpClientInterface;
+use LC\Node\HttpClient\HttpClientRequest;
 use LC\Node\HttpClient\HttpClientResponse;
 
 class TestHttpClient implements HttpClientInterface
 {
-    /**
-     * @param array<string,null|string> $postData
-     */
-    public function post(string $requestUrl, array $postData): HttpClientResponse
+    public function send(HttpClientRequest $httpClientRequest): HttpClientResponse
     {
-        switch ($requestUrl) {
+        switch ($httpClientRequest->requestUrl()) {
             case 'http://localhost/vpn-user-portal/node-api.php/connect':
-                if ('common_name' === $postData['common_name']) {
-                    return new HttpClientResponse(200, 'OK');
+                if ('profile_id=profile_id&common_name=common_name&ip_four=ip_four&ip_six=ip_six&originating_ip=orig_ip_four&connected_at=connected_at' === $httpClientRequest->postParameters()) {
+                    return new HttpClientResponse(200, '', 'OK');
                 }
 
-                return new HttpClientResponse(200, 'ERR');
+                return new HttpClientResponse(200, '', 'ERR');
 
             case 'http://localhost/vpn-user-portal/node-api.php/disconnect':
-                if ('common_name' === $postData['common_name']) {
-                    return new HttpClientResponse(200, 'OK');
+                if ('profile_id=profile_id&common_name=common_name&ip_four=ip_four&ip_six=ip_six&originating_ip=orig_ip_four&connected_at=connected_at&disconnected_at=0&bytes_transferred=0' === $httpClientRequest->postParameters()) {
+                    return new HttpClientResponse(200, '', 'OK');
                 }
 
-                return new HttpClientResponse(200, 'ERR');
+                return new HttpClientResponse(200, '', 'ERR');
 
             case 'http://localhost/vpn-user-portal/node-api.php/server_config':
-                return new HttpClientResponse(200, 'default-0.conf:ZGVmYXVsdC0w'."\r\ndefault-1.conf:ZGVmYXVsdC0x");
+                return new HttpClientResponse(200, '', 'default-0.conf:ZGVmYXVsdC0w'."\r\ndefault-1.conf:ZGVmYXVsdC0x");
 
             default:
-                return new HttpClientResponse(404, 'Not Found');
+                return new HttpClientResponse(404, '', 'Not Found');
         }
     }
 }
