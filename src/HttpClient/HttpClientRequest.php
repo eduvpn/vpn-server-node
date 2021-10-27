@@ -79,9 +79,17 @@ class HttpClientRequest
         return self::buildQuery($this->postParameters);
     }
 
+    /**
+     * @return array<string>
+     */
     public function requestHeaders(): array
     {
-        return $this->requestHeaders;
+        $headerList = [];
+        foreach ($this->requestHeaders as $k => $v) {
+            $headerList[] = $k.': '.$v;
+        }
+
+        return $headerList;
     }
 
     /**

@@ -17,12 +17,12 @@ use RuntimeException;
 
 class CurlHttpClient implements HttpClientInterface
 {
-    /** @var array<string,string> */
+    /** @var array<string> */
     private array $requestHeaderList = [];
 
     public function setRequestHeader(string $headerName, string $headerValue): void
     {
-        $this->requestHeaderList[$headerName] = $headerValue;
+        $this->requestHeaderList[] = $headerName.': '.$headerValue;
     }
 
     public function send(HttpClientRequest $httpClientRequest): HttpClientResponse
