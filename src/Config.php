@@ -26,7 +26,7 @@ class Config
     public function apiUrl(): string
     {
         if (!\array_key_exists('apiUrl', $this->configData)) {
-            throw new ConfigException('key "apiUrl" not available');
+            return 'http://localhost/vpn-user-portal/node-api.php';
         }
 
         if (!\is_string($this->configData['apiUrl'])) {
@@ -47,6 +47,22 @@ class Config
         }
 
         return $this->configData['nodeNumber'];
+    }
+
+    /**
+     * @return array<string>
+     */
+    public function profileList(): array
+    {
+        if (!\array_key_exists('profileList', $this->configData)) {
+            return [];
+        }
+
+        if ($this->configData['profileList'] !== array_filter($this->configData['profileList'], 'is_string')) {
+            throw new ConfigException('key "profileList" not of type array<string>');
+        }
+
+        return $this->configData['profileList'];
     }
 
     public static function fromFile(string $configFile): self

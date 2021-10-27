@@ -26,7 +26,7 @@ try {
     $apiSecret = Utils::readFile($apiSecretFile);
     $httpClient = new CurlHttpClient();
     $httpClient->setRequestHeader('Authorization', 'Bearer '.$apiSecret);
-    $configWriter = new ConfigWriter($openVpnConfigDir, $wgConfigDir, $httpClient, $config->apiUrl(), $config->nodeNumber());
+    $configWriter = new ConfigWriter($openVpnConfigDir, $wgConfigDir, $httpClient, $config);
     $configWriter->write();
 } catch (Exception $e) {
     echo 'ERROR: '.$e->getMessage().\PHP_EOL;

@@ -20,16 +20,14 @@ class ConfigWriter
     private string $openVpnConfigDir;
     private string $wgConfigDir;
     private HttpClientInterface $httpClient;
-    private string $apiUrl;
-    private int $nodeNumber;
+    private Config $config;
 
-    public function __construct(string $openVpnConfigDir, string $wgConfigDir, HttpClientInterface $httpClient, string $apiUrl, int $nodeNumber)
+    public function __construct(string $openVpnConfigDir, string $wgConfigDir, HttpClientInterface $httpClient, Config $config)
     {
         $this->openVpnConfigDir = $openVpnConfigDir;
         $this->wgConfigDir = $wgConfigDir;
         $this->httpClient = $httpClient;
-        $this->apiUrl = $apiUrl;
-        $this->nodeNumber = $nodeNumber;
+        $this->config = $config;
     }
 
     public function write(): void
@@ -37,18 +35,20 @@ class ConfigWriter
         $httpResponse = $this->httpClient->send(
             new HttpClientRequest(
                 'POST',
-                $this->apiUrl.'/server_config',
+                $this->config->apiUrl().'/server_config',
                 [],
                 [
-                    'node_number' => (string) $this->nodeNumber,
+                    'node_number' => (string) $this->config->nodeNumber(),
                     // XXX allow overriding this flag in config?!
                     'cpu_has_aes' => sodium_crypto_aead_aes256gcm_is_available() ? 'yes' : 'no',
+                    'profile_list' => $this->config->profileList(),
                 ]
             )
         );
         if (!$httpResponse->isOkay()) {
             throw new RuntimeException(sprintf('unable to retrieve server_config [HTTP=%d:%s]', $httpResponse->statusCode(), $httpResponse->body()));
         }
+
         foreach (explode("\r\n", $httpResponse->body()) as $configNameData) {
             [$configName, $configData] = explode(':', $configNameData);
 

@@ -1,9 +1,17 @@
 <?php
 
 return [
-    'apiUrl' => 'http://localhost/vpn-user-portal/node-api.php',
+    // Node API URL
+    // DEFAULT: http://localhost/vpn-user-portal/node-api.php
+    //'apiUrl' => 'http://localhost/vpn-user-portal/node-api.php',
 
     // specify the number of this node
     // DEFAULT: 0
     //'nodeNumber' => 0,
+
+    // specify the profiles that you want to load on this node, empty list,
+    // i.e. [], means ALL profiles
+    // DEFAULT: []
+    //'profileList' => [],
+    //'profileList' => ['default'],
 ];
