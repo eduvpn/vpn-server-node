@@ -49,6 +49,21 @@ class Config
         return $this->configData['nodeNumber'];
     }
 
+    public function preferAes(): bool
+    {
+        if (!\array_key_exists('preferAes', $this->configData)) {
+            // determine whether the hardware this code runs on supports
+            // hardware AES
+            return sodium_crypto_aead_aes256gcm_is_available();
+        }
+
+        if (!\is_bool($this->configData['preferAes'])) {
+            throw new ConfigException('key "nodeNumber" not of type bool');
+        }
+
+        return $this->configData['preferAes'];
+    }
+
     /**
      * @return array<string>
      */

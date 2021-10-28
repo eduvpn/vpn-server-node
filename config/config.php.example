@@ -9,6 +9,12 @@ return [
     // DEFAULT: 0
     //'nodeNumber' => 0,
 
+    // Override whether to prefer AES over CHACHA
+    // DEFAULT: auto detect whether the CPU supports hardware accelerated AES,
+    // if it is does prefer AES
+    //'preferAes' => true,
+    //'preferAes' => false,
+
     // specify the profiles that you want to load on this node, empty list,
     // i.e. [], means ALL profiles
     // DEFAULT: []

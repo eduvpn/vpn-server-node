@@ -39,8 +39,7 @@ class ConfigWriter
                 [],
                 [
                     'node_number' => (string) $this->config->nodeNumber(),
-                    // XXX allow overriding this flag in config?!
-                    'cpu_has_aes' => sodium_crypto_aead_aes256gcm_is_available() ? 'yes' : 'no',
+                    'prefer_aes' => $this->config->preferAes() ? 'yes' : 'no',
                     'profile_list' => $this->config->profileList(),
                 ]
             )
