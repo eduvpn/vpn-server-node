@@ -9,7 +9,7 @@ return [
     // DEFAULT: 0
     //'nodeNumber' => 0,
 
-    // Override whether to prefer AES over CHACHA
+    // Override whether to prefer AES over CHACHA with OpenVPN
     // DEFAULT: auto detect whether the CPU supports hardware accelerated AES,
     // if it does, prefer AES
     //'preferAes' => true,
