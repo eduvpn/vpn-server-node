@@ -47,7 +47,7 @@ class HttpClientResponse
     public function header(string $headerKey): ?string
     {
         foreach (explode("\r\n", $this->headerList) as $headerLine) {
-            if (!str_contains($headerLine, ':')) {
+            if (false === strpos($headerLine, ':')) {
                 continue;
             }
             [$k, $v] = explode(':', $headerLine, 2);
