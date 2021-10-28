@@ -11,7 +11,7 @@ return [
 
     // Override whether to prefer AES over CHACHA
     // DEFAULT: auto detect whether the CPU supports hardware accelerated AES,
-    // if it is does prefer AES
+    // if it does, prefer AES
     //'preferAes' => true,
     //'preferAes' => false,
 
