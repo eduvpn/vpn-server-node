@@ -18,6 +18,6 @@ return [
     // specify the profiles that you want to load on this node, empty list,
     // i.e. [], means ALL profiles
     // DEFAULT: []
-    //'profileList' => [],
-    //'profileList' => ['default'],
+    //'profileIdList' => [],
+    //'profileIdList' => ['default'],
 ];

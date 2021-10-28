@@ -27,7 +27,6 @@ final class ConfigWriterTest extends TestCase
             [
                 'apiUrl' => 'http://localhost/vpn-user-portal/node-api.php',
                 'nodeNumber' => 0,
-                'profileList' => [],
             ]
         );
         $tmpDir = sprintf('%s/%s', sys_get_temp_dir(), bin2hex(random_bytes(16)));

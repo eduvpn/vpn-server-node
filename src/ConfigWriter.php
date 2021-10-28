@@ -39,7 +39,7 @@ class ConfigWriter
             [
                 'node_number' => (string) $this->config->nodeNumber(),
                 'prefer_aes' => $this->config->preferAes() ? 'yes' : 'no',
-                'profile_list' => $this->config->profileList(),
+                'profile_id_list' => $this->config->profileIdList(),
             ]
         );
         $httpResponse = $this->httpClient->send($request->withHttpBuildQuery());

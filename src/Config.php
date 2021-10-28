@@ -67,17 +67,17 @@ class Config
     /**
      * @return array<string>
      */
-    public function profileList(): array
+    public function profileIdList(): array
     {
-        if (!\array_key_exists('profileList', $this->configData)) {
+        if (!\array_key_exists('profileIdList', $this->configData)) {
             return [];
         }
 
-        if ($this->configData['profileList'] !== array_filter($this->configData['profileList'], 'is_string')) {
-            throw new ConfigException('key "profileList" not of type array<string>');
+        if ($this->configData['profileIdList'] !== array_filter($this->configData['profileIdList'], 'is_string')) {
+            throw new ConfigException('key "profileIdList" not of type array<string>');
         }
 
-        return $this->configData['profileList'];
+        return $this->configData['profileIdList'];
     }
 
     public static function fromFile(string $configFile): self
