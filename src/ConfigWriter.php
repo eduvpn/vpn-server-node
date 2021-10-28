@@ -32,18 +32,17 @@ class ConfigWriter
 
     public function write(): void
     {
-        $httpResponse = $this->httpClient->send(
-            new HttpClientRequest(
-                'POST',
-                $this->config->apiUrl().'/server_config',
-                [],
-                [
-                    'node_number' => (string) $this->config->nodeNumber(),
-                    'prefer_aes' => $this->config->preferAes() ? 'yes' : 'no',
-                    'profile_list' => $this->config->profileList(),
-                ]
-            )
+        $request = new HttpClientRequest(
+            'POST',
+            $this->config->apiUrl().'/server_config',
+            [],
+            [
+                'node_number' => (string) $this->config->nodeNumber(),
+                'prefer_aes' => $this->config->preferAes() ? 'yes' : 'no',
+                'profile_list' => $this->config->profileList(),
+            ]
         );
+        $httpResponse = $this->httpClient->send($request->withHttpBuildQuery());
         if (!$httpResponse->isOkay()) {
             throw new RuntimeException(sprintf('unable to retrieve server_config [HTTP=%d:%s]', $httpResponse->statusCode(), $httpResponse->body()));
         }
