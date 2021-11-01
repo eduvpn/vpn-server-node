@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.2.11 (...)
+- implement check to verify overlap between pushed IPv4 ranges and hostName in 
+  split tunnel config
+- only push `route remote_host 255.255.255.255 net_gateway` when routes 
+  overlap hostName IPs (partial fix for vpn-server-node#51)
+
 ## 2.2.10 (2021-08-09)
 - make sure the IPv6 client pool always starts at `::1000` which was the 
   default on OpenVPN 2.4, but 
