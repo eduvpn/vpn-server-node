@@ -189,7 +189,7 @@ class IP
 
         $hexIp = bin2hex(inet_pton($this->getNetwork()));
         $lastDigit = hexdec(substr($hexIp, -1));
-        $hexIp = substr_replace($hexIp, $lastDigit + 1, -1);
+        $hexIp = substr_replace($hexIp, (string) ($lastDigit + 1), -1);
 
         return inet_ntop(hex2bin($hexIp));
     }
