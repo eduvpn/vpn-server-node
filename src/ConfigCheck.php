@@ -67,7 +67,7 @@ class ConfigCheck
             // we ALSO want the prefix to be divisible by 4 (restriction in
             // IP.php)
             if (0 !== ((int) $ipPrefix) % 4) {
-                throw new RuntimeException(sprintf('prefix length of "range6" in profile "%s" MUST be divisible by 4', $profileId, $ipPrefix));
+                throw new RuntimeException(sprintf('prefix length of "range6" in profile "%s" MUST be divisible by 4', $profileId));
             }
             if ((int) $ipPrefix > (112 - $prefixSpace)) {
                 throw new RuntimeException(sprintf('"range6" in profile "%s" MUST be at least "/%d" to accommodate %d OpenVPN server process(es)', $profileId, 112 - $prefixSpace, \count($vpnProtoPorts)));
