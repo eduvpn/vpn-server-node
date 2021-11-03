@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.2.11 (...)
+## 2.2.11 (2021-11-03)
 - implement check to verify overlap between pushed IPv4 ranges and hostName in 
   split tunnel config
 - only push `route remote_host 255.255.255.255 net_gateway` when routes 
