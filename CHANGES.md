@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.2.12 (...)
+- implement support for `ProfileConfig::excludeRoutes()` to redirect traffic to
+  some prefixes outside the VPN tunnel
+
 ## 2.2.11 (2021-11-03)
 - implement check to verify overlap between pushed IPv4 ranges and hostName in 
   split tunnel config

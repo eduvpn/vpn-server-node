@@ -309,32 +309,28 @@ class OpenVpn
      */
     private static function getRoutes(ProfileConfig $profileConfig)
     {
+        $routeConfig = [];
         if ($profileConfig->defaultGateway()) {
             $redirectFlags = ['def1', 'ipv6'];
             if ($profileConfig->blockLan()) {
                 $redirectFlags[] = 'block-local';
             }
 
-            return [
-                sprintf('push "redirect-gateway %s"', implode(' ', $redirectFlags)),
-                'push "route 0.0.0.0 0.0.0.0"',
-            ];
+            $routeConfig[] = sprintf('push "redirect-gateway %s"', implode(' ', $redirectFlags));
+            $routeConfig[] = 'push "route 0.0.0.0 0.0.0.0"';
         }
 
         $routeList = $profileConfig->routes();
-        if (0 === \count($routeList)) {
-            return [];
-        }
-
-        $routeConfig = [];
         // Always set a route to the remote host through the client's default
         // gateway to avoid problems when the "split routes" pushed also
         // contain a range with the public IP address of the VPN server.
         // When connecting to a VPN server _over_ IPv6, OpenVPN takes care of
         // this all by itself by setting a /128 through the client's original
         // IPv6 gateway
-        if (self::checkHostnameOverlapsRoutes($routeList, $profileConfig->hostName())) {
-            $routeConfig[] = 'push "route remote_host 255.255.255.255 net_gateway"';
+        if (0 !== \count($routeList)) {
+            if (self::checkHostnameOverlapsRoutes($routeList, $profileConfig->hostName())) {
+                $routeConfig[] = 'push "route remote_host 255.255.255.255 net_gateway"';
+            }
         }
 
         // there may be some routes specified, push those, and not the default
@@ -346,6 +342,20 @@ class OpenVpn
             } else {
                 // IPv4
                 $routeConfig[] = sprintf('push "route %s %s"', $routeIp->getAddress(), $routeIp->getNetmask());
+            }
+        }
+
+        $excludeRouteList = $profileConfig->excludeRoutes();
+        if (0 !== \count($excludeRouteList)) {
+            foreach ($excludeRouteList as $excludeRoute) {
+                $routeIp = new IP($excludeRoute);
+                if (6 === $routeIp->getFamily()) {
+                    // IPv6
+                    $routeConfig[] = sprintf('push "route-ipv6 %s net_gateway_ipv6"', (string) $routeIp);
+                } else {
+                    // IPv4
+                    $routeConfig[] = sprintf('push "route %s %s net_gateway"', $routeIp->getAddress(), $routeIp->getNetmask());
+                }
             }
         }
 
