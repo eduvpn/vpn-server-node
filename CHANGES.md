@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.2.12 (...)
+## 2.2.12 (2021-11-08)
 - implement support for `ProfileConfig::excludeRoutes()` to redirect traffic to
   some prefixes outside the VPN tunnel
 
