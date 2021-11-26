@@ -43,6 +43,7 @@ class ConfigWriter
             ]
         );
         $httpResponse = $this->httpClient->send($request->withHttpBuildQuery());
+        // XXX redundant check, already checked in httpClient
         if (!$httpResponse->isOkay()) {
             throw new RuntimeException(sprintf('unable to retrieve server_config [HTTP=%d:%s]', $httpResponse->statusCode(), $httpResponse->body()));
         }
