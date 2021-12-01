@@ -120,15 +120,19 @@ class IP
     }
 
     /**
-     * IPv4 only.
-     *
      * @return string
      */
     public function getNetwork()
     {
-        $this->requireIPv4();
+        if (4 === $this->getFamily()) {
+            return long2ip(ip2long($this->getAddress()) & ip2long($this->getNetmask()));
+        }
 
-        return long2ip(ip2long($this->getAddress()) & ip2long($this->getNetmask()));
+        $hexAddress = bin2hex(inet_pton($this->getAddress()));
+        $clearPrefixLength = (int) (32 - ($this->getPrefix() / 4));
+        $hexAddress = substr($hexAddress, 0, -$clearPrefixLength).str_repeat('0', $clearPrefixLength);
+
+        return inet_ntop(hex2bin($hexAddress));
     }
 
     /**
