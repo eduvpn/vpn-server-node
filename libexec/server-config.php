@@ -12,10 +12,10 @@ declare(strict_types=1);
 require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
-use LC\Node\Config;
-use LC\Node\ConfigWriter;
-use LC\Node\HttpClient\CurlHttpClient;
-use LC\Node\Utils;
+use Vpn\Node\Config;
+use Vpn\Node\ConfigWriter;
+use Vpn\Node\HttpClient\CurlHttpClient;
+use Vpn\Node\Utils;
 
 try {
     $openVpnConfigDir = sprintf('%s/openvpn-config', $baseDir);

@@ -2,27 +2,27 @@
     "authors": [
         {
             "email": "fkooman@tuxed.net",
-            "name": "Fran\u00e7ois Kooman",
+            "name": "François Kooman",
             "role": "Developer"
         }
     ],
     "autoload": {
         "psr-4": {
-            "LC\\Node\\": "src/"
+            "Vpn\\Node\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "LC\\Node\\Tests\\": "tests/"
+            "Vpn\\Node\\Tests\\": "tests/"
         }
     },
-    "description": "Server node for Let's Connect! and eduVPN",
+    "description": "VPN Node",
     "license": "AGPL-3.0-or-later",
-    "name": "lc/vpn-server-node",
+    "name": "vpn/node",
     "require": {
         "ext-curl": "*",
-        "ext-spl": "*",
         "ext-sodium": "*",
+        "ext-spl": "*",
         "php": ">=7.4"
     },
     "require-dev": {

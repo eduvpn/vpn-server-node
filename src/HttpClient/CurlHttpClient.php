@@ -9,11 +9,11 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Node\HttpClient;
+namespace Vpn\Node\HttpClient;
 
-use LC\Node\Binary;
-use LC\Node\HttpClient\Exception\HttpClientException;
 use RuntimeException;
+use Vpn\Node\Binary;
+use Vpn\Node\HttpClient\Exception\HttpClientException;
 
 class CurlHttpClient implements HttpClientInterface
 {

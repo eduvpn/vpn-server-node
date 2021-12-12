@@ -9,9 +9,9 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Node;
+namespace Vpn\Node;
 
-use LC\Node\Exception\ConfigException;
+use Vpn\Node\Exception\ConfigException;
 
 class Config
 {

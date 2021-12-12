@@ -12,11 +12,11 @@ declare(strict_types=1);
 require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
-use LC\Node\Config;
-use LC\Node\Connection;
-use LC\Node\HttpClient\CurlHttpClient;
-use LC\Node\Syslog;
-use LC\Node\Utils;
+use Vpn\Node\Config;
+use Vpn\Node\Connection;
+use Vpn\Node\HttpClient\CurlHttpClient;
+use Vpn\Node\Syslog;
+use Vpn\Node\Utils;
 
 try {
     $configFile = $baseDir.'/config/config.php';

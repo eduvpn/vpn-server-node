@@ -9,12 +9,12 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Node\HttpClient\Exception;
+namespace Vpn\Node\HttpClient\Exception;
 
 use Exception;
-use LC\Node\HttpClient\HttpClientRequest;
-use LC\Node\HttpClient\HttpClientResponse;
 use Throwable;
+use Vpn\Node\HttpClient\HttpClientRequest;
+use Vpn\Node\HttpClient\HttpClientResponse;
 
 class HttpClientException extends Exception
 {

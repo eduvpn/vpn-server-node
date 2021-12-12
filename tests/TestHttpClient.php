@@ -9,11 +9,11 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Node\Tests;
+namespace Vpn\Node\Tests;
 
-use LC\Node\HttpClient\HttpClientInterface;
-use LC\Node\HttpClient\HttpClientRequest;
-use LC\Node\HttpClient\HttpClientResponse;
+use Vpn\Node\HttpClient\HttpClientInterface;
+use Vpn\Node\HttpClient\HttpClientRequest;
+use Vpn\Node\HttpClient\HttpClientResponse;
 
 class TestHttpClient implements HttpClientInterface
 {

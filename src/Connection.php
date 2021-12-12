@@ -9,11 +9,11 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Node;
+namespace Vpn\Node;
 
-use LC\Node\Exception\ConnectionException;
-use LC\Node\HttpClient\HttpClientInterface;
-use LC\Node\HttpClient\HttpClientRequest;
+use Vpn\Node\Exception\ConnectionException;
+use Vpn\Node\HttpClient\HttpClientInterface;
+use Vpn\Node\HttpClient\HttpClientRequest;
 
 class Connection
 {
