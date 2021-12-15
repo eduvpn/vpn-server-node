@@ -48,7 +48,7 @@ class ConfigWriter
             throw new RuntimeException(sprintf('unable to retrieve server_config [HTTP=%d:%s]', $httpResponse->statusCode(), $httpResponse->body()));
         }
 
-        foreach (explode("\r\n", $httpResponse->body()) as $configNameData) {
+        foreach (explode("\n", $httpResponse->body()) as $configNameData) {
             [$configName, $configData] = explode(':', $configNameData);
 
             $configFile = self::getConfigFile($configName);
