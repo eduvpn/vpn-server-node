@@ -84,9 +84,9 @@ final class ConnectionTest extends TestCase
                 'ip_four',
                 'ip_six',
                 'connected_at',
-                'connection_duration',
-                'bytes_received',
-                'bytes_sent'
+                '0',
+                '0',
+                'connection_duration'
             )
         );
     }
@@ -104,9 +104,9 @@ final class ConnectionTest extends TestCase
             'ip_four',
             'ip_six',
             'connected_at',
-            'connection_duration',
-            'bytes_received',
-            'bytes_sent'
+            'bytes_in',
+            'bytes_out',
+            'connection_duration'
         );
     }
 }

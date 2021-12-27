@@ -54,7 +54,7 @@ class Connection
         }
     }
 
-    public function disconnect(string $profileId, string $commonName, ?string $origIpFour, ?string $origIpSix, string $ipFour, string $ipSix, string $connectedAt, string $connectionDuration, string $bytesReceived, string $bytesSent): void
+    public function disconnect(string $profileId, string $commonName, ?string $origIpFour, ?string $origIpSix, string $ipFour, string $ipSix, string $connectedAt, string $bytesIn, string $bytesOut, string $connectionDuration): void
     {
         $httpResponse = $this->httpClient->send(
             new HttpClientRequest(
@@ -68,9 +68,9 @@ class Connection
                     'ip_six' => $ipSix,
                     'originating_ip' => self::requireOriginatingIp($origIpFour, $origIpSix),
                     'connected_at' => $connectedAt,
+                    'bytes_in' => $bytesIn,
+                    'bytes_out' => $bytesOut,
                     'disconnected_at' => (string) ((int) $connectedAt + (int) $connectionDuration),
-                    'bytes_in' => $bytesReceived,
-                    'bytes_out' => $bytesSent,
                 ]
             )
         );
