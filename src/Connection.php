@@ -69,7 +69,8 @@ class Connection
                     'originating_ip' => self::requireOriginatingIp($origIpFour, $origIpSix),
                     'connected_at' => $connectedAt,
                     'disconnected_at' => (string) ((int) $connectedAt + (int) $connectionDuration),
-                    'bytes_transferred' => (string) ((int) $bytesReceived + (int) $bytesSent),
+                    'bytes_in' => $bytesReceived,
+                    'bytes_out' => $bytesSent,
                 ]
             )
         );
