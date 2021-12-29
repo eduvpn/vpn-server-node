@@ -19,12 +19,10 @@ use Vpn\Node\Syslog;
 use Vpn\Node\Utils;
 
 try {
-    $configFile = $baseDir.'/config/config.php';
-    $config = Config::fromFile($configFile);
-    $apiSecretFile = $baseDir.'/config/node.key';
-    $apiSecret = Utils::readFile($apiSecretFile);
+    $config = Config::fromFile($baseDir.'/config/config.php');
     $httpClient = new CurlHttpClient();
-    $httpClient->setRequestHeader('Authorization', 'Bearer '.$apiSecret);
+    $httpClient->setRequestHeader('X-Node-Number', (string) $config->nodeNumber());
+    $httpClient->setRequestHeader('Authorization', 'Bearer '.Utils::readFile($baseDir.'/config/node.key'));
     $connection = new Connection($httpClient, $config->apiUrl());
     $connection->connect(
         Utils::reqEnvString('PROFILE_ID'),
