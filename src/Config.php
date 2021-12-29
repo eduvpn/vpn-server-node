@@ -15,8 +15,9 @@ use Vpn\Node\Exception\ConfigException;
 
 class Config
 {
-    /** @var array */
-    protected $configData;
+    use ConfigTrait;
+
+    private array $configData;
 
     public function __construct(array $configData)
     {
@@ -25,43 +26,17 @@ class Config
 
     public function apiUrl(): string
     {
-        if (!\array_key_exists('apiUrl', $this->configData)) {
-            return 'http://localhost/vpn-user-portal/node-api.php';
-        }
-
-        if (!\is_string($this->configData['apiUrl'])) {
-            throw new ConfigException('key "apiUrl" not of type string');
-        }
-
-        return $this->configData['apiUrl'];
+        return $this->requireString('apiUrl', 'http://localhost/vpn-user-portal/node-api.php');
     }
 
     public function nodeNumber(): int
     {
-        if (!\array_key_exists('nodeNumber', $this->configData)) {
-            return 0;
-        }
-
-        if (!\is_int($this->configData['nodeNumber'])) {
-            throw new ConfigException('key "nodeNumber" not of type int');
-        }
-
-        return $this->configData['nodeNumber'];
+        return $this->requireInt('nodeNumber', 0);
     }
 
     public function preferAes(): bool
     {
-        if (!\array_key_exists('preferAes', $this->configData)) {
-            // determine whether the hardware this code runs on supports
-            // hardware AES
-            return sodium_crypto_aead_aes256gcm_is_available();
-        }
-
-        if (!\is_bool($this->configData['preferAes'])) {
-            throw new ConfigException('key "preferAes" not of type bool');
-        }
-
-        return $this->configData['preferAes'];
+        return $this->requireBool('preferAes', sodium_crypto_aead_aes256gcm_is_available());
     }
 
     /**
@@ -69,21 +44,16 @@ class Config
      */
     public function profileIdList(): array
     {
-        if (!\array_key_exists('profileIdList', $this->configData)) {
-            return [];
-        }
-
-        if ($this->configData['profileIdList'] !== array_filter($this->configData['profileIdList'], 'is_string')) {
-            throw new ConfigException('key "profileIdList" not of type array<string>');
-        }
-
-        return $this->configData['profileIdList'];
+        return $this->requireStringArray('profileIdList', []);
     }
 
+    /**
+     * @psalm-suppress UnresolvableInclude
+     */
     public static function fromFile(string $configFile): self
     {
-        if (!Utils::fileExists($configFile)) {
-            throw new ConfigException(sprintf('file "%s" does not exist', $configFile));
+        if (false === Utils::fileExists($configFile)) {
+            throw new ConfigException(sprintf('unable to read "%s"', $configFile));
         }
 
         return new self(require $configFile);
