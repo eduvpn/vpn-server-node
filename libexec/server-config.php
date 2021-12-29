@@ -18,15 +18,11 @@ use Vpn\Node\HttpClient\CurlHttpClient;
 use Vpn\Node\Utils;
 
 try {
-    $openVpnConfigDir = sprintf('%s/openvpn-config', $baseDir);
-    $wgConfigDir = sprintf('%s/wg-config', $baseDir);
-    $configDir = sprintf('%s/config', $baseDir);
-    $config = Config::fromFile($configDir.'/config.php');
-    $apiSecretFile = $configDir.'/node.key';
-    $apiSecret = Utils::readFile($apiSecretFile);
+    $config = Config::fromFile($baseDir.'/config/config.php');
     $httpClient = new CurlHttpClient();
-    $httpClient->setRequestHeader('Authorization', 'Bearer '.$apiSecret);
-    $configWriter = new ConfigWriter($openVpnConfigDir, $wgConfigDir, $httpClient, $config);
+    $httpClient->setRequestHeader('X-Node-Number', (string) $config->nodeNumber());
+    $httpClient->setRequestHeader('Authorization', 'Bearer '.Utils::readFile($baseDir.'/config/node.key'));
+    $configWriter = new ConfigWriter($baseDir, $httpClient, $config);
     $configWriter->write();
 } catch (Exception $e) {
     echo 'ERROR: '.$e->getMessage().\PHP_EOL;

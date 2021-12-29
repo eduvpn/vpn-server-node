@@ -14,6 +14,7 @@ namespace Vpn\Node\Tests;
 use PHPUnit\Framework\TestCase;
 use Vpn\Node\Config;
 use Vpn\Node\ConfigWriter;
+use Vpn\Node\Utils;
 
 /**
  * @internal
@@ -31,9 +32,14 @@ final class ConfigWriterTest extends TestCase
         );
         $tmpDir = sprintf('%s/%s', sys_get_temp_dir(), bin2hex(random_bytes(16)));
         mkdir($tmpDir, 0700, true);
-        $configWriter = new ConfigWriter($tmpDir, $tmpDir, new TestHttpClient(), $config);
+        mkdir($tmpDir.'/config', 0700, true);
+        mkdir($tmpDir.'/openvpn-config', 0700, true);
+        mkdir($tmpDir.'/wg-config', 0700, true);
+        Utils::writeFile($tmpDir.'/config/wireguard.key', 'sBu1nuSr9w1IAIby38GCl7E/3iDcoVEsKch4hsdGSiI=');
+        $configWriter = new ConfigWriter($tmpDir, new TestHttpClient(), $config);
         $configWriter->write();
-        static::assertSame('default-0', file_get_contents($tmpDir.'/default-0.conf'));
-        static::assertSame('default-1', file_get_contents($tmpDir.'/default-1.conf'));
+        // XXX add test for wireguard
+        static::assertSame('default-0', file_get_contents($tmpDir.'/openvpn-config/default-0.conf'));
+        static::assertSame('default-1', file_get_contents($tmpDir.'/openvpn-config/default-1.conf'));
     }
 }
