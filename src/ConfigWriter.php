@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace Vpn\Node;
 
-use RuntimeException;
 use Vpn\Node\HttpClient\HttpClientInterface;
 use Vpn\Node\HttpClient\HttpClientRequest;
 
@@ -41,11 +40,6 @@ class ConfigWriter
             ]
         );
         $httpResponse = $this->httpClient->send($request->withHttpBuildQuery());
-        // XXX redundant check, already checked in httpClient
-        if (!$httpResponse->isOkay()) {
-            throw new RuntimeException(sprintf('unable to retrieve server_config [HTTP=%d:%s]', $httpResponse->statusCode(), $httpResponse->body()));
-        }
-
         foreach (explode("\n", $httpResponse->body()) as $configNameData) {
             [$configName, $configData] = explode(':', $configNameData);
             self::writeConfig($configName, Base64::decode($configData));
