@@ -58,7 +58,7 @@ class Config
         }
 
         if (!\is_bool($this->configData['preferAes'])) {
-            throw new ConfigException('key "nodeNumber" not of type bool');
+            throw new ConfigException('key "preferAes" not of type bool');
         }
 
         return $this->configData['preferAes'];
