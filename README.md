@@ -5,6 +5,8 @@ server configuration and processes.
 
 **License**:  AGPL-3.0-or-later
 
+[![builds.sr.ht status](https://builds.sr.ht/~fkooman/vpn-server-node.svg)](https://builds.sr.ht/~fkooman/vpn-server-node?)
+
 # Introduction
 
 This project is the VPN node of the Let's Connect! software. It controls the
