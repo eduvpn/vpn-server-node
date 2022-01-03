@@ -23,7 +23,7 @@ final class ConnectionTest extends TestCase
 {
     public function testConnect(): void
     {
-        $connection = new Connection(new TestHttpClient(), 'http://localhost/vpn-user-portal/node-api.php');
+        $connection = new Connection(new TestHttpClient(), 'http://localhost/vpn-user-portal/node-api.php', 0, 'node-key');
         static::assertNull(
             $connection->connect(
                 'profile_id',
@@ -42,7 +42,7 @@ final class ConnectionTest extends TestCase
     {
         $this->expectException(ConnectionException::class);
         $this->expectExceptionMessage('unable to connect');
-        $connection = new Connection(new TestHttpClient(), 'http://localhost/vpn-user-portal/node-api.php');
+        $connection = new Connection(new TestHttpClient(), 'http://localhost/vpn-user-portal/node-api.php', 0, 'node-key');
         $connection->connect(
             'profile_id',
             'profile_id',
@@ -59,7 +59,7 @@ final class ConnectionTest extends TestCase
     {
         $this->expectException(ConnectionException::class);
         $this->expectExceptionMessage('client certificate has OU "wrong_cert_ou", but requires "profile_id" for this profile');
-        $connection = new Connection(new TestHttpClient(), 'http://localhost/vpn-user-portal/node-api.php');
+        $connection = new Connection(new TestHttpClient(), 'http://localhost/vpn-user-portal/node-api.php', 0, 'node-key');
         $connection->connect(
             'profile_id',
             'wrong_cert_ou',
@@ -74,7 +74,7 @@ final class ConnectionTest extends TestCase
 
     public function testDisconnect(): void
     {
-        $connection = new Connection(new TestHttpClient(), 'http://localhost/vpn-user-portal/node-api.php');
+        $connection = new Connection(new TestHttpClient(), 'http://localhost/vpn-user-portal/node-api.php', 0, 'node-key');
         static::assertNull(
             $connection->disconnect(
                 'profile_id',
@@ -95,7 +95,7 @@ final class ConnectionTest extends TestCase
     {
         $this->expectException(ConnectionException::class);
         $this->expectExceptionMessage('unable to disconnect');
-        $connection = new Connection(new TestHttpClient(), 'http://localhost/vpn-user-portal/node-api.php');
+        $connection = new Connection(new TestHttpClient(), 'http://localhost/vpn-user-portal/node-api.php', 0, 'node-key');
         $connection->disconnect(
             'profile_id',
             'common_name_error',

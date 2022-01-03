@@ -19,10 +19,7 @@ use Vpn\Node\Utils;
 
 try {
     $config = Config::fromFile($baseDir.'/config/config.php');
-    $httpClient = new CurlHttpClient();
-    $httpClient->setRequestHeader('X-Node-Number', (string) $config->nodeNumber());
-    $httpClient->setRequestHeader('Authorization', 'Bearer '.Utils::readFile($baseDir.'/config/node.key'));
-    $configWriter = new ConfigWriter($baseDir, $httpClient, $config);
+    $configWriter = new ConfigWriter($baseDir, new CurlHttpClient(), $config, Utils::readFile($baseDir.'/config/node.key'));
     $configWriter->write();
 } catch (Exception $e) {
     echo 'ERROR: '.$e->getMessage().\PHP_EOL;

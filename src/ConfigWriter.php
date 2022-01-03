@@ -19,12 +19,14 @@ class ConfigWriter
     private string $baseDir;
     private HttpClientInterface $httpClient;
     private Config $config;
+    private string $nodeKey;
 
-    public function __construct(string $baseDir, HttpClientInterface $httpClient, Config $config)
+    public function __construct(string $baseDir, HttpClientInterface $httpClient, Config $config, string $nodeKey)
     {
         $this->baseDir = $baseDir;
         $this->httpClient = $httpClient;
         $this->config = $config;
+        $this->nodeKey = $nodeKey;
     }
 
     public function write(): void
@@ -37,6 +39,10 @@ class ConfigWriter
                 'public_key' => KeyPair::computePublicKey(Utils::readFile($this->baseDir.'/config/wireguard.key')),
                 'prefer_aes' => $this->config->preferAes() ? 'yes' : 'no',
                 'profile_id_list' => $this->config->profileIdList(),
+            ],
+            [
+                'X-Node-Number' => (string) $this->config->nodeNumber(),
+                'Authorization' => 'Bearer '.$this->nodeKey,
             ]
         );
         $httpResponse = $this->httpClient->send($request->withHttpBuildQuery());

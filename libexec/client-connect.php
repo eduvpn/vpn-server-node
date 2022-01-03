@@ -20,10 +20,7 @@ use Vpn\Node\Utils;
 
 try {
     $config = Config::fromFile($baseDir.'/config/config.php');
-    $httpClient = new CurlHttpClient();
-    $httpClient->setRequestHeader('X-Node-Number', (string) $config->nodeNumber());
-    $httpClient->setRequestHeader('Authorization', 'Bearer '.Utils::readFile($baseDir.'/config/node.key'));
-    $connection = new Connection($httpClient, $config->apiUrl());
+    $connection = new Connection(new CurlHttpClient(), $config->apiUrl(), $config->nodeNumber(), Utils::readFile($baseDir.'/config/node.key'));
     $connection->connect(
         Utils::reqEnvString('PROFILE_ID'),
         Utils::reqEnvString('X509_0_OU'),

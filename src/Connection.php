@@ -18,13 +18,16 @@ use Vpn\Node\HttpClient\HttpClientRequest;
 class Connection
 {
     private HttpClientInterface $httpClient;
-
     private string $apiUrl;
+    private int $nodeNumber;
+    private string $nodeKey;
 
-    public function __construct(HttpClientInterface $httpClient, string $apiUrl)
+    public function __construct(HttpClientInterface $httpClient, string $apiUrl, int $nodeNumber, string $nodeKey)
     {
         $this->httpClient = $httpClient;
         $this->apiUrl = $apiUrl;
+        $this->nodeNumber = $nodeNumber;
+        $this->nodeKey = $nodeKey;
     }
 
     public function connect(string $profileId, string $certOrgUnit, string $commonName, ?string $origIpFour, ?string $origIpSix, string $ipFour, string $ipSix, string $connectedAt): void
@@ -45,6 +48,10 @@ class Connection
                     'ip_six' => $ipSix,
                     'originating_ip' => self::requireOriginatingIp($origIpFour, $origIpSix),
                     'connected_at' => $connectedAt,
+                ],
+                [
+                    'X-Node-Number' => (string) $this->nodeNumber,
+                    'Authorization' => 'Bearer '.$this->nodeKey,
                 ]
             )
         );

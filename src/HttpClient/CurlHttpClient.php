@@ -17,12 +17,11 @@ use Vpn\Node\HttpClient\Exception\HttpClientException;
 
 class CurlHttpClient implements HttpClientInterface
 {
-    /** @var array<string> */
-    private array $requestHeaderList = [];
+    private ?string $certPath;
 
-    public function setRequestHeader(string $headerName, string $headerValue): void
+    public function __construct(?string $certPath = null)
     {
-        $this->requestHeaderList[] = $headerName.': '.$headerValue;
+        $this->certPath = $certPath;
     }
 
     public function send(HttpClientRequest $httpClientRequest): HttpClientResponse
@@ -34,10 +33,13 @@ class CurlHttpClient implements HttpClientInterface
         $headerList = '';
         $curlOptions = [
             CURLOPT_URL => $httpClientRequest->requestUrl(),
-            CURLOPT_HTTPHEADER => array_merge($this->requestHeaderList, $httpClientRequest->requestHeaders()),
+            CURLOPT_HTTPHEADER => $httpClientRequest->requestHeaders(),
             CURLOPT_HEADER => false,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_FOLLOWLOCATION => false,
+            CURLOPT_SSL_VERIFYPEER => true,
+            CURLOPT_SSL_VERIFYHOST => 2,
+            CURLOPT_SSLVERSION => CURL_SSLVERSION_TLSv1_3,
             CURLOPT_CONNECTTIMEOUT => 10,
             CURLOPT_TIMEOUT => 15,
             CURLOPT_PROTOCOLS => CURLPROTO_HTTP | CURLPROTO_HTTPS,
@@ -51,6 +53,13 @@ class CurlHttpClient implements HttpClientInterface
                 return Binary::safeStrlen($headerLine);
             },
         ];
+
+        if (null !== $this->certPath) {
+            // configure for TLS client certificate authentication
+            $curlOptions[CURLOPT_CAINFO] = $this->certPath.'/ca.crt';
+            $curlOptions[CURLOPT_SSLCERT] = $this->certPath.'/vpn-daemon-client.crt';
+            $curlOptions[CURLOPT_SSLKEY] = $this->certPath.'/vpn-daemon-client.key';
+        }
 
         if ('POST' === $httpClientRequest->requestMethod()) {
             $curlOptions[CURLOPT_POSTFIELDS] = $httpClientRequest->postParameters();

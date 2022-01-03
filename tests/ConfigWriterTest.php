@@ -36,7 +36,7 @@ final class ConfigWriterTest extends TestCase
         mkdir($tmpDir.'/openvpn-config', 0700, true);
         mkdir($tmpDir.'/wg-config', 0700, true);
         Utils::writeFile($tmpDir.'/config/wireguard.key', 'sBu1nuSr9w1IAIby38GCl7E/3iDcoVEsKch4hsdGSiI=');
-        $configWriter = new ConfigWriter($tmpDir, new TestHttpClient(), $config);
+        $configWriter = new ConfigWriter($tmpDir, new TestHttpClient(), $config, 'node-key');
         $configWriter->write();
         static::assertSame('default-0', file_get_contents($tmpDir.'/openvpn-config/default-0.conf'));
         static::assertSame('default-1', file_get_contents($tmpDir.'/openvpn-config/default-1.conf'));
