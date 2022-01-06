@@ -75,6 +75,10 @@ class Connection
                     'originating_ip' => self::requireOriginatingIp($origIpFour, $origIpSix),
                     'bytes_in' => $bytesIn,
                     'bytes_out' => $bytesOut,
+                ],
+                [
+                    'X-Node-Number' => (string) $this->nodeNumber,
+                    'Authorization' => 'Bearer '.$this->nodeKey,
                 ]
             )
         );
