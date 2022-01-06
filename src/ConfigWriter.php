@@ -46,6 +46,7 @@ class ConfigWriter
             ]
         );
         $httpResponse = $this->httpClient->send($request->withHttpBuildQuery());
+        // XXX this breaks if there are 0 profiles...
         foreach (explode("\n", $httpResponse->body()) as $configNameData) {
             [$configName, $configData] = explode(':', $configNameData);
             self::writeConfig($configName, Base64::decode($configData));

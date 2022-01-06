@@ -21,14 +21,14 @@ class TestHttpClient implements HttpClientInterface
     {
         switch ($httpClientRequest->requestUrl()) {
             case 'http://localhost/vpn-user-portal/node-api.php/connect':
-                if ('profile_id=profile_id&common_name=common_name&ip_four=ip_four&ip_six=ip_six&originating_ip=orig_ip_four&connected_at=connected_at' === $httpClientRequest->postParameters()) {
+                if ('profile_id=profile_id&common_name=common_name&ip_four=ip_four&ip_six=ip_six&originating_ip=orig_ip_four' === $httpClientRequest->postParameters()) {
                     return new HttpClientResponse(200, '', 'OK');
                 }
 
                 return new HttpClientResponse(200, '', 'ERR');
 
             case 'http://localhost/vpn-user-portal/node-api.php/disconnect':
-                if ('profile_id=profile_id&common_name=common_name&ip_four=ip_four&ip_six=ip_six&originating_ip=orig_ip_four&connected_at=connected_at&bytes_in=0&bytes_out=0&disconnected_at=0' === $httpClientRequest->postParameters()) {
+                if ('profile_id=profile_id&common_name=common_name&ip_four=ip_four&ip_six=ip_six&originating_ip=orig_ip_four&bytes_in=0&bytes_out=0' === $httpClientRequest->postParameters()) {
                     return new HttpClientResponse(200, '', 'OK');
                 }
 

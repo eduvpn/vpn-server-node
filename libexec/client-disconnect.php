@@ -28,8 +28,6 @@ try {
         Utils::optEnvString('trusted_ip6'),
         Utils::reqEnvString('ifconfig_pool_remote_ip'),
         Utils::reqEnvString('ifconfig_pool_remote_ip6'),
-        Utils::reqEnvString('time_unix'),
-        Utils::reqEnvString('time_duration'),
         Utils::reqEnvString('bytes_received'),
         Utils::reqEnvString('bytes_sent'),
     );

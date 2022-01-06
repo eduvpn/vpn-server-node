@@ -32,7 +32,6 @@ final class ConnectionTest extends TestCase
             'orig_ip_six',
             'ip_four',
             'ip_six',
-            'connected_at'
         );
     }
 
@@ -49,7 +48,6 @@ final class ConnectionTest extends TestCase
             'orig_ip_six',
             'ip_four',
             'ip_six',
-            'connected_at'
         );
     }
 
@@ -66,7 +64,6 @@ final class ConnectionTest extends TestCase
             'orig_ip_six',
             'ip_four',
             'ip_six',
-            'connected_at'
         );
     }
 
@@ -80,10 +77,8 @@ final class ConnectionTest extends TestCase
             'orig_ip_six',
             'ip_four',
             'ip_six',
-            'connected_at',
             '0',
             '0',
-            'connection_duration'
         );
     }
 
@@ -99,10 +94,8 @@ final class ConnectionTest extends TestCase
             'orig_ip_six',
             'ip_four',
             'ip_six',
-            'connected_at',
             'bytes_in',
             'bytes_out',
-            'connection_duration'
         );
     }
 }

@@ -30,7 +30,7 @@ class Connection
         $this->nodeKey = $nodeKey;
     }
 
-    public function connect(string $profileId, string $certOrgUnit, string $commonName, ?string $origIpFour, ?string $origIpSix, string $ipFour, string $ipSix, string $connectedAt): void
+    public function connect(string $profileId, string $certOrgUnit, string $commonName, ?string $origIpFour, ?string $origIpSix, string $ipFour, string $ipSix): void
     {
         if ($profileId !== $certOrgUnit) {
             throw new ConnectionException('client certificate has OU "'.$certOrgUnit.'", but requires "'.$profileId.'" for this profile');
@@ -47,7 +47,6 @@ class Connection
                     'ip_four' => $ipFour,
                     'ip_six' => $ipSix,
                     'originating_ip' => self::requireOriginatingIp($origIpFour, $origIpSix),
-                    'connected_at' => $connectedAt,
                 ],
                 [
                     'X-Node-Number' => (string) $this->nodeNumber,
@@ -61,7 +60,7 @@ class Connection
         }
     }
 
-    public function disconnect(string $profileId, string $commonName, ?string $origIpFour, ?string $origIpSix, string $ipFour, string $ipSix, string $connectedAt, string $bytesIn, string $bytesOut, string $connectionDuration): void
+    public function disconnect(string $profileId, string $commonName, ?string $origIpFour, ?string $origIpSix, string $ipFour, string $ipSix, string $bytesIn, string $bytesOut): void
     {
         $httpResponse = $this->httpClient->send(
             new HttpClientRequest(
@@ -74,10 +73,8 @@ class Connection
                     'ip_four' => $ipFour,
                     'ip_six' => $ipSix,
                     'originating_ip' => self::requireOriginatingIp($origIpFour, $origIpSix),
-                    'connected_at' => $connectedAt,
                     'bytes_in' => $bytesIn,
                     'bytes_out' => $bytesOut,
-                    'disconnected_at' => (string) ((int) $connectedAt + (int) $connectionDuration),
                 ]
             )
         );

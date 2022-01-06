@@ -28,8 +28,7 @@ try {
         Utils::optEnvString('trusted_ip'),
         Utils::optEnvString('trusted_ip6'),
         Utils::reqEnvString('ifconfig_pool_remote_ip'),
-        Utils::reqEnvString('ifconfig_pool_remote_ip6'),
-        Utils::reqEnvString('time_unix')
+        Utils::reqEnvString('ifconfig_pool_remote_ip6')
     );
 } catch (Exception $e) {
     $log = new Syslog('client-connect');
