@@ -16,7 +16,7 @@ use Vpn\Node\KeyPair;
 use Vpn\Node\Utils;
 
 // allow group to read the created files/folders
-umask(0027);
+umask(0077);
 
 try {
     $wgKeyFile = $baseDir.'/config/wireguard.key';
