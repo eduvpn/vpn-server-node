@@ -12,6 +12,10 @@ server configuration and processes.
 This project is the VPN node of the Let's Connect! software. It controls the
 OpenVPN processes.
 
+# Issue Tracker
+
+Find our issue tracker [here](https://todo.sr.ht/~eduvpn/server).
+
 # Contributing
 
 Thank you for taking the time to contribute to eduVPN / Let's Connect!. In 
