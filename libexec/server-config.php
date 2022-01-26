@@ -17,6 +17,9 @@ use Vpn\Node\ConfigWriter;
 use Vpn\Node\FileIO;
 use Vpn\Node\HttpClient\CurlHttpClient;
 
+// allow group to read the created files/folders
+umask(0027);
+
 try {
     $nodeKeyFile = $baseDir.'/config/keys/node.key';
     $config = Config::fromFile($baseDir.'/config/config.php');

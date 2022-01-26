@@ -16,7 +16,7 @@ use Vpn\Node\FileIO;
 use Vpn\Node\KeyPair;
 
 // allow group to read the created files/folders
-umask(0077);
+umask(0027);
 
 try {
     $keyDir = $baseDir.'/config/keys';
