@@ -16,6 +16,11 @@
             "Vpn\\Node\\Tests\\": "tests/"
         }
     },
+    "config": {
+        "platform": {
+            "php": "7.4.0"
+        }
+    },
     "description": "VPN Node",
     "license": "AGPL-3.0-or-later",
     "name": "vpn/node",
