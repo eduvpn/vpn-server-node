@@ -1,6 +1,6 @@
 /vendor
 /data
 /config/*.php
-/config/*.key
+/config/keys
 /.phpunit.cache
 /.php-cs-fixer.cache

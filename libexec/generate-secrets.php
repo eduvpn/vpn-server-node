@@ -12,17 +12,20 @@ declare(strict_types=1);
 require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
+use Vpn\Node\FileIO;
 use Vpn\Node\KeyPair;
-use Vpn\Node\Utils;
 
 // allow group to read the created files/folders
 umask(0077);
 
 try {
-    $wgKeyFile = $baseDir.'/config/wireguard.key';
-    if (!Utils::fileExists($wgKeyFile)) {
+    $keyDir = $baseDir.'/config/keys';
+    FileIO::mkdir($keyDir);
+
+    $wgKeyFile = $keyDir.'/wireguard.key';
+    if (!FileIO::exists($wgKeyFile)) {
         $keyPair = KeyPair::generate();
-        Utils::writeFile($wgKeyFile, $keyPair['secret_key']);
+        FileIO::write($wgKeyFile, $keyPair['secret_key']);
     }
 } catch (Exception $e) {
     echo 'ERROR: '.$e->getMessage().\PHP_EOL;

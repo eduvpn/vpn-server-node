@@ -14,12 +14,13 @@ $baseDir = dirname(__DIR__);
 
 use Vpn\Node\Config;
 use Vpn\Node\ConfigWriter;
+use Vpn\Node\FileIO;
 use Vpn\Node\HttpClient\CurlHttpClient;
-use Vpn\Node\Utils;
 
 try {
+    $nodeKeyFile = $baseDir.'/config/keys/node.key';
     $config = Config::fromFile($baseDir.'/config/config.php');
-    $configWriter = new ConfigWriter($baseDir, new CurlHttpClient(), $config, Utils::readFile($baseDir.'/config/node.key'));
+    $configWriter = new ConfigWriter($baseDir, new CurlHttpClient(), $config, FileIO::read($nodeKeyFile));
     $configWriter->write();
 } catch (Exception $e) {
     echo 'ERROR: '.$e->getMessage().\PHP_EOL;

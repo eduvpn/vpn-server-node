@@ -52,7 +52,7 @@ class Config
      */
     public static function fromFile(string $configFile): self
     {
-        if (false === Utils::fileExists($configFile)) {
+        if (false === FileIO::exists($configFile)) {
             throw new ConfigException(sprintf('unable to read "%s"', $configFile));
         }
 

@@ -31,12 +31,13 @@ class ConfigWriter
 
     public function write(): void
     {
+        $wgKeyFile = $this->baseDir.'/config/keys/wireguard.key';
         $request = new HttpClientRequest(
             'POST',
             $this->config->apiUrl().'/server_config',
             [],
             [
-                'public_key' => KeyPair::computePublicKey(Utils::readFile($this->baseDir.'/config/wireguard.key')),
+                'public_key' => KeyPair::computePublicKey(FileIO::read($wgKeyFile)),
                 'prefer_aes' => $this->config->preferAes() ? 'yes' : 'no',
                 'profile_id_list' => $this->config->profileIdList(),
             ],
@@ -55,16 +56,17 @@ class ConfigWriter
 
     private function writeConfig(string $configName, string $configData): void
     {
+        $wgKeyFile = $this->baseDir.'/config/keys/wireguard.key';
         if ('wg.conf' === $configName) {
-            Utils::writeFile(
+            FileIO::write(
                 $this->baseDir.'/wg-config/wg0.conf',
                 // replace the literal string '{{PRIVATE_KEY}}' with the actual private key of this node
-                str_replace('{{PRIVATE_KEY}}', Utils::readFile($this->baseDir.'/config/wireguard.key'), $configData)
+                str_replace('{{PRIVATE_KEY}}', FileIO::read($wgKeyFile), $configData)
             );
 
             return;
         }
 
-        Utils::writeFile($this->baseDir.'/openvpn-config/'.$configName, $configData);
+        FileIO::write($this->baseDir.'/openvpn-config/'.$configName, $configData);
     }
 }

@@ -14,7 +14,7 @@ namespace Vpn\Node\Tests;
 use PHPUnit\Framework\TestCase;
 use Vpn\Node\Config;
 use Vpn\Node\ConfigWriter;
-use Vpn\Node\Utils;
+use Vpn\Node\FileIO;
 
 /**
  * @internal
@@ -31,15 +31,16 @@ final class ConfigWriterTest extends TestCase
             ]
         );
         $tmpDir = sprintf('%s/%s', sys_get_temp_dir(), bin2hex(random_bytes(16)));
-        mkdir($tmpDir, 0700, true);
-        mkdir($tmpDir.'/config', 0700, true);
-        mkdir($tmpDir.'/openvpn-config', 0700, true);
-        mkdir($tmpDir.'/wg-config', 0700, true);
-        Utils::writeFile($tmpDir.'/config/wireguard.key', 'sBu1nuSr9w1IAIby38GCl7E/3iDcoVEsKch4hsdGSiI=');
+        FileIO::mkdir($tmpDir);
+        FileIO::mkdir($tmpDir.'/config');
+        FileIO::mkdir($tmpDir.'/config/keys');
+        FileIO::mkdir($tmpDir.'/openvpn-config');
+        FileIO::mkdir($tmpDir.'/wg-config');
+        FileIO::write($tmpDir.'/config/keys/wireguard.key', 'sBu1nuSr9w1IAIby38GCl7E/3iDcoVEsKch4hsdGSiI=');
         $configWriter = new ConfigWriter($tmpDir, new TestHttpClient(), $config, 'node-key');
         $configWriter->write();
-        static::assertSame('default-0', file_get_contents($tmpDir.'/openvpn-config/default-0.conf'));
-        static::assertSame('default-1', file_get_contents($tmpDir.'/openvpn-config/default-1.conf'));
-        static::assertSame('WG:sBu1nuSr9w1IAIby38GCl7E/3iDcoVEsKch4hsdGSiI=', file_get_contents($tmpDir.'/wg-config/wg0.conf'));
+        static::assertSame('default-0', FileIO::read($tmpDir.'/openvpn-config/default-0.conf'));
+        static::assertSame('default-1', FileIO::read($tmpDir.'/openvpn-config/default-1.conf'));
+        static::assertSame('WG:sBu1nuSr9w1IAIby38GCl7E/3iDcoVEsKch4hsdGSiI=', FileIO::read($tmpDir.'/wg-config/wg0.conf'));
     }
 }

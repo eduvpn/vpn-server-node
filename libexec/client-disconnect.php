@@ -14,13 +14,15 @@ $baseDir = dirname(__DIR__);
 
 use Vpn\Node\Config;
 use Vpn\Node\Connection;
+use Vpn\Node\FileIO;
 use Vpn\Node\HttpClient\CurlHttpClient;
 use Vpn\Node\Syslog;
 use Vpn\Node\Utils;
 
 try {
+    $nodeKeyFile = $baseDir.'/config/keys/node.key';
     $config = Config::fromFile($baseDir.'/config/config.php');
-    $connection = new Connection(new CurlHttpClient(), $config->apiUrl(), $config->nodeNumber(), Utils::readFile($baseDir.'/config/node.key'));
+    $connection = new Connection(new CurlHttpClient(), $config->apiUrl(), $config->nodeNumber(), FileIO::read($nodeKeyFile));
     $connection->disconnect(
         Utils::reqEnvString('PROFILE_ID'),
         Utils::reqEnvString('common_name'),

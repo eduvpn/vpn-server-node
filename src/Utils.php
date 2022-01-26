@@ -32,25 +32,4 @@ class Utils
 
         return $envValue;
     }
-
-    public static function fileExists(string $fileName): bool
-    {
-        return @file_exists($fileName);
-    }
-
-    public static function writeFile(string $fileName, string $fileContent): void
-    {
-        if (false === @file_put_contents($fileName, $fileContent)) {
-            throw new RuntimeException('unable to write "'.$fileName.'"');
-        }
-    }
-
-    public static function readFile(string $fileName): string
-    {
-        if (false === $fileContent = @file_get_contents($fileName)) {
-            throw new RuntimeException('unable to read "'.$fileName.'"');
-        }
-
-        return $fileContent;
-    }
 }
