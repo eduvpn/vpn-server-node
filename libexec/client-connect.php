@@ -33,8 +33,8 @@ try {
         Utils::reqEnvString('ifconfig_pool_remote_ip6')
     );
 } catch (Exception $e) {
-    $log = new Syslog('client-connect');
-    $log->error($e->getMessage());
+    $log = new Syslog('vpn-server-node');
+    $log->error('CONNECT: '.$e->getMessage());
 
     exit(1);
 }

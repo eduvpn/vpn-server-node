@@ -34,8 +34,8 @@ try {
         Utils::reqEnvString('bytes_sent'),
     );
 } catch (Exception $e) {
-    $log = new Syslog('client-disconnect');
-    $log->error($e->getMessage());
+    $log = new Syslog('vpn-server-node');
+    $log->error('DISCONNECT: '.$e->getMessage());
 
     exit(1);
 }
