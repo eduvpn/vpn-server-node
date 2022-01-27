@@ -14,6 +14,7 @@ namespace Vpn\Node\Tests;
 use Vpn\Node\HttpClient\HttpClientInterface;
 use Vpn\Node\HttpClient\HttpClientRequest;
 use Vpn\Node\HttpClient\HttpClientResponse;
+use Vpn\Node\Json;
 
 class TestHttpClient implements HttpClientInterface
 {
@@ -35,7 +36,17 @@ class TestHttpClient implements HttpClientInterface
                 return new HttpClientResponse(200, '', 'ERR');
 
             case 'http://localhost/vpn-user-portal/node-api.php/server_config':
-                return new HttpClientResponse(200, '', 'default-0.conf:ZGVmYXVsdC0w'."\ndefault-1.conf:ZGVmYXVsdC0x"."\nwg.conf:V0c6e3tQUklWQVRFX0tFWX19");
+                return new HttpClientResponse(
+                    200,
+                    '',
+                    Json::encode(
+                        [
+                            'default-0.conf' => 'default-0',
+                            'default-1.conf' => 'default-1',
+                            'wg.conf' => 'WG:{{PRIVATE_KEY}}',
+                        ]
+                    )
+                );
 
             default:
                 return new HttpClientResponse(404, '', 'Not Found');
