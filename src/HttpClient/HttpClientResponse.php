@@ -26,7 +26,7 @@ class HttpClientResponse
 
     public function __toString(): string
     {
-        return $this->statusCode().' '.$this->body().' ['.$this->headerList().']';
+        return $this->statusCode().PHP_EOL.'---- BODY ----'.PHP_EOL.$this->body().PHP_EOL.'---- /BODY ----'.PHP_EOL.'---- HEADERS ----'.PHP_EOL.$this->headerList().PHP_EOL.'---- /HEADERS ----';
     }
 
     public function statusCode(): int
