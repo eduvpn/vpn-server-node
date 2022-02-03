@@ -1,4 +1,1 @@
-/vendor
-/data
-/openvpn-config
-/config/*.php
+/.php_cs.cache
