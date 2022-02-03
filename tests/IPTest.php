@@ -217,9 +217,17 @@ class IPTest extends TestCase
     {
         $ip = new IP('192.168.1.5/24');
         $this->assertSame('192.168.1.0/24', $ip->getNetwork().'/'.$ip->getPrefix());
+
+        $ip = new IP('192.168.1.5/32');
+        $this->assertSame('192.168.1.5/32', $ip->getNetwork().'/'.$ip->getPrefix());
+
         $ip = new IP('fd00::1:2:3:4/64');
         $this->assertSame('fd00::/64', $ip->getNetwork().'/'.$ip->getPrefix());
+
         $ip = new IP('fd00::1234:1:2:3:4/64');
         $this->assertSame('fd00:0:0:1234::/64', $ip->getNetwork().'/'.$ip->getPrefix());
+
+        $ip = new IP('fd00::1234:1:2:3:4/128');
+        $this->assertSame('fd00::1234:1:2:3:4/128', $ip->getNetwork().'/'.$ip->getPrefix());
     }
 }

@@ -16,6 +16,11 @@
             "LC\\Node\\Tests\\": "tests/"
         }
     },
+    "config": {
+        "platform": {
+            "php": "5.4.8"
+        }
+    },
     "description": "Server node for Let's Connect! and eduVPN",
     "license": "AGPL-3.0-or-later",
     "name": "lc/vpn-server-node",
@@ -33,7 +38,7 @@
         "ext-pcre": "*",
         "ext-spl": "*",
         "lc/common": "v2.x-dev",
-        "php": ">=5.4",
+        "php": ">=5.4.8",
         "psr/log": "^1"
     },
     "require-dev": {
