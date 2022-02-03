@@ -229,5 +229,8 @@ class IPTest extends TestCase
 
         $ip = new IP('fd00::1234:1:2:3:4/128');
         $this->assertSame('fd00::1234:1:2:3:4/128', $ip->getNetwork().'/'.$ip->getPrefix());
+
+        $ip = new IP('fd00::1234:1:2:3:1/124');
+        $this->assertSame('fd00::1234:1:2:3:0/124', $ip->getNetwork().'/'.$ip->getPrefix());
     }
 }

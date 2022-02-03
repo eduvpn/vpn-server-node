@@ -120,6 +120,11 @@ class IP
     }
 
     /**
+     * Get IPv4 & IPv6 network address.
+     *
+     * NOTE: for IPv6 network prefixes MUST be divisible by 4 before this
+     * works... probably has some implications somewhere!
+     *
      * @return string
      */
     public function getNetwork()
@@ -130,7 +135,9 @@ class IP
 
         $hexAddress = bin2hex(inet_pton($this->getAddress()));
         $clearPrefixLength = (int) (32 - ($this->getPrefix() / 4));
-        $hexAddress = substr($hexAddress, 0, -$clearPrefixLength).str_repeat('0', $clearPrefixLength);
+        if (0 !== $clearPrefixLength) {
+            $hexAddress = substr($hexAddress, 0, -$clearPrefixLength).str_repeat('0', $clearPrefixLength);
+        }
 
         return inet_ntop(hex2bin($hexAddress));
     }
