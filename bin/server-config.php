@@ -33,6 +33,6 @@ try {
     $o = new OpenVpn($vpnConfigDir, $useVpnDaemon);
     $o->writeProfiles($serverClient, $vpnUser, $vpnGroup, $profileIdDeployList);
 } catch (Exception $e) {
-    echo sprintf('ERROR: %s', $e->getMessage()).PHP_EOL;
+    echo sprintf('ERROR: %s', $e->getMessage()).\PHP_EOL;
     exit(1);
 }

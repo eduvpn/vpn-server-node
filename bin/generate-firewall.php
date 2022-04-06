@@ -7,12 +7,12 @@
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-echo '************************************************************************'.PHP_EOL;
-echo '*                                                                      *'.PHP_EOL;
-echo '*       FIREWALL MODIFICATIONS ARE NO LONGER INSTALLED!                *'.PHP_EOL;
-echo '*                                                                      *'.PHP_EOL;
-echo '*                              SEE                                     *'.PHP_EOL;
-echo '*                                                                      *'.PHP_EOL;
-echo '* https://github.com/eduvpn/documentation/blob/v2/FIREWALL.md#updating *'.PHP_EOL;
-echo '*                                                                      *'.PHP_EOL;
-echo '************************************************************************'.PHP_EOL;
+echo '************************************************************************'.\PHP_EOL;
+echo '*                                                                      *'.\PHP_EOL;
+echo '*       FIREWALL MODIFICATIONS ARE NO LONGER INSTALLED!                *'.\PHP_EOL;
+echo '*                                                                      *'.\PHP_EOL;
+echo '*                              SEE                                     *'.\PHP_EOL;
+echo '*                                                                      *'.\PHP_EOL;
+echo '* https://github.com/eduvpn/documentation/blob/v2/FIREWALL.md#updating *'.\PHP_EOL;
+echo '*                                                                      *'.\PHP_EOL;
+echo '************************************************************************'.\PHP_EOL;
