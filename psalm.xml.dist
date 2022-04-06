@@ -8,6 +8,8 @@
 >
     <projectFiles>
         <directory name="src" />
+        <directory name="bin" />
+        <directory name="libexec" />
         <ignoreFiles>
             <directory name="vendor" />
         </ignoreFiles>

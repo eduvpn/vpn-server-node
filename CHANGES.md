@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.2.13 (...)
+- implement IPv6 support for `IP::getNetwork()`
+- switch from `psr/log` to `SysLogger` from `vpn-lib-common`
+- source formatting
+
 ## 2.2.12 (2021-11-08)
 - implement support for `ProfileConfig::excludeRoutes()` to redirect traffic to
   some prefixes outside the VPN tunnel

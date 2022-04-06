@@ -58,7 +58,7 @@
             "dist": {
                 "type": "path",
                 "url": "../vpn-lib-common",
-                "reference": "f1a1b3fb04a8d8e98301c9db0f56c2d1b4757dfc"
+                "reference": "a564ba65aed8be0fea16e1ecc433f321806d6f56"
             },
             "require": {
                 "ext-curl": "*",
