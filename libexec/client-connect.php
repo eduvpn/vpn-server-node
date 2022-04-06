@@ -14,10 +14,10 @@ use LC\Common\Config;
 use LC\Common\HttpClient\CurlHttpClient;
 use LC\Common\HttpClient\Exception\ApiException;
 use LC\Common\HttpClient\ServerClient;
-use LC\Common\Logger;
+use LC\Common\Log\SysLogger;
 use LC\Node\Connection;
 
-$logger = new Logger(
+$logger = new SysLogger(
     basename($argv[0])
 );
 
