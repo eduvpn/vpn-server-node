@@ -4,4 +4,3 @@ parameters:
 		- bin
 		- src
 		- libexec
-		- tests

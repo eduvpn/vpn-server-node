@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.2.13 (...)
+## 2.2.13 (2022-04-07)
 - implement IPv6 support for `IP::getNetwork()`
 - switch from `psr/log` to `SysLogger` from `vpn-lib-common`
 - source formatting
