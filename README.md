@@ -1,20 +1,24 @@
-**Summary**: Server node for Let's Connect! and eduVPN 
+**Summary**: Server node for Let's Connect! / eduVPN 
 
-**Description**: Server node for Let's Connect! and eduVPN managing the OpenVPN
-server configuration and processes.
+**Description**: Server node for Let's Connect! / eduVPN managing OpenVPN and
+WireGuard.
 
-**License**:  AGPL-3.0-or-later
+**License**: AGPL-3.0-or-later
 
-[![builds.sr.ht status](https://builds.sr.ht/~fkooman/vpn-server-node.svg)](https://builds.sr.ht/~fkooman/vpn-server-node?)
+[![builds.sr.ht status](https://builds.sr.ht/~fkooman/vpn-server-node.svg)](https://builds.sr.ht/~fkooman/vpn-server-node)
 
 # Introduction
 
-This project is the VPN node of the Let's Connect! software. It controls the
-OpenVPN processes.
+This project is the VPN node of the Let's Connect! / eduVPN software. It 
+manages OpenVPN and WireGuard.
 
 # Issue Tracker
 
-Find our issue tracker [here](https://todo.sr.ht/~eduvpn/server).
+Find our issue tracker [here](https://todo.sr.ht/~eduvpn/server). You can also 
+submit an issue through mail. 
+
+Please mention the version of eduVPN / Let's Connect! server you are running 
+and _only_ report issues with the _server_ here!
 
 # Contributing
 
