@@ -1,5 +1,8 @@
 # Changelog
 
+## 3.0.0 (2022-05-18)
+- major changes for 3.x
+
 ## 2.2.8 (2021-03-15)
 - also push `0.0.0.0/0` when `defaultGateway` is `true` to work around bug in 
   Windows online detection
