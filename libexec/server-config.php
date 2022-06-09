@@ -30,7 +30,10 @@ try {
     $exceptionMessage = $e->getMessage();
     if ($e instanceof HttpClientException) {
         // add the HttpClientResponse body to it
-        $exceptionMessage = (string) $e->httpClientResponse();
+        $response = (string) $e->httpClientResponse();
+        if ($response) {
+            $exceptionMessage .= " (reponse: $response)";
+        }
     }
 
     echo 'ERROR: '.$exceptionMessage.\PHP_EOL;
