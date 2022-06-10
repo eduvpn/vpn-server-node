@@ -29,8 +29,8 @@ try {
 } catch (Exception $e) {
     $exceptionMessage = $e->getMessage();
     if ($e instanceof HttpClientException) {
-        // add the HttpClientResponse body to it
-        $exceptionMessage = (string) $e->httpClientResponse();
+        // add the HttpClientResponse body to error message
+        $exceptionMessage .= (string) $e->httpClientResponse();
     }
 
     echo 'ERROR: '.$exceptionMessage.\PHP_EOL;
