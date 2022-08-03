@@ -9,7 +9,6 @@
     <projectFiles>
         <directory name="src" />
         <directory name="libexec" />
-        <directory name="tests" />
         <ignoreFiles>
             <directory name="vendor" />
         </ignoreFiles>
