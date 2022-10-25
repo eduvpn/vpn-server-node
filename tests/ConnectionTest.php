@@ -17,6 +17,7 @@ use Vpn\Node\Exception\ConnectionException;
 
 /**
  * @internal
+ *
  * @coversNothing
  */
 final class ConnectionTest extends TestCase

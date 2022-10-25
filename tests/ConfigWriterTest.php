@@ -18,6 +18,7 @@ use Vpn\Node\FileIO;
 
 /**
  * @internal
+ *
  * @coversNothing
  */
 final class ConfigWriterTest extends TestCase
