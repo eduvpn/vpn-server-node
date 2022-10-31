@@ -16,6 +16,11 @@
             "LC\\Node\\Tests\\": "tests/"
         }
     },
+    "config": {
+        "platform": {
+            "php": "5.4.8"
+        }
+    },
     "description": "Server node for Let's Connect! and eduVPN",
     "license": "AGPL-3.0-or-later",
     "name": "lc/vpn-server-node",
@@ -23,6 +28,10 @@
         {
             "type": "path",
             "url": "../vpn-lib-common"
+        },
+        {
+            "type": "vcs",
+            "url": "https://git.sr.ht/~fkooman/put"
         }
     ],
     "require": {
@@ -37,10 +46,10 @@
     },
     "require-dev": {
         "ext-json": "*",
-        "friendsofphp/php-cs-fixer": "^2"
+        "fkooman/put": "^0"
     },
     "support": {
-        "email": "eduvpn@surfnet.nl",
+        "email": "eduvpn-support@lists.geant.org",
         "source": "https://git.sr.ht/~fkooman/vpn-server-node"
     },
     "type": "project"
