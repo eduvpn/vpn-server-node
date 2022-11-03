@@ -11,15 +11,17 @@ declare(strict_types=1);
 
 namespace Vpn\Node\HttpClient\Exception;
 
+use Exception;
+use Throwable;
 use Vpn\Node\HttpClient\HttpClientRequest;
 use Vpn\Node\HttpClient\HttpClientResponse;
 
-class HttpClientException extends \Exception
+class HttpClientException extends Exception
 {
     private HttpClientRequest $httpClientRequest;
     private ?HttpClientResponse $httpClientResponse;
 
-    public function __construct(HttpClientRequest $httpClientRequest, ?HttpClientResponse $httpClientResponse, string $message, int $code = 0, ?\Throwable $previous = null)
+    public function __construct(HttpClientRequest $httpClientRequest, ?HttpClientResponse $httpClientResponse, string $message, int $code = 0, ?Throwable $previous = null)
     {
         parent::__construct($message, $code, $previous);
         $this->httpClientRequest = $httpClientRequest;

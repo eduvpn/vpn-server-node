@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Vpn\Node\Exception;
 
-class ConfigException extends \Exception
+use Exception;
+
+class ConfigException extends Exception
 {
 }

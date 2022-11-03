@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Vpn\Node\HttpClient;
 
+use RuntimeException;
 use Vpn\Node\Binary;
 use Vpn\Node\HttpClient\Exception\HttpClientException;
 
@@ -26,7 +27,7 @@ class CurlHttpClient implements HttpClientInterface
     public function send(HttpClientRequest $httpClientRequest): HttpClientResponse
     {
         if (false === $curlChannel = curl_init()) {
-            throw new \RuntimeException('unable to create cURL channel');
+            throw new RuntimeException('unable to create cURL channel');
         }
 
         $headerList = '';
@@ -65,7 +66,7 @@ class CurlHttpClient implements HttpClientInterface
         }
 
         if (false === curl_setopt_array($curlChannel, $curlOptions)) {
-            throw new \RuntimeException('unable to set cURL options');
+            throw new RuntimeException('unable to set cURL options');
         }
 
         $responseData = curl_exec($curlChannel);

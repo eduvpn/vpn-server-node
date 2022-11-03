@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Vpn\Node;
 
+use RuntimeException;
+
 class Utils
 {
     public static function verifyNodeKey(string $nodeKey): string
@@ -27,7 +29,7 @@ class Utils
     public static function reqEnvString(string $envKey): string
     {
         if (null === $envValue = self::optEnvString($envKey)) {
-            throw new \RuntimeException('environment variable "'.$envKey.'" not set');
+            throw new RuntimeException('environment variable "'.$envKey.'" not set');
         }
 
         return $envValue;
