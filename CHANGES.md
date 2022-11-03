@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.0.1 (...)
+- verify and trim `node.key` before using it 
+  ([#100](https://todo.sr.ht/~eduvpn/server/100))
+
 ## 3.0.0 (2022-05-18)
 - major changes for 3.x
 
