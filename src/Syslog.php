@@ -11,14 +11,12 @@ declare(strict_types=1);
 
 namespace Vpn\Node;
 
-use RuntimeException;
-
 class Syslog implements LogInterface
 {
     public function __construct(string $appName)
     {
         if (false === openlog($appName, LOG_PERROR | LOG_ODELAY, LOG_USER)) {
-            throw new RuntimeException('unable to open syslog');
+            throw new \RuntimeException('unable to open syslog');
         }
     }
 

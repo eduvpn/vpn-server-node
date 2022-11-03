@@ -11,8 +11,6 @@ declare(strict_types=1);
 
 namespace Vpn\Node\Exception;
 
-use Exception;
-
-class ConnectionException extends Exception
+class ConnectionException extends \Exception
 {
 }
