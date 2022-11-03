@@ -27,7 +27,7 @@ class Connection
         $this->httpClient = $httpClient;
         $this->apiUrl = $apiUrl;
         $this->nodeNumber = $nodeNumber;
-        $this->nodeKey = $nodeKey;
+        $this->nodeKey = Utils::verifyNodeKey($nodeKey);
     }
 
     public function connect(string $profileId, string $certOrgUnit, string $commonName, ?string $origIpFour, ?string $origIpSix, string $ipFour, string $ipSix): void

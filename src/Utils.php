@@ -13,6 +13,17 @@ namespace Vpn\Node;
 
 class Utils
 {
+    public static function verifyNodeKey(string $nodeKey): string
+    {
+        // remove leading/trailing whitespace
+        $nodeKey = trim($nodeKey);
+        if (1 !== preg_match('/^[a-f0-9]{64}$/', $nodeKey)) {
+            throw new \RuntimeException('invalid "node.key"');
+        }
+
+        return $nodeKey;
+    }
+
     public static function reqEnvString(string $envKey): string
     {
         if (null === $envValue = self::optEnvString($envKey)) {

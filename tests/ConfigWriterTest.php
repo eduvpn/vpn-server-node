@@ -38,7 +38,7 @@ final class ConfigWriterTest extends TestCase
         FileIO::mkdir($tmpDir.'/openvpn-config');
         FileIO::mkdir($tmpDir.'/wg-config');
         FileIO::write($tmpDir.'/config/keys/wireguard.key', 'sBu1nuSr9w1IAIby38GCl7E/3iDcoVEsKch4hsdGSiI=');
-        $configWriter = new ConfigWriter($tmpDir, new TestHttpClient(), $config, 'node-key');
+        $configWriter = new ConfigWriter($tmpDir, new TestHttpClient(), $config, '0011223344556677889900112233445566778899001122334455667788990011');
         $configWriter->write();
         static::assertSame('default-0', FileIO::read($tmpDir.'/openvpn-config/default-0.conf'));
         static::assertSame('default-1', FileIO::read($tmpDir.'/openvpn-config/default-1.conf'));

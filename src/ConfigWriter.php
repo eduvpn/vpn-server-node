@@ -26,7 +26,7 @@ class ConfigWriter
         $this->baseDir = $baseDir;
         $this->httpClient = $httpClient;
         $this->config = $config;
-        $this->nodeKey = $nodeKey;
+        $this->nodeKey = Utils::verifyNodeKey($nodeKey);
     }
 
     public function write(): void
