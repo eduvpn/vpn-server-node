@@ -1,11 +1,7 @@
 image: debian/stable
 packages:
   - composer
-  - unzip
   - php-curl
-  - php-dom
-  - php-date
-  - php-mbstring
 sources:
   -  https://git.sr.ht/~fkooman/vpn-server-node
 tasks:
@@ -14,4 +10,4 @@ tasks:
       composer update
   - build: |
       cd vpn-server-node
-      vendor/bin/phpunit
+      vendor/bin/put
