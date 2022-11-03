@@ -20,7 +20,7 @@ class Utils
         // remove leading/trailing whitespace
         $nodeKey = trim($nodeKey);
         if (1 !== preg_match('/^[a-f0-9]{64}$/', $nodeKey)) {
-            throw new \RuntimeException('invalid "node.key"');
+            throw new RuntimeException('invalid node key, MUST be 64 hex chars');
         }
 
         return $nodeKey;
