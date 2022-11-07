@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.0.2 (...)
+- remove `Binary` class
+- add missing `ext-json` dependency
+
 ## 3.0.1 (2022-11-04)
 - verify and trim `node.key` before using it 
   ([#100](https://todo.sr.ht/~eduvpn/server/100))
