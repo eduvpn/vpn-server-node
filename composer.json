@@ -35,6 +35,7 @@
     ],
     "require": {
         "ext-curl": "*",
+        "ext-json": "*",
         "ext-sodium": "*",
         "ext-spl": "*",
         "php": ">=7.4"
