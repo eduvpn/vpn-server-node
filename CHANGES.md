@@ -1,6 +1,6 @@
 # Changelog
 
-## 3.0.2 (...)
+## 3.0.2 (2022-11-07)
 - remove `Binary` class
 - add missing `ext-json` dependency
 
