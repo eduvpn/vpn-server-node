@@ -242,6 +242,9 @@ class OpenVpn
             sprintf('local %s', $processConfig['local']),
         ];
 
+        if (null !== $ldapAuthPlugin = $profileConfig->ldapAuthPlugin()) {
+            $serverConfig[] = sprintf('plugin %s "/etc/openvpn/auth/ldap.conf"', $ldapAuthPlugin);
+        }
         if ($profileConfig->tlsOneThree()) {
             // for TLSv1.3 we don't care about the tls-ciphers, they are all
             // fine, let the client choose
