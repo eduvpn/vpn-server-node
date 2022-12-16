@@ -13,6 +13,14 @@ return $config->setRules(
 
         // Unused use statements must be removed.
         'no_unused_imports' => true,
+        // Ordering use statements.
+        'ordered_imports' => true,
+        // Orders the elements of classes/interfaces/traits/enums.
+        'ordered_class_elements' => true,
+        // Annotations in PHPDoc should be grouped together so that annotations
+        // of the same type immediately follow each other. Annotations of a
+        // different type are separated by a single blank line.
+        'phpdoc_separation' => true,
 
         'header_comment' => [
             'header' => <<< 'EOD'
