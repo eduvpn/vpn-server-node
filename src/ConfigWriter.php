@@ -40,6 +40,8 @@ class ConfigWriter
                 'public_key' => KeyPair::computePublicKey(FileIO::read($wgKeyFile)),
                 'prefer_aes' => $this->config->preferAes() ? 'yes' : 'no',
                 'profile_id_list' => $this->config->profileIdList(),
+                'vpn_user' => $this->config->vpnUser(),
+                'vpn_group' => $this->config->vpnGroup(),
             ],
             [
                 'X-Node-Number' => (string) $this->config->nodeNumber(),

@@ -48,6 +48,42 @@ class Config
     }
 
     /**
+     * User to use to run the OpenVPN server process.
+     */
+    public function vpnUser(): string
+    {
+        if (null !== $vpnUser = $this->optionalString('vpnUser')) {
+            return $vpnUser;
+        }
+
+        // rudimentary OS detection
+        if (FileIO::exists('/etc/debian_version')) {
+            // Debian & Ubuntu
+            return 'nobody';
+        }
+
+        return 'openvpn';
+    }
+
+    /**
+     * Group to use to run the OpenVPN server process.
+     */
+    public function vpnGroup(): string
+    {
+        if (null !== $vpnGroup = $this->optionalString('vpnGroup')) {
+            return $vpnGroup;
+        }
+
+        // rudimentary OS detection
+        if (FileIO::exists('/etc/debian_version')) {
+            // Debian & Ubuntu
+            return 'nogroup';
+        }
+
+        return 'openvpn';
+    }
+
+    /**
      * @psalm-suppress UnresolvableInclude
      */
     public static function fromFile(string $configFile): self
