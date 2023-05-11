@@ -1,5 +1,8 @@
 # Changelog
 
+## 3.0.3 (2023-05-11)
+- move OpenVPN user/group "detection"/config to node
+
 ## 3.0.2 (2022-11-07)
 - remove `Binary` class
 - add missing `ext-json` dependency
